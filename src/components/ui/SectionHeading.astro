@@ -10,6 +10,8 @@ interface Props {
   titleClass?: string;
   /** Full Tailwind class for subtitle color. Default: "text-accent" */
   subtitleClass?: string;
+  /** Skip uppercase + tracking on subtitle (for paragraph-length subtitles) */
+  subtitlePlain?: boolean;
   /** Larger title size (text-title-big) */
   big?: boolean;
   /** Smaller title size (text-title-sm) + compact margins */
@@ -26,6 +28,7 @@ const {
   left = false,
   titleClass,
   subtitleClass = "text-accent",
+  subtitlePlain = false,
   big = false,
   small = false,
   smallMargin = false,
@@ -58,7 +61,8 @@ const Tag = `h${level}` as "h1" | "h2" | "h3";
       <p
         class:list={[
           big ? "text-lg lg:text-xl" : small ? "text-sm" : "text-base",
-          "uppercase tracking-[0.42em] leading-tight font-light",
+          !subtitlePlain && "uppercase tracking-[0.42em] font-light",
+
           subtitleClass,
         ]}
       >

@@ -16,6 +16,7 @@ import type { UnifiedPath } from "@lib/types";
 import ServicePage from "@components/service/ServicePage.astro";
 import LegalPage from "@components/legal/LegalPage.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
+import SellersPage from "@components/contact/SellersPage.astro";
 import ListingsPage from "@components/listings/ListingsPage.astro";
 import BlogPage from "@components/blog/BlogPage.astro";
 
@@ -70,11 +71,12 @@ if (type === "service") {
   }
   {type === "page" && enSlug === "contact" && <SchemaOrg schema={contactSchema(String(Astro.url), lang)} />}
   {type === "page" && enSlug === "contact" && <ContactSection {lang} level={1} />}
+  {type === "page" && enSlug === "inquiry-form" && <SellersPage {lang} />}
   {type === "page" && enSlug === "listings" && <ListingsPage {lang} />}
   {type === "page" && enSlug === "blog" && <BlogPage {lang} />}
-  {type === "page" && enSlug !== "contact" && enSlug !== "listings" && legalData && <LegalPage data={legalData} />}
+  {type === "page" && enSlug !== "contact" && enSlug !== "inquiry-form" && enSlug !== "listings" && legalData && <LegalPage data={legalData} />}
   {
-    type === "page" && enSlug !== "contact" && enSlug !== "listings" && !legalData && (
+    type === "page" && enSlug !== "contact" && enSlug !== "inquiry-form" && enSlug !== "listings" && !legalData && (
       <section class="flex min-h-[60vh] items-center justify-center bg-black text-white">
         <p class="text-lg text-white/60">{title} — coming soon</p>
       </section>

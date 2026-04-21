@@ -13,6 +13,8 @@ import PropertyVideo from "@components/listings/property/PropertyVideo.astro";
 import PropertyVirtualTour from "@components/listings/property/PropertyVirtualTour.astro";
 import PropertyDescription from "@components/listings/property/PropertyDescription.astro";
 import PropertyGallery from "@components/listings/property/PropertyGallery.astro";
+import ContactSection from "@components/contact/ContactSection.astro";
+import ContactForm from "@components/contact/ContactForm.astro";
 
 interface Props {
   property: Property;
@@ -35,34 +37,52 @@ const breadcrumbs = [
 
 <SchemaOrg schema={propertySchema(property, pageUrl, breadcrumbs)} />
 
-<section class="section bg-white lg:py-section-sm">
+<section class="section bg-white py-section-sm">
   <div>
     <SectionHeading title={property.title} level={1} big left smallMargin />
     <PropertyGallery images={property.images} title={property.title} {lang} />
   </div>
 </section>
 
-<PropertyDetails {property} {lang} />
+<!-- Desktop: two-column grid. Mobile: single column. -->
+<div
+  class="bg-white md:bg-gray-100 lg:grid lg:grid-cols-[1fr_24rem] lg:items-start"
+>
+  <!-- Left: property content -->
+  <div>
+    <PropertyDetails {property} {lang} />
+    {
+      property.features && property.features.length > 0 && (
+        <PropertyFeatures features={property.features} {lang} />
+      )
+    }
+    {
+      property.description && property.description.length > 0 && (
+        <PropertyDescription description={property.description} {lang} />
+      )
+    }
+    {property.videoUrl && <PropertyVideo url={property.videoUrl} {lang} />}
+    {
+      property.virtualTourUrl && (
+        <PropertyVirtualTour url={property.virtualTourUrl} {lang} />
+      )
+    }
+  </div>
 
-{
-  property.features && property.features.length > 0 && (
-    <PropertyFeatures features={property.features} {lang} />
-  )
-}
+  <!-- Desktop sticky sidebar: form only -->
+  <aside
+    class="hidden lg:block lg:sticky lg:top-10 lg:py-section-xs lg:pr-svw 2xl:pr-0"
+  >
+    <div class="rounded-xl bg-white p-6 text-black">
+      <ContactForm {lang} />
+    </div>
+  </aside>
+</div>
 
-{
-  property.description && property.description.length > 0 && (
-    <PropertyDescription description={property.description} {lang} />
-  )
-}
-
-{property.videoUrl && <PropertyVideo url={property.videoUrl} {lang} />}
-
-{
-  property.virtualTourUrl && (
-    <PropertyVirtualTour url={property.virtualTourUrl} {lang} />
-  )
-}
+<!-- Mobile contact section: full ContactSection (form + agent card) -->
+<div class="lg:hidden">
+  <ContactSection {lang} />
+</div>
 
 {
   relatedProperties.length > 0 && (

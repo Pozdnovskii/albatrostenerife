@@ -15,6 +15,7 @@ import type { UnifiedPath } from "@lib/types";
 import ServicePage from "@components/service/ServicePage.astro";
 import LegalPage from "@components/legal/LegalPage.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
+import SellersPage from "@components/contact/SellersPage.astro";
 
 export async function getStaticPaths() {
   const paths = await getAllPaths();
@@ -57,9 +58,10 @@ if (type === "service") {
   }
   {type === "page" && enSlug === "contact" && <SchemaOrg schema={contactSchema(String(Astro.url), lang)} />}
   {type === "page" && enSlug === "contact" && <ContactSection {lang} level={1} />}
-  {type === "page" && enSlug !== "contact" && legalData && <LegalPage data={legalData} />}
+  {type === "page" && enSlug === "inquiry-form" && <SellersPage {lang} />}
+  {type === "page" && enSlug !== "contact" && enSlug !== "inquiry-form" && legalData && <LegalPage data={legalData} />}
   {
-    type === "page" && enSlug !== "contact" && !legalData && (
+    type === "page" && enSlug !== "contact" && enSlug !== "inquiry-form" && !legalData && (
       <section class="flex min-h-[60vh] items-center justify-center bg-black text-white">
         <p class="text-lg text-white/60">{title} — coming soon</p>
       </section>

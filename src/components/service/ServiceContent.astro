@@ -68,12 +68,9 @@ const { service } = Astro.props;
           <p class="text-title-sm font-serif ">📮 {service.ctaText}</p>
         )}
         {service.cardButtonText && (
-          <a
-            href={service.ctaHref ? `/${service.ctaHref}` : "#contact"}
-            class="btn btn-solid"
-          >
+          <button type="button" data-open-modal class="btn btn-solid">
             {service.cardButtonText}
-          </a>
+          </button>
         )}
       </div>
     </section>

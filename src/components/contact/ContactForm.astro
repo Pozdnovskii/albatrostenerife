@@ -10,6 +10,7 @@ interface Props {
 const { lang = DEFAULT_LOCALE } = Astro.props;
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
+const labelClass = "block font-medium mb-1";
 const inputClass =
   "w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-black placeholder:text-gray-400";
 ---
@@ -23,49 +24,88 @@ const inputClass =
   <input type="hidden" name="lang" value={lang} />
   <input type="hidden" name="source" value={Astro.url.pathname} />
   <!-- honeypot -->
-  <input type="text" name="_trap" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
+  <input
+    type="text"
+    name="_trap"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+    class="hidden"
+  />
 
   <div>
-    <label for="firstName" class="block font-bold mb-1">{t(lang, "form.firstName")}</label>
-    <input type="text" id="firstName" name="firstName"
-      placeholder={t(lang, "form.firstName.placeholder")} class={inputClass} />
+    <label for="firstName" class={labelClass}>{t(lang, "form.firstName")}</label
+    >
+    <input
+      type="text"
+      id="firstName"
+      name="firstName"
+      placeholder={t(lang, "form.firstName.placeholder")}
+      class={inputClass}
+    />
   </div>
 
   <div>
-    <label for="lastName" class="block font-bold mb-1">{t(lang, "form.lastName")}</label>
-    <input type="text" id="lastName" name="lastName"
-      placeholder={t(lang, "form.lastName.placeholder")} class={inputClass} />
+    <label for="lastName" class={labelClass}>{t(lang, "form.lastName")}</label>
+    <input
+      type="text"
+      id="lastName"
+      name="lastName"
+      placeholder={t(lang, "form.lastName.placeholder")}
+      class={inputClass}
+    />
   </div>
 
   <div>
-    <label for="email" class="block font-bold mb-1">{t(lang, "form.email")}</label>
-    <input type="email" id="email" name="email" required
-      placeholder={t(lang, "form.email.placeholder")} class={inputClass} />
+    <label for="email" class={labelClass}>{t(lang, "form.email")}</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      required
+      placeholder={t(lang, "form.email.placeholder")}
+      class={inputClass}
+    />
   </div>
 
   <div>
-    <label for="phone" class="block font-bold mb-1">{t(lang, "form.phone")}</label>
-    <input type="tel" id="phone" name="phone"
-      placeholder={t(lang, "form.phone.placeholder")} class={inputClass} />
+    <label for="phone" class={labelClass}>{t(lang, "form.phone")}</label>
+    <input
+      type="tel"
+      id="phone"
+      name="phone"
+      placeholder={t(lang, "form.phone.placeholder")}
+      class={inputClass}
+    />
   </div>
 
   <div class="sm:max-md:col-span-2 lg:col-span-2">
-    <label for="message" class="block font-bold mb-1">{t(lang, "form.message")}</label>
-    <textarea id="message" name="message" rows="5"
+    <label for="message" class={labelClass}>{t(lang, "form.message")}</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="5"
       placeholder={t(lang, "form.message.placeholder")}
       class={`${inputClass} resize-y`}></textarea>
   </div>
 
   <!-- Turnstile widget (invisible if siteKey not set in dev) -->
-  {siteKey && (
-    <div class="sm:max-md:col-span-2 lg:col-span-2">
-      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="light"></div>
-    </div>
-  )}
+  {
+    siteKey && (
+      <div class="sm:max-md:col-span-2 lg:col-span-2">
+        <div class="cf-turnstile" data-sitekey={siteKey} data-theme="light" />
+      </div>
+    )
+  }
 
   <!-- Status message -->
-  <p id="form-status" role="status" aria-live="polite"
-    class="sm:max-md:col-span-2 lg:col-span-2 text-sm hidden"></p>
+  <p
+    id="form-status"
+    role="status"
+    aria-live="polite"
+    class="sm:max-md:col-span-2 lg:col-span-2 text-sm hidden"
+  >
+  </p>
 
   <button
     id="form-submit"
@@ -76,26 +116,36 @@ const inputClass =
   </button>
 </form>
 
-{siteKey && (
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-)}
+{
+  siteKey && (
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    />
+  )
+}
 
 <script>
-  const form    = document.getElementById("contact-form") as HTMLFormElement;
-  const btn     = document.getElementById("form-submit") as HTMLButtonElement;
-  const status  = document.getElementById("form-status") as HTMLParagraphElement;
+  const form = document.getElementById("contact-form") as HTMLFormElement;
+  const btn = document.getElementById("form-submit") as HTMLButtonElement;
+  const status = document.getElementById("form-status") as HTMLParagraphElement;
 
   const MESSAGES = {
     sending: "Sending…",
     success: "Thank you! We'll get back to you shortly.",
-    error:   "Something went wrong. Please try again.",
+    error: "Something went wrong. Please try again.",
   };
 
   function showStatus(type: "sending" | "success" | "error") {
     status.textContent = MESSAGES[type];
     status.className = [
       "sm:max-md:col-span-2 lg:col-span-2 text-sm",
-      type === "success" ? "text-green-600" : type === "error" ? "text-red-600" : "text-gray-500",
+      type === "success"
+        ? "text-green-600"
+        : type === "error"
+          ? "text-red-600"
+          : "text-gray-500",
     ].join(" ");
   }
 

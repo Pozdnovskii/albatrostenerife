@@ -31,7 +31,7 @@ const [desktop, mobile, slugs] = await Promise.all([
   }),
   sanityClient.fetch<{ btn1: string | null; btn2: string | null }>(
     `{
-      "btn1": *[_type == "seoSettings" && translations.en.slug.current == "buyers"][0]{
+      "btn1": *[_type == "seoSettings" && translations.en.slug.current == "listings"][0]{
         "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
       }.slug,
       "btn2": *[_type == "seoSettings" && translations.en.slug.current == "inquiry-form"][0]{
@@ -43,7 +43,7 @@ const [desktop, mobile, slugs] = await Promise.all([
 ]);
 
 const prefix = localePrefix(lang);
-const btn1Href = slugs.btn1 ? `${prefix}/${slugs.btn1}` : `${prefix}/buyers`;
+const btn1Href = slugs.btn1 ? `${prefix}/${slugs.btn1}` : `${prefix}/listings`;
 const btn2Href = slugs.btn2
   ? `${prefix}/${slugs.btn2}`
   : `${prefix}/inquiry-form`;

@@ -5,6 +5,7 @@ import { form } from "./ui/form";
 import { services } from "./ui/services";
 import { listings } from "./ui/listings";
 import { blog } from "./ui/blog";
+import { sellers } from "./ui/sellers";
 
 type AllKeys =
   | keyof (typeof footer)["en"]
@@ -12,12 +13,13 @@ type AllKeys =
   | keyof (typeof form)["en"]
   | keyof (typeof services)["en"]
   | keyof (typeof listings)["en"]
-  | keyof (typeof blog)["en"];
+  | keyof (typeof blog)["en"]
+  | keyof (typeof sellers)["en"];
 
 const ui = Object.fromEntries(
   (["en", "cs", "pl", "hu", "it", "es"] as Locale[]).map((lang) => [
     lang,
-    { ...footer[lang], ...home[lang], ...form[lang], ...services[lang], ...listings[lang], ...blog[lang] },
+    { ...footer[lang], ...home[lang], ...form[lang], ...services[lang], ...listings[lang], ...blog[lang], ...sellers[lang] },
   ])
 ) as Record<Locale, Record<AllKeys, string>>;
 
