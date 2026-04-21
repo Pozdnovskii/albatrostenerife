@@ -36,8 +36,8 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
 
 <SchemaOrg schema={blogPostSchema(post, pageUrl, lang, breadcrumbs)} />
 
-<section class="section bg-white lg:py-section-sm">
-  <div>
+<section class="section bg-white pt-section-sm pb-10">
+  <div class="max-w-5xl">
     <SectionHeading
       title={post.title}
       level={1}
@@ -56,7 +56,7 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
           width={1200}
           height={675}
           loading="eager"
-          class="w-full  rounded-xl overflow-hidden aspect-video mb-12"
+          class="w-full rounded-xl overflow-hidden aspect-video mb-6"
         />
       )
     }
@@ -98,15 +98,29 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
 
 {
   post.body && post.body.length > 0 && (
-    <section class="section bg-white pt-section-xs">
-      <div>
+    <section class="section bg-white pt-0">
+      <div class="max-w-5xl prose prose-a:text-accent">
         <PostBody body={post.body} {lang} {blogSlug} />
+        {post.faq && post.faq.length > 0 && (
+          <section>
+            <h2>FAQ</h2>
+            <dl class="not-prose">
+            {post.faq.map((item) => (
+                <dt class="font-medium text-lg mb-1">
+                  {item.question}
+                </dt>
+                <dd class="mb-6">{item.answer}</dd>
+
+            ))}
+          </dl>
+          </section>
+        )}
       </div>
     </section>
   )
 }
 
-<ContactSection {lang} />
+<ContactSection {lang} left class="[&>div]:max-w-5xl" />
 
 {
   relatedPosts.length > 0 && (

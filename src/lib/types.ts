@@ -116,6 +116,7 @@ export type Post = {
   tags: { name: string }[];
   // — detail-only (absent on card queries) —
   body?: unknown[] | null;
+  faq?: { question: string; answer: string }[] | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
 };

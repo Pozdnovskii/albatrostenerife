@@ -12,6 +12,8 @@ interface Props {
   level?: 1 | 2;
   title?: string;
   subtitle?: string;
+  left?: boolean;
+  class?: string;
 }
 
 const {
@@ -19,14 +21,16 @@ const {
   level = 2,
   title = t(lang, "contact.title"),
   subtitle = t(lang, "contact.subtitle"),
+  left = false,
+  class: cls,
 } = Astro.props;
 
 const contact = await getContactInfo(lang);
 ---
 
-<section id="contact" class="section bg-white lg:pt-section-sm">
+<section id="contact" class:list={["section bg-white lg:pt-section-sm", cls]}>
   <div
-    class="flex flex-col max-md:gap-y-section md:flex-row md:gap-x-svw lg:gap-x-section-sm lg:justify-center"
+    class:list={["flex flex-col max-md:gap-y-section md:flex-row md:gap-x-svw lg:gap-x-section-sm", !left && "lg:justify-center"]}
   >
     <div class="grow max-w-xl">
       <SectionHeading left {level} {title} {subtitle} smallMargin />

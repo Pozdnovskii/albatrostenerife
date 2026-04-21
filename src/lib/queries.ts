@@ -348,6 +348,7 @@ export async function getPostDetail(
       "slug":            coalesce(slug[$lang].current, slug.en.current),
       "body":            coalesce(body[$lang], body.en)[]{
         ...,
+        _type == "image" => { ..., "asset": asset->{ url } },
         markDefs[]{
           ...,
           "internalRef": internalLink->{
@@ -362,6 +363,10 @@ export async function getPostDetail(
             )
           }
         }
+      },
+      "faq":             faq[]{
+        "question": coalesce(question[$lang], question.en),
+        "answer":   coalesce(answer[$lang], answer.en)
       },
       "metaTitle":       coalesce(metaTitle[$lang], metaTitle.en),
       "metaDescription": coalesce(metaDescription[$lang], metaDescription.en)

@@ -39,9 +39,13 @@ type ImageBlock = {
 
 type Block = TextBlock | ImageBlock;
 
-type TextChunk  = { kind: "block"; block: TextBlock };
+type TextChunk = { kind: "block"; block: TextBlock };
 type ImageChunk = { kind: "image"; block: ImageBlock };
-type ListChunk  = { kind: "list"; listItem: "bullet" | "number"; items: TextBlock[] };
+type ListChunk = {
+  kind: "list";
+  listItem: "bullet" | "number";
+  items: TextBlock[];
+};
 type Chunk = TextChunk | ImageChunk | ListChunk;
 
 interface Props {
@@ -59,7 +63,8 @@ function resolveHref(link: PTLink): string {
   const ref = link.internalRef;
   if (ref) {
     if (ref.isHomepage) return `${prefix}/`;
-    if (ref._type === "blogPost") return `${prefix}/${blogSlug}/${ref.slug ?? ""}`;
+    if (ref._type === "blogPost")
+      return `${prefix}/${blogSlug}/${ref.slug ?? ""}`;
     // service or seoSettings — slug is the full path segment
     return `${prefix}/${ref.slug ?? ""}`;
   }
@@ -78,12 +83,15 @@ function inlineHTML(children: PTSpan[], markDefs: PTLink[]): string {
         const link = markDefs.find((m) => m._key === mark);
         if (link) {
           const href = resolveHref(link);
-          const extras = link.blank ? ' target="_blank" rel="noopener noreferrer"' : "";
+          const extras = link.blank
+            ? ' target="_blank" rel="noopener noreferrer"'
+            : "";
           html = `<a href="${href}"${extras} class="text-accent underline hover:no-underline transition-colors">${html}</a>`;
-        } else if (mark === "strong")        html = `<strong class="font-semibold">${html}</strong>`;
-        else if (mark === "em")              html = `<em>${html}</em>`;
-        else if (mark === "underline")       html = `<u>${html}</u>`;
-        else if (mark === "strike-through")  html = `<s>${html}</s>`;
+        } else if (mark === "strong")
+          html = `<strong class="font-semibold">${html}</strong>`;
+        else if (mark === "em") html = `<em>${html}</em>`;
+        else if (mark === "underline") html = `<u>${html}</u>`;
+        else if (mark === "strike-through") html = `<s>${html}</s>`;
       }
 
       return html;
@@ -111,13 +119,14 @@ for (const raw of body as Block[]) {
 }
 ---
 
-<div class="max-w-2xl">
-  {chunks.map((chunk) => {
+{
+  chunks.map((chunk) => {
     // Image
     if (chunk.kind === "image") {
       const { block } = chunk;
+      if (!block.asset?.url) return null;
       return (
-        <figure class="my-8">
+        <figure>
           <Image
             src={block.asset.url}
             alt={block.alt ?? ""}
@@ -126,9 +135,7 @@ for (const raw of body as Block[]) {
             loading="lazy"
             class="w-full rounded-xl"
           />
-          {block.caption && (
-            <figcaption class="mt-2 text-sm text-center text-gray-500">{block.caption}</figcaption>
-          )}
+          {block.caption && <figcaption>{block.caption}</figcaption>}
         </figure>
       );
     }
@@ -137,12 +144,9 @@ for (const raw of body as Block[]) {
     if (chunk.kind === "list") {
       const Tag = chunk.listItem === "bullet" ? "ul" : "ol";
       return (
-        <Tag class:list={["my-4 pl-5 space-y-1", chunk.listItem === "bullet" ? "list-disc" : "list-decimal"]}>
+        <Tag>
           {chunk.items.map((item) => (
-            <li
-              class="leading-relaxed text-gray-800"
-              set:html={inlineHTML(item.children, item.markDefs)}
-            />
+            <li set:html={inlineHTML(item.children, item.markDefs)} />
           ))}
         </Tag>
       );
@@ -152,20 +156,11 @@ for (const raw of body as Block[]) {
     const { block } = chunk;
     const html = inlineHTML(block.children, block.markDefs);
 
-    if (block.style === "h2")
-      return <h2 class="text-2xl font-semibold mt-10 mb-3 text-gray-900" set:html={html} />;
-    if (block.style === "h3")
-      return <h3 class="text-xl font-semibold mt-8 mb-2 text-gray-900" set:html={html} />;
-    if (block.style === "h4")
-      return <h4 class="text-lg font-semibold mt-6 mb-2 text-gray-900" set:html={html} />;
-    if (block.style === "blockquote")
-      return (
-        <blockquote
-          class="my-6 pl-5 border-l-4 border-accent italic text-gray-600 leading-relaxed"
-          set:html={html}
-        />
-      );
+    if (block.style === "h2") return <h2 set:html={html} />;
+    if (block.style === "h3") return <h3 set:html={html} />;
+    if (block.style === "h4") return <h4 set:html={html} />;
+    if (block.style === "blockquote") return <blockquote set:html={html} />;
 
-    return <p class="mb-4 leading-relaxed text-gray-800" set:html={html} />;
-  })}
-</div>
+    return <p set:html={html} />;
+  })
+}
