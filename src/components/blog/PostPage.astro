@@ -10,6 +10,7 @@ import SectionHeading from "@components/ui/SectionHeading.astro";
 import BlogList from "@components/blog/BlogList.astro";
 import PostBody from "@components/blog/PostBody.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
+import advisorPhoto from "@assets/ivan_uher.webp";
 
 interface Props {
   post: Post;
@@ -37,42 +38,75 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
 
 <section class="section bg-white lg:py-section-sm">
   <div>
-    <SectionHeading title={post.title} level={1} big left smallMargin />
-    <div class="flex items-center gap-4 text-sm text-gray-500">
-      <time datetime={post.publishedAt}>{date}</time>
-      {post.tags.map((tag) => <span class="text-accent">{tag.name}</span>)}
+    <SectionHeading
+      title={post.title}
+      level={1}
+      left
+      smallMargin
+      subtitle={post.description ?? undefined}
+      subtitlePlain
+      subtitleClass="text-black/80 max-w-prose"
+    />
+
+    {
+      post.mainImage && (
+        <Image
+          src={post.mainImage}
+          alt={post.mainImageAlt ?? post.title}
+          width={1200}
+          height={675}
+          loading="eager"
+          class="w-full  rounded-xl overflow-hidden aspect-video mb-12"
+        />
+      )
+    }
+
+    <div
+      class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-700"
+    >
+      <span class="flex items-center gap-2">
+        <Image
+          src={advisorPhoto}
+          alt="Ivan Uher"
+          width={28}
+          height={28}
+          class="rounded-full object-cover w-7 aspect-square"
+          loading="eager"
+        />
+        <span>Ivan Uher</span>
+      </span>
+
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3 aspect-square shrink-0" aria-hidden="true">
+          <use href="#icon-calendar"></use>
+        </svg>
+        <time datetime={post.publishedAt}>{date}</time>
+      </span>
+      {
+        post.tags.map((tag) => (
+          <span class="flex items-center gap-1.5">
+            <svg class="w-3.5 aspect-square shrink-0" aria-hidden="true">
+              <use href="#icon-tag" />
+            </svg>
+            <span>{tag.name}</span>
+          </span>
+        ))
+      }
     </div>
   </div>
 </section>
 
 {
-  post.mainImage && (
-    <div class="section py-0 pb-section-xs">
-      <div>
-        <div class="rounded-xl overflow-hidden aspect-video">
-          <Image
-            src={post.mainImage}
-            alt={post.mainImageAlt ?? post.title}
-            width={1200}
-            height={675}
-            loading="eager"
-            class="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-{
   post.body && post.body.length > 0 && (
-    <section class="section bg-white">
+    <section class="section bg-white pt-section-xs">
       <div>
         <PostBody body={post.body} {lang} {blogSlug} />
       </div>
     </section>
   )
 }
+
+<ContactSection {lang} />
 
 {
   relatedPosts.length > 0 && (
@@ -89,5 +123,3 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
     </section>
   )
 }
-
-<ContactSection {lang} />

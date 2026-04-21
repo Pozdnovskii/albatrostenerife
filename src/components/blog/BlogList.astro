@@ -4,6 +4,7 @@ import type { Locale } from "@i18n/config";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import { localePrefix } from "@i18n/utils";
 import BlogCard from "@components/blog/BlogCard.astro";
+import PropertyIcons from "@components/listings/ui/PropertyIcons.astro";
 
 interface Props {
   posts: Post[];
@@ -22,6 +23,8 @@ const {
 } = Astro.props;
 const prefix = localePrefix(lang);
 ---
+
+{posts.length > 0 && <PropertyIcons />}
 
 {
   posts.length > 0 && (

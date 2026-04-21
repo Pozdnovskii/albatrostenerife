@@ -10,6 +10,12 @@ const { level = 2, large = false, class: cls } = Astro.props;
 const Tag = `h${level}` as "h2" | "h3" | "h4";
 ---
 
-<Tag class:list={[large ? "text-title-sm leading-none" : "text-lg leading-snug", "text-balance text-pretty mb-4", cls]}>
+<Tag
+  class:list={[
+    large ? "text-title-sm leading-none" : "text-lg leading-snug",
+    "text-balance  mb-4",
+    cls,
+  ]}
+>
   <slot />
 </Tag>
