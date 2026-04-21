@@ -1,0 +1,76 @@
+---
+import { getImage } from "astro:assets";
+import { sanityClient } from "sanity:client";
+import { t } from "@i18n/ui";
+import { localePrefix } from "@i18n/utils";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import desktopSrc from "@assets/Parque_Albatros.webp";
+import mobileSrc from "@assets/Parque_Albatros-mob.webp";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import ResponsivePicture from "@components/ui/ResponsivePicture.astro";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+
+const [desktop, mobile, slugs] = await Promise.all([
+  getImage({
+    src: desktopSrc,
+    widths: [1024, 1440, 1920],
+    sizes: "100vw",
+    format: "webp",
+  }),
+  getImage({
+    src: mobileSrc,
+    widths: [390, 640, 828],
+    sizes: "100vw",
+    format: "webp",
+  }),
+  sanityClient.fetch<{ btn1: string | null; btn2: string | null }>(
+    `{
+      "btn1": *[_type == "seoSettings" && translations.en.slug.current == "buyers"][0]{
+        "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
+      }.slug,
+      "btn2": *[_type == "seoSettings" && translations.en.slug.current == "inquiry-form"][0]{
+        "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
+      }.slug
+    }`,
+    { lang },
+  ),
+]);
+
+const prefix = localePrefix(lang);
+const btn1Href = slugs.btn1 ? `${prefix}/${slugs.btn1}` : `${prefix}/buyers`;
+const btn2Href = slugs.btn2
+  ? `${prefix}/${slugs.btn2}`
+  : `${prefix}/inquiry-form`;
+---
+
+<section id="hero" class="section relative min-h-svh 2xl:min-h-240">
+  <div class="flex flex-col items-center justify-center">
+    <SectionHeading
+      title={t(lang, "hero.title")}
+      subtitle={t(lang, "hero.subtitle")}
+      level={1}
+      big
+      subtitleClass="text-inherit"
+    />
+
+    <div
+      class="w-full justify-center flex flex-wrap gap-4 [&>a]:btn [&>a]:btn-big [&>a]:border-white [&>a]:hover:bg-accent/80 [&>a]:hover:border-accent/60"
+    >
+      <a href={btn1Href}>{t(lang, "hero.btn1")}</a>
+      <a href={btn2Href}>{t(lang, "hero.btn2")}</a>
+    </div>
+
+    <ResponsivePicture
+      {desktop}
+      {mobile}
+      width={mobileSrc.width}
+      height={mobileSrc.height}
+    />
+  </div>
+</section>

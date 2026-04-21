@@ -1,0 +1,38 @@
+---
+import { getContactInfo } from "@lib/queries";
+import { t } from "@i18n/ui";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import AgentCard from "@components/contact/AgentCard.astro";
+import ContactForm from "@components/contact/ContactForm.astro";
+
+interface Props {
+  lang?: Locale;
+  level?: 1 | 2;
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  lang = DEFAULT_LOCALE,
+  level = 2,
+  title = t(lang, "contact.title"),
+  subtitle = t(lang, "contact.subtitle"),
+} = Astro.props;
+
+const contact = await getContactInfo(lang);
+---
+
+<section id="contact" class="section bg-white lg:pt-section-sm">
+  <div
+    class="flex flex-col max-md:gap-y-section md:flex-row md:gap-x-svw lg:gap-x-section-sm lg:justify-center"
+  >
+    <div class="grow max-w-xl">
+      <SectionHeading left {level} {title} {subtitle} smallMargin />
+      <ContactForm lang={lang} />
+    </div>
+
+    {contact && <AgentCard contact={contact} level={level === 1 ? 2 : 3} />}
+  </div>
+</section>

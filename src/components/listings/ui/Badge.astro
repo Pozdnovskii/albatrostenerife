@@ -1,0 +1,21 @@
+---
+interface Props {
+  variant?: "dark" | "red";
+}
+
+const { variant = "dark" } = Astro.props;
+
+const colors = {
+  dark: "bg-black/70",
+  red: "bg-red-700/80",
+};
+---
+
+<span
+  class:list={[
+    colors[variant],
+    "text-white text-xs font-medium px-2 py-1 rounded-md",
+  ]}
+>
+  <slot />
+</span>

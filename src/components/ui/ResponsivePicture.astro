@@ -1,0 +1,51 @@
+---
+import type { GetImageResult } from "astro";
+
+interface Props {
+  desktop: GetImageResult;
+  mobile: GetImageResult;
+  width: number;
+  height: number;
+  alt?: string;
+  loading?: "eager" | "lazy";
+  fetchpriority?: "high" | "low" | "auto";
+  class?: string;
+}
+
+const {
+  desktop,
+  mobile,
+  width,
+  height,
+  alt = "",
+  loading = "eager",
+  fetchpriority = "high",
+  class: cls,
+} = Astro.props;
+---
+
+<picture
+  class:list={[
+    "absolute inset-0 -z-6 h-full w-full brightness-50 2xl:inset-s-1/2 2xl:-translate-x-1/2 2xl:max-w-480 2xl:mask-[linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)]",
+    cls,
+  ]}
+>
+  <source
+    media="(min-width: 768px)"
+    srcset={desktop.srcSet.attribute}
+    sizes="100vw"
+  />
+  <img
+    src={mobile.src}
+    srcset={mobile.srcSet.attribute}
+    sizes="100vw"
+    {width}
+    {height}
+    {alt}
+    aria-hidden={alt === "" ? "true" : undefined}
+    {loading}
+    {fetchpriority}
+    decoding="async"
+    class="h-full w-full object-cover"
+  />
+</picture>

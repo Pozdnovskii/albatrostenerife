@@ -1,0 +1,65 @@
+---
+import { Image } from "astro:assets";
+import SliderButton from "@components/ui/SliderButton.astro";
+import { t } from "@i18n/ui";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import { getReviews } from "@lib/queries";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+
+const reviews = await getReviews(lang);
+---
+
+<section id="reviews" class="section bg-gray-100">
+  <div data-reviews-slider class="relative max-w-prose">
+    <SectionHeading
+      title={t(lang, "reviews.title")}
+      subtitle={t(lang, "reviews.subtitle")}
+    />
+
+    <ul
+      id="reviews-track"
+      data-track
+      class="flex overflow-x-scroll snap-x snap-mandatory text-center [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {
+        reviews.map((review) => (
+          <li class="snap-center shrink-0 w-full flex flex-col-reverse justify-end gap-y-6 items-center px-svw">
+            <blockquote>
+              <p class="text-lg leading-relaxed mb-6">{review.text}</p>
+              <footer>
+                <p class="font-bold">{review.name}</p>
+                <p class="italic">{review.location}</p>
+              </footer>
+            </blockquote>
+
+            {review.photoUrl && (
+              <Image
+                src={review.photoUrl}
+                alt={`Photo of ${review.name}`}
+                width={96}
+                height={96}
+                class="rounded-full"
+              />
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    <SliderButton direction="prev" controls="reviews-track" label="Previous review" data-prev class="top-full md:top-3/5 max-md:-translate-y-full left-0 md:-translate-x-full [&>svg]:fill-gray-500 hover:[&>svg]:fill-gray-800" />
+    <SliderButton direction="next" controls="reviews-track" label="Next review" data-next class="top-full md:top-3/5 max-md:-translate-y-full right-0 md:translate-x-full [&>svg]:fill-gray-500 hover:[&>svg]:fill-gray-800" />
+  </div>
+</section>
+
+<script>
+  import { initSlider } from "@/scripts/slider";
+  const el = document.querySelector<HTMLElement>("[data-reviews-slider]");
+  if (el) initSlider(el, { infinite: true });
+</script>

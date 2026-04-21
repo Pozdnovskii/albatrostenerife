@@ -1,0 +1,34 @@
+---
+import Layout from "@layouts/Layout.astro";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import { getLangFromUrl, localePrefix } from "@i18n/utils";
+import { t } from "@i18n/ui";
+
+export const prerender = true;
+
+const lang = getLangFromUrl(Astro.url);
+const homeUrl = `${localePrefix(lang)}/`;
+---
+
+<Layout
+  title={`404 — ${t(lang, "404.title")}`}
+  description={t(lang, "404.subtitle")}
+  {lang}
+>
+  <section class="flex min-h-[70vh] flex-col items-center justify-center px-4">
+    <p class="mb-4 text-8xl font-bold leading-none text-accent">404</p>
+    <SectionHeading
+      title={t(lang, "404.title")}
+      subtitle={t(lang, "404.subtitle")}
+      subtitleClass="text-white/50"
+      level={1}
+      smallMargin
+    />
+    <a
+      href={homeUrl}
+      class="inline-block rounded-full bg-accent px-8 py-3 font-medium text-black transition-opacity hover:opacity-80"
+    >
+      {t(lang, "404.back")}
+    </a>
+  </section>
+</Layout>

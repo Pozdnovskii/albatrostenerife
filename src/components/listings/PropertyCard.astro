@@ -1,0 +1,181 @@
+---
+import { Image } from "astro:assets";
+import type { Locale } from "@i18n/config";
+import { t } from "@i18n/ui";
+import type { Property } from "@lib/types";
+import SliderButton from "@components/ui/SliderButton.astro";
+import Badge from "@components/listings/ui/Badge.astro";
+import HeadingSmall from "@components/ui/HeadingSmall.astro";
+
+interface Props {
+  property: Property;
+  href: string;
+  lang: Locale;
+  /** Heading tag. Default: 3 */
+  level?: 2 | 3;
+}
+
+const { property, href, lang, level = 3 } = Astro.props;
+const trackId = `photos-${crypto.randomUUID().slice(0, 8)}`;
+
+const price = property.price
+  ? new Intl.NumberFormat("en-EU", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0,
+    }).format(property.price)
+  : null;
+---
+
+<article
+  class="relative h-full flex flex-col-reverse bg-white rounded-xl overflow-clip shadow-sm group"
+>
+  <!-- CONTENT -->
+  <div class="flex flex-col flex-1 py-5 px-svw lg:px-5">
+    <HeadingSmall {level}>
+      <a
+        href={href}
+        class="after:absolute after:inset-0 hover:text-accent transition-colors"
+      >
+        {property.title}
+      </a>
+    </HeadingSmall>
+
+    <dl class="flex flex-col mt-auto [&_dt]:sr-only">
+      <dt>{t(lang, "listings.price")}</dt>
+      <dd class="font-medium mb-1">
+        {price ?? t(lang, "listings.priceOnRequest")}
+      </dd>
+
+      <dt>{t(lang, "listings.propertyType")}</dt>
+      <dd class="text-sm mb-3 pb-2 border-b border-gray-200">
+        {property.propertyType?.name}
+      </dd>
+
+      <div class="flex flex-wrap gap-4 text-sm">
+        {
+          [
+            {
+              label: t(lang, "listings.bedroom"),
+              icon: "#icon-bed",
+              value: property.bedrooms,
+              unit: "",
+            },
+            {
+              label: t(lang, "listings.bath"),
+              icon: "#icon-bath",
+              value: property.bathrooms,
+              unit: "",
+            },
+            {
+              label: t(lang, "listings.areaSize"),
+              icon: "#icon-area",
+              value: property.area,
+              unit: " m²",
+            },
+          ]
+            .filter((s) => s.value != null)
+            .map((s) => (
+              <>
+                <dt>{s.label}</dt>
+                <dd class="flex items-center gap-1.5">
+                  <svg class="w-4 aspect-square" aria-hidden="true">
+                    <use href={s.icon} />
+                  </svg>
+                  {s.value}
+                  {s.unit}
+                </dd>
+              </>
+            ))
+        }
+      </div>
+    </dl>
+
+    <!-- badges -->
+    {
+      (property.status || property.labels?.length > 0) && (
+        <div class="absolute top-3 left-3 z-6 flex flex-wrap gap-1.5 pointer-events-none">
+          {property.status && <Badge>{property.status.name}</Badge>}
+          {property.labels?.map((label) => (
+            <Badge variant="red">{label.name}</Badge>
+          ))}
+        </div>
+      )
+    }
+  </div>
+
+  <!-- SLIDER -->
+  <div data-prop-slider class="relative">
+    <!-- track -->
+    <ul
+      id={trackId}
+      data-track
+      aria-label={`${t(lang, "listings.photos")}: ${property.title}`}
+      class="flex overflow-x-scroll snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>li]:snap-center [&>li]:shrink-0 [&>li]:w-full [&>li]:aspect-4/3 [&>li]:overflow-hidden"
+    >
+      {
+        property.images.map((url, i) => (
+          <li class="bg-gray-200">
+            <Image
+              src={url}
+              alt={i === 0 ? property.title : `${property.title} – ${i + 1}`}
+              width={640}
+              height={480}
+              loading="lazy"
+              class="w-full h-full object-cover transition-transform duration-500 group-has-[a:hover]:scale-105"
+            />
+          </li>
+        ))
+      }
+
+      <!-- view more slide -->
+      <li>
+        <a
+          href={href}
+          class="w-full h-full flex flex-col-reverse items-center justify-center gap-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+        >
+          <span class="text-sm font-medium tracking-wide"
+            >{t(lang, "listings.viewMore")}</span
+          >
+          <svg
+            class="w-8 aspect-square"
+            viewBox="0 0 48 48"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="6" y="10" width="36" height="28" rx="2"></rect>
+            <circle cx="18" cy="22" r="4"></circle>
+            <path d="M6 32l9-8 7 6 6-5 14 11"></path>
+          </svg>
+        </a>
+      </li>
+    </ul>
+
+    <!-- prev / next -->
+    <SliderButton
+      direction="prev"
+      controls={trackId}
+      label="Previous photo"
+      data-prev
+      class="top-1/2 -translate-y-1/2 z-6 left-2 [&>svg]:fill-white/70 hover:[&>svg]:fill-white disabled:opacity-40 disabled:cursor-default"
+    />
+    <SliderButton
+      direction="next"
+      controls={trackId}
+      label="Next photo"
+      data-next
+      class="top-1/2 -translate-y-1/2 z-6 right-2 [&>svg]:fill-white/70 hover:[&>svg]:fill-white disabled:opacity-40 disabled:cursor-default"
+    />
+  </div>
+</article>
+
+<script>
+  import { initSlider } from "@/scripts/slider";
+  document
+    .querySelectorAll<HTMLElement>("[data-prop-slider]")
+    .forEach((el) => initSlider(el));
+</script>

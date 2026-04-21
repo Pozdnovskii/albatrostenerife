@@ -1,0 +1,33 @@
+---
+import Layout from "@layouts/Layout.astro";
+import BlogPage from "@components/blog/BlogPage.astro";
+import { DEFAULT_LOCALE, LOCALES } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { localePrefix } from "@i18n/utils";
+import { t } from "@i18n/ui";
+import { getPageContent, getBlogSlugs, sanityOgImage } from "@lib/queries";
+
+const lang = DEFAULT_LOCALE;
+
+const [seo, blogSlugs] = await Promise.all([
+  getPageContent(lang, "blog"),
+  getBlogSlugs(),
+]);
+
+const alternateUrls = Object.fromEntries(
+  LOCALES.map((l) => {
+    const slug = l === DEFAULT_LOCALE ? "blog" : (blogSlugs?.[l] ?? "blog");
+    return [l, `${Astro.url.origin}${localePrefix(l)}/${slug}`];
+  })
+) as Record<Locale, string>;
+---
+
+<Layout
+  title={seo?.metaTitle ?? t(lang, "blog.pageTitle")}
+  description={seo?.metaDescription ?? t(lang, "blog.pageSubtitle")}
+  {lang}
+  {alternateUrls}
+  ogImage={sanityOgImage(seo?.ogImageUrl)}
+>
+  <BlogPage {lang} />
+</Layout>

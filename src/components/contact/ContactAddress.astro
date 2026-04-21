@@ -1,0 +1,42 @@
+---
+import type { ContactInfo } from "@lib/types";
+import WaIcon from "@assets/svg/wa.svg";
+import MailIcon from "@assets/svg/mail.svg";
+
+interface Props {
+  contact: ContactInfo;
+  class?: string;
+  linksOnly?: boolean;
+}
+
+const { contact, class: cls, linksOnly = false } = Astro.props;
+
+const telHref = `tel:${contact.phone.replace(/\s/g, "")}`;
+const mailHref = `mailto:${contact.email}`;
+---
+
+<address class:list={[cls]}>
+  {
+    !linksOnly && contact.locationName && (
+      <p class="font-semibold">{contact.locationName}</p>
+    )
+  }
+  {
+    !linksOnly && contact.address && (
+      <p class="mb-6 text-balance">{contact.address}</p>
+    )
+  }
+
+  <div
+    class="flex flex-wrap gap-x-6 gap-y-2 [&>a]:flex [&>a]:items-center [&>a]:gap-2 [&>a]:transition-colors [&>a]:hover:text-accent [&_svg]:h-lh [&_svg]:fill-accent"
+  >
+    <a href={telHref}>
+      <WaIcon />
+      {contact.phone}
+    </a>
+    <a href={mailHref}>
+      <MailIcon />
+      {contact.email}
+    </a>
+  </div>
+</address>

@@ -1,0 +1,39 @@
+---
+import { t } from "@i18n/ui";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import { localePrefix } from "@i18n/utils";
+import type { Locale } from "@i18n/config";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import PropertyList from "@components/listings/PropertyList.astro";
+import { getProperties, getListingsSlugs } from "@lib/queries";
+
+interface Props {
+  lang?: Locale;
+  class?: string;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+
+const [properties, listingsSlugs] = await Promise.all([
+  getProperties(lang, 6),
+  getListingsSlugs(),
+]);
+
+const listingsSlug = listingsSlugs[lang] ?? "listings";
+const listingsHref = `${localePrefix(lang)}/${listingsSlug}`;
+---
+
+<section id="listings" class="section bg-gray-100">
+  <div>
+    <SectionHeading
+      title={t(lang, "listings.title")}
+      subtitle={t(lang, "listings.subtitle")}
+    />
+
+    <PropertyList {properties} {lang} {listingsSlug} class="mb-10" />
+
+    <a href={listingsHref} class="btn btn-outline mx-auto">
+      {t(lang, "listings.viewAll")}
+    </a>
+  </div>
+</section>

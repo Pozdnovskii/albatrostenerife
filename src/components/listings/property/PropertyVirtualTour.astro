@@ -1,0 +1,23 @@
+---
+import type { Locale } from "@i18n/config";
+import { t } from "@i18n/ui";
+import PropertySection from "@components/listings/ui/PropertySection.astro";
+
+interface Props {
+  url: string;
+  lang: Locale;
+}
+
+const { url, lang } = Astro.props;
+---
+
+<PropertySection title={t(lang, "listings.virtualTour")}>
+  <div class="aspect-video mt-5 rounded-md overflow-clip">
+    <iframe
+      src={url}
+      title={t(lang, "listings.virtualTour")}
+      class="w-full h-full"
+      loading="lazy"
+      allowfullscreen></iframe>
+  </div>
+</PropertySection>

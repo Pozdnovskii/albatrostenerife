@@ -1,0 +1,52 @@
+---
+import Logo from "@assets/albatros_logo.svg";
+import { t } from "@i18n/ui";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { localePrefix } from "@i18n/utils";
+import type { NavItem } from "@lib/types";
+
+interface Props {
+  lang?: Locale;
+  navItems: NavItem[];
+}
+
+const { lang = DEFAULT_LOCALE, navItems } = Astro.props;
+const year = new Date().getFullYear();
+const prefix = localePrefix(lang);
+
+function buildHref(item: NavItem): string {
+  if (item.page.isHomepage) return `${prefix}/`;
+  return `${prefix}/${item.page.slug}`;
+}
+---
+
+<footer id="footer" class="py-10 text-center">
+  <div class="flex flex-col items-center gap-y-9">
+    <Logo aria-hidden="true" class="w-40 max-w-full" />
+
+    <p class="flex flex-col justify-center sm:flex-row sm:flex-wrap sm:gap-x-2">
+      <span>© {year} Albatrostenerife.com</span>
+
+      <span class="hidden sm:inline-flex"> – </span>
+
+      <span>{t(lang, "footer.rights")}</span>
+      <span class="hidden sm:inline-flex"> | </span>
+      <span>
+        {
+          navItems.map((item, i) => (
+            <>
+              <a
+                href={buildHref(item)}
+                class="transition-colors hover:text-accent"
+              >
+                {item.label}
+              </a>
+              {i < navItems.length - 1 && " & "}
+            </>
+          ))
+        }
+      </span>
+    </p>
+  </div>
+</footer>

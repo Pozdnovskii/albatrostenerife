@@ -1,0 +1,44 @@
+---
+import PropertyCard from "@components/listings/PropertyCard.astro";
+import PropertyIcons from "@components/listings/ui/PropertyIcons.astro";
+import { localePrefix } from "@i18n/utils";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import type { Property as PropertyType } from "@lib/types";
+
+interface Props {
+  properties: PropertyType[];
+  lang?: Locale;
+  listingsSlug?: string;
+  level?: 2 | 3;
+  class?: string;
+}
+
+const {
+  properties,
+  lang = DEFAULT_LOCALE,
+  listingsSlug = "listings",
+  level = 3,
+  class: cls,
+} = Astro.props;
+const prefix = localePrefix(lang);
+---
+
+<PropertyIcons />
+
+{
+  properties.length > 0 && (
+    <ul
+      class:list={["grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3", cls]}
+    >
+      {properties.map((property) => {
+        const href = `${prefix}/${listingsSlug}/${property.slug ?? ""}`;
+        return (
+          <li>
+            <PropertyCard {property} {href} {lang} {level} />
+          </li>
+        );
+      })}
+    </ul>
+  )
+}

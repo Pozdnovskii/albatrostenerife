@@ -1,0 +1,19 @@
+---
+import { YouTube } from "@astro-community/astro-embed-youtube";
+import type { Locale } from "@i18n/config";
+import { t } from "@i18n/ui";
+import PropertySection from "@components/listings/ui/PropertySection.astro";
+
+interface Props {
+  url: string;
+  lang: Locale;
+}
+
+const { url, lang } = Astro.props;
+---
+
+<PropertySection title={t(lang, "listings.video")}>
+  <div class="aspect-video mt-5 rounded-md overflow-clip">
+    <YouTube id={url} class="w-full h-full" />
+  </div>
+</PropertySection>

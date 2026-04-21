@@ -1,0 +1,67 @@
+---
+import type { Property } from "@lib/types";
+import type { Locale } from "@i18n/config";
+import { t } from "@i18n/ui";
+import PropertySection from "@components/listings/ui/PropertySection.astro";
+
+interface Props {
+  property: Property;
+  lang: Locale;
+}
+
+const { property, lang } = Astro.props;
+
+const price = property.price
+  ? new Intl.NumberFormat("en-EU", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0,
+    }).format(property.price)
+  : null;
+
+const details = [
+  {
+    label: t(lang, "listings.price"),
+    value: price ?? t(lang, "listings.priceOnRequest"),
+  },
+  property.area != null && {
+    label: t(lang, "listings.areaSize"),
+    value: `${property.area} m²`,
+  },
+  property.bedrooms != null && {
+    label: t(lang, "listings.bedroom"),
+    value: String(property.bedrooms),
+  },
+  property.bathrooms != null && {
+    label: t(lang, "listings.bath"),
+    value: String(property.bathrooms),
+  },
+  property.year != null && {
+    label: t(lang, "listings.yearBuilt"),
+    value: String(property.year),
+  },
+  property.propertyType && {
+    label: t(lang, "listings.propertyType"),
+    value: property.propertyType.name,
+  },
+  property.status && {
+    label: t(lang, "listings.propertyStatus"),
+    value: property.status.name,
+  },
+].filter(Boolean) as { label: string; value: string }[];
+---
+
+<PropertySection title={t(lang, "listings.details")}>
+  <dl
+    class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 sm:gap-x-10 rounded-md border border-accent/50 bg-accent-darker/20 p-6 pb-7 mt-5"
+  >
+    {
+      details.map((d) => (
+        <div class="flex justify-between items-baseline pb-3 border-b border-gray-500 gap-8">
+          <dt class="font-medium">{d.label}</dt>
+          <dd class="text-end text-gray-700">{d.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</PropertySection>

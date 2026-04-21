@@ -1,0 +1,35 @@
+---
+import type { Locale } from "@i18n/config";
+import type { ServicePageData } from "@lib/types";
+import { getContactInfo } from "@lib/queries";
+import { localePrefix } from "@i18n/utils";
+import { serviceSchema } from "@lib/schema";
+import SchemaOrg from "@components/seo/SchemaOrg.astro";
+import ServiceHero from "./ServiceHero.astro";
+import ServiceContent from "./ServiceContent.astro";
+import ServiceAgent from "./ServiceAgent.astro";
+
+interface Props {
+  service: ServicePageData;
+  lang: Locale;
+}
+
+const { service, lang } = Astro.props;
+const contact = await getContactInfo(lang);
+
+const origin = Astro.url.origin;
+const prefix = localePrefix(lang);
+const pageUrl = String(Astro.url);
+const breadcrumbs = [
+  { name: "Home", url: `${origin}${prefix}` },
+  { name: service.title, url: pageUrl },
+];
+---
+
+<SchemaOrg schema={serviceSchema(service.title, service.metaDescription, pageUrl, lang, breadcrumbs)} />
+
+<ServiceHero {service} {lang} />
+<ServiceContent {service} />
+{contact && service.agentQuote && (
+  <ServiceAgent agentQuote={service.agentQuote} {contact} />
+)}

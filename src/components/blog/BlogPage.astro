@@ -1,0 +1,41 @@
+---
+import type { Locale } from "@i18n/config";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import { t } from "@i18n/ui";
+import { getPosts, getBlogSlugs } from "@lib/queries";
+import { localePrefix } from "@i18n/utils";
+import { collectionSchema } from "@lib/schema";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import BlogList from "@components/blog/BlogList.astro";
+import SchemaOrg from "@components/seo/SchemaOrg.astro";
+import ContactSection from "@components/contact/ContactSection.astro";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+const [posts, blogSlugs] = await Promise.all([getPosts(lang), getBlogSlugs()]);
+const blogSlug = blogSlugs[lang] ?? "blog";
+const origin = Astro.url.origin;
+const blogUrl = `${origin}${localePrefix(lang)}/${blogSlug}`;
+const itemUrls = posts.map((p) => `${blogUrl}/${p.slug}`);
+---
+
+<SchemaOrg schema={collectionSchema(t(lang, "blog.pageTitle"), blogUrl, lang, itemUrls)} />
+
+<section class="section bg-gray-100 lg:pt-section-sm">
+  <div>
+    <SectionHeading
+      big
+      smallMargin
+      title={t(lang, "blog.pageTitle")}
+      subtitle={t(lang, "blog.pageSubtitle")}
+      level={1}
+    />
+
+    <BlogList {posts} {lang} {blogSlug} level={2} />
+  </div>
+</section>
+
+<ContactSection {lang} />

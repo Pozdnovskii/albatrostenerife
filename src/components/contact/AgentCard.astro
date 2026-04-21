@@ -1,0 +1,35 @@
+---
+import { Image } from "astro:assets";
+import type { ContactInfo } from "@lib/types";
+import advisorPhoto from "@assets/ivan_uher.webp";
+import ContactAddress from "@components/contact/ContactAddress.astro";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+
+interface Props {
+  contact: ContactInfo;
+  class?: string;
+  level?: 2 | 3;
+}
+
+const { contact, class: cls, level = 3 } = Astro.props;
+---
+
+<article
+  class:list={["order-first flex flex-col md:max-w-3xs lg:max-w-xs", cls]}
+>
+  <SectionHeading
+    {level}
+    left
+    small
+    title={contact.advisorName}
+    subtitle={contact.advisorTitle ?? undefined}
+  />
+
+  <ContactAddress contact={contact} />
+
+  <Image
+    src={advisorPhoto}
+    alt={contact.advisorName}
+    class="order-first mb-6 max-w-2xs"
+  />
+</article>

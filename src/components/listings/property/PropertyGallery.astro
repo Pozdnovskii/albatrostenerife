@@ -1,0 +1,271 @@
+---
+import { Image } from "astro:assets";
+import type { Locale } from "@i18n/config";
+import { t } from "@i18n/ui";
+import SliderButton from "@components/ui/SliderButton.astro";
+
+interface Props {
+  images: string[];
+  title: string;
+  lang: Locale;
+}
+
+const { images, title, lang } = Astro.props;
+const trackId = `gallery-${crypto.randomUUID().slice(0, 8)}`;
+const dialogTrackId = `gallery-dialog-${crypto.randomUUID().slice(0, 8)}`;
+
+const gridImages = images.slice(0, 5);
+const gridClass =
+  gridImages.length >= 5
+    ? "grid-cols-[2fr_1fr_1fr] grid-rows-2"
+    : gridImages.length >= 3
+      ? "grid-cols-[2fr_1fr] grid-rows-2"
+      : "grid-cols-2";
+---
+
+<!-- Mobile: full-bleed slider -->
+<div data-gallery-mobile class="md:hidden relative">
+  <ul
+    id={trackId}
+    data-track
+    aria-label={`${t(lang, "listings.photos")}: ${title}`}
+    class="flex overflow-x-scroll snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>li]:snap-center [&>li]:shrink-0 [&>li]:w-full [&>li]:aspect-4/3 [&>li]:overflow-hidden"
+  >
+    {images.map((url, i) => (
+      <li>
+        <Image
+          src={url}
+          alt={i === 0 ? title : `${title} – ${i + 1}`}
+          width={800}
+          height={600}
+          loading={i === 0 ? "eager" : "lazy"}
+          class="w-full h-full object-cover"
+        />
+      </li>
+    ))}
+  </ul>
+
+  <span
+    data-counter
+    aria-live="polite"
+    aria-atomic="true"
+    class="absolute bottom-3 right-3 bg-black/55 text-white text-xs px-2.5 py-1 rounded-full tabular-nums pointer-events-none"
+  >
+    1 / {images.length}
+  </span>
+
+  <SliderButton
+    direction="prev"
+    controls={trackId}
+    label="Previous photo"
+    data-prev
+    class="top-1/2 -translate-y-1/2 z-6 left-2 [&>svg]:fill-white/70 hover:[&>svg]:fill-white disabled:opacity-40 disabled:cursor-default"
+  />
+  <SliderButton
+    direction="next"
+    controls={trackId}
+    label="Next photo"
+    data-next
+    class="top-1/2 -translate-y-1/2 z-6 right-2 [&>svg]:fill-white/70 hover:[&>svg]:fill-white disabled:opacity-40 disabled:cursor-default"
+  />
+</div>
+
+<!-- Desktop: Airbnb grid -->
+<div class="hidden md:block relative mt-6">
+  {gridImages.length === 1 ? (
+    <button
+      data-gallery-open
+      data-index="0"
+      aria-label={t(lang, "listings.allPhotos")}
+      class="block w-full h-130 rounded-xl overflow-hidden cursor-pointer"
+    >
+      <Image
+        src={gridImages[0]}
+        alt={title}
+        width={1200}
+        height={800}
+        loading="eager"
+        class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+      />
+    </button>
+  ) : (
+    <div class={`grid gap-1.5 h-130 rounded-xl overflow-hidden ${gridClass}`}>
+      {gridImages.map((url, i) => (
+        <button
+          data-gallery-open
+          data-index={String(i)}
+          aria-label={i === 0 ? t(lang, "listings.allPhotos") : `${title} – ${i + 1}`}
+          class:list={["overflow-hidden cursor-pointer block w-full h-full", i === 0 && gridImages.length >= 3 && "row-span-2"]}
+        >
+          <Image
+            src={url}
+            alt={i === 0 ? title : `${title} – ${i + 1}`}
+            width={i === 0 ? 900 : 450}
+            height={i === 0 ? 700 : 350}
+            loading={i === 0 ? "eager" : "lazy"}
+            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+
+  <button
+    data-gallery-open
+    class="absolute bottom-4 right-4 flex items-center gap-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2 text-sm font-medium shadow-sm hover:bg-white transition-colors cursor-pointer"
+  >
+    <svg
+      class="w-4 h-4 shrink-0"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path d="M21 15l-5-5L5 21" />
+    </svg>
+    {t(lang, "listings.allPhotos")} · {images.length}
+  </button>
+</div>
+
+<!-- Lightbox: full-screen slider dialog -->
+<dialog
+  data-gallery-dialog
+  class="m-0 p-0 w-screen h-dvh max-w-full max-h-full bg-black text-white backdrop:bg-black"
+>
+  <!-- Top bar -->
+  <div class="absolute top-0 inset-x-0 z-10 flex items-center justify-between px-4 py-3 bg-linear-to-b from-black/60 to-transparent pointer-events-none">
+    <span
+      data-dialog-counter
+      aria-live="polite"
+      aria-atomic="true"
+      class="text-sm tabular-nums pointer-events-auto"
+    >
+      1 / {images.length}
+    </span>
+    <button
+      data-gallery-close
+      aria-label="Close"
+      class="pointer-events-auto p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+    >
+      <svg
+        class="w-6 h-6"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Slider track -->
+  <ul
+    id={dialogTrackId}
+    data-dialog-track
+    class="w-full h-full flex overflow-x-scroll snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>li]:snap-center [&>li]:shrink-0 [&>li]:w-full [&>li]:h-full [&>li]:flex [&>li]:items-center [&>li]:justify-center [&>li]:px-14"
+  >
+    {images.map((url, i) => (
+      <li>
+        <Image
+          src={url}
+          alt={i === 0 ? title : `${title} – ${i + 1}`}
+          width={1400}
+          height={1050}
+          loading="lazy"
+          class="max-w-full max-h-dvh object-contain"
+        />
+      </li>
+    ))}
+  </ul>
+
+  <!-- Prev / Next -->
+  <SliderButton
+    direction="prev"
+    controls={dialogTrackId}
+    label="Previous photo"
+    data-dialog-prev
+    class="absolute top-1/2 -translate-y-1/2 left-2 z-10 [&>svg]:fill-white/70 hover:[&>svg]:fill-white disabled:opacity-30 disabled:cursor-default"
+  />
+  <SliderButton
+    direction="next"
+    controls={dialogTrackId}
+    label="Next photo"
+    data-dialog-next
+    class="absolute top-1/2 -translate-y-1/2 right-2 z-10 [&>svg]:fill-white/70 hover:[&>svg]:fill-white disabled:opacity-30 disabled:cursor-default"
+  />
+</dialog>
+
+<script>
+  import { initSlider } from "@/scripts/slider";
+
+  // Mobile: slider + counter
+  document.querySelectorAll<HTMLElement>("[data-gallery-mobile]").forEach((wrapper) => {
+    const track = wrapper.querySelector<HTMLElement>("[data-track]")!;
+    const counter = wrapper.querySelector<HTMLElement>("[data-counter]")!;
+    const total = track.children.length;
+
+    initSlider(wrapper);
+
+    track.addEventListener("scroll", () => {
+      const idx = Math.round(track.scrollLeft / track.offsetWidth) + 1;
+      counter.textContent = `${idx} / ${total}`;
+    }, { passive: true });
+  });
+
+  // Lightbox dialog slider
+  document.querySelectorAll<HTMLDialogElement>("[data-gallery-dialog]").forEach((dialog) => {
+    const track = dialog.querySelector<HTMLElement>("[data-dialog-track]")!;
+    const counter = dialog.querySelector<HTMLElement>("[data-dialog-counter]")!;
+    const prevBtn = dialog.querySelector<HTMLButtonElement>("[data-dialog-prev]")!;
+    const nextBtn = dialog.querySelector<HTMLButtonElement>("[data-dialog-next]")!;
+    const total = track.children.length;
+    let current = 0;
+
+    const goTo = (n: number, smooth = true) => {
+      current = Math.max(0, Math.min(n, total - 1));
+      track.scrollTo({ left: current * track.offsetWidth, behavior: smooth ? "smooth" : "instant" });
+      counter.textContent = `${current + 1} / ${total}`;
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+    };
+
+    track.addEventListener("scroll", () => {
+      current = Math.round(track.scrollLeft / track.offsetWidth);
+      counter.textContent = `${current + 1} / ${total}`;
+    }, { passive: true });
+
+    prevBtn.addEventListener("click", () => goTo(current - 1));
+    nextBtn.addEventListener("click", () => goTo(current + 1));
+
+    // Keyboard arrow navigation
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") goTo(current - 1);
+      if (e.key === "ArrowRight") goTo(current + 1);
+    });
+
+    // Open at specific index (or 0 by default)
+    document.querySelectorAll<HTMLButtonElement>("[data-gallery-open]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        dialog.showModal();
+        goTo(Number(btn.dataset.index ?? 0), false);
+      });
+    });
+
+    // Close via button
+    dialog.querySelector("[data-gallery-close]")?.addEventListener("click", () => dialog.close());
+
+    // Close on backdrop click
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  });
+</script>

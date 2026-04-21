@@ -1,0 +1,83 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { LOCALES, DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { buildAlternateUrls } from "@i18n/utils";
+import {
+  getAllPaths,
+  getPageContent,
+  getServicePageData,
+  getLegalPageData,
+  sanityOgImage,
+} from "@lib/queries";
+import { contactSchema } from "@lib/schema";
+import SchemaOrg from "@components/seo/SchemaOrg.astro";
+import type { UnifiedPath } from "@lib/types";
+import ServicePage from "@components/service/ServicePage.astro";
+import LegalPage from "@components/legal/LegalPage.astro";
+import ContactSection from "@components/contact/ContactSection.astro";
+import ListingsPage from "@components/listings/ListingsPage.astro";
+import BlogPage from "@components/blog/BlogPage.astro";
+
+export async function getStaticPaths() {
+  const paths = await getAllPaths();
+  const nonEnLangs = LOCALES.filter((l) => l !== DEFAULT_LOCALE);
+
+  // Property and post detail pages have their own two-level routes
+  return paths
+    .filter((p) => p.type !== "property" && p.type !== "post")
+    .flatMap((p) =>
+      nonEnLangs.flatMap((lang) => {
+        const slug = p.slugs[lang] ?? p.slugs[DEFAULT_LOCALE];
+        if (!slug) return [];
+        return [{ params: { lang, slug }, props: p }];
+      }),
+    );
+}
+
+const { lang } = Astro.params as { lang: Locale };
+const { type, enSlug, slugs } = Astro.props as UnifiedPath;
+const alternateUrls = buildAlternateUrls(Astro.url.origin, slugs);
+
+let title = "";
+let description = "";
+let ogImage: string | undefined;
+let serviceData = null;
+let legalData = null;
+
+if (type === "service") {
+  const data = await getServicePageData(lang, enSlug);
+  title = data?.metaTitle ?? data?.title ?? "";
+  description = data?.metaDescription ?? "";
+  serviceData = data;
+} else {
+  const [seo, legal] = await Promise.all([
+    getPageContent(lang, enSlug),
+    getLegalPageData(lang, enSlug),
+  ]);
+  title = seo?.metaTitle ?? seo?.title ?? "";
+  description = seo?.metaDescription ?? "";
+  ogImage = sanityOgImage(seo?.ogImageUrl);
+  legalData = legal;
+}
+---
+
+<Layout {title} {description} {lang} {alternateUrls} {ogImage}>
+  {
+    type === "service" && serviceData && (
+      <ServicePage service={serviceData} {lang} />
+    )
+  }
+  {type === "page" && enSlug === "contact" && <SchemaOrg schema={contactSchema(String(Astro.url), lang)} />}
+  {type === "page" && enSlug === "contact" && <ContactSection {lang} level={1} />}
+  {type === "page" && enSlug === "listings" && <ListingsPage {lang} />}
+  {type === "page" && enSlug === "blog" && <BlogPage {lang} />}
+  {type === "page" && enSlug !== "contact" && enSlug !== "listings" && legalData && <LegalPage data={legalData} />}
+  {
+    type === "page" && enSlug !== "contact" && enSlug !== "listings" && !legalData && (
+      <section class="flex min-h-[60vh] items-center justify-center bg-black text-white">
+        <p class="text-lg text-white/60">{title} — coming soon</p>
+      </section>
+    )
+  }
+</Layout>

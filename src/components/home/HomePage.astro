@@ -1,0 +1,26 @@
+---
+import type { Locale } from "@i18n/config";
+import HeroSection from "./HeroSection.astro";
+import ResortSection from "./ResortSection.astro";
+import ListingsSection from "./ListingsSection.astro";
+import ServicesSection from "./ServicesSection.astro";
+import ActivitiesSection from "./ActivitiesSection.astro";
+import ReviewsSection from "./ReviewsSection.astro";
+import ContactSection from "@components/contact/ContactSection.astro";
+import BlogSection from "./BlogSection.astro";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+---
+
+<HeroSection {lang} />
+<ResortSection {lang} />
+<ListingsSection {lang} />
+<ServicesSection {lang} />
+<ActivitiesSection {lang} />
+<ReviewsSection {lang} />
+<ContactSection {lang} />
+<BlogSection {lang} />

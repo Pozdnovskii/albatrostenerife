@@ -1,0 +1,291 @@
+---
+import Logo from "@assets/albatros_logo.svg";
+import { LOCALES, DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { localePrefix } from "@i18n/utils";
+import type { NavItem } from "@lib/types";
+
+interface Props {
+  lang?: Locale;
+  alternateUrls?: Partial<Record<Locale, string>>;
+  navItems: NavItem[];
+}
+
+const { lang = DEFAULT_LOCALE, alternateUrls = {}, navItems } = Astro.props;
+const prefix = localePrefix(lang);
+
+function buildHref(item: NavItem): string {
+  if (item.page.isHomepage) return `${prefix}/`;
+  return `${prefix}/${item.page.slug}`;
+}
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string) {
+  if (href.endsWith("/") && href.length > 1)
+    return currentPath === href || currentPath === href.slice(0, -1);
+  return currentPath === href || currentPath.startsWith(href + "/");
+}
+---
+
+<header id="header" class="sticky top-0 z-50 bg-black">
+  <div class="flex items-center justify-between py-3">
+    <!-- Logo -->
+    <a
+      href={`${prefix}/`}
+      aria-label="Albatros home"
+      class="relative z-50 shrink-0"
+    >
+      <Logo class="h-8 max-h-[60px] w-auto" />
+    </a>
+
+    <!-- Nav: mobile overlay + desktop inline (single element) ──────────── -->
+    <nav
+      id="site-nav"
+      aria-label="Main navigation"
+      class="fixed inset-0 bg-black flex flex-col gap-12 px-svw pt-24 pb-12 opacity-0 transition-opacity pointer-events-none
+      text-lg font-medium leading-loose tracking-widest uppercase md:text-sm
+        data-open:opacity-100 data-open:pointer-events-auto
+        md:static md:flex-row md:items-center md:gap-4
+        md:opacity-100 md:pointer-events-auto md:p-0 md:transition-none"
+    >
+      <!-- Nav links -->
+      <ul class="flex flex-col gap-y-4 md:flex-row md:items-center md:gap-2">
+        {
+          navItems.map((item) => {
+            const href = buildHref(item);
+            return (
+              <li>
+                <a
+                  href={href}
+                  aria-current={isActive(href) ? "page" : undefined}
+                  class:list={[
+                    "block pe-3 transition-colors md:ps-3",
+                    isActive(href)
+                      ? "text-white"
+                      : "text-white/50 hover:text-white",
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      <!-- Language dropdown (desktop only) -->
+      <div class="relative hidden md:block" id="lang-dropdown">
+        <button
+          id="lang-btn"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-label={`Language: ${lang.toUpperCase()}, open selector`}
+          class="flex items-center justify-center gap-1.5 min-w-[48px] aspect-square cursor-pointer uppercase text-white/60 hover:text-white transition-colors group"
+        >
+          {lang}
+          <svg
+            class="w-3 aspect-square transition-transform group-aria-expanded:rotate-180"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6"></path>
+          </svg>
+        </button>
+
+        <ul
+          id="lang-list"
+          role="listbox"
+          aria-label="Select language"
+          inert
+          class="absolute right-0 top-full mt-2 bg-gray-900 rounded-md py-1.5 min-w-18 shadow-xl ring-1 ring-white/10
+                 transition-all origin-top
+                 opacity-0 scale-95 pointer-events-none
+                 data-open:opacity-100 data-open:scale-100 data-open:pointer-events-auto"
+        >
+          {
+            LOCALES.map((l) => {
+              const href = alternateUrls[l] ?? `${localePrefix(l)}/`;
+              return (
+                <li role="option" aria-selected={l === lang}>
+                  <a
+                    href={href}
+                    hreflang={l}
+                    class:list={[
+                      "block px-3 py-1 transition-colors",
+                      l === lang
+                        ? "text-white"
+                        : "text-white/50 hover:text-white",
+                    ]}
+                  >
+                    {l}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+
+      <!-- Language row (mobile only) -->
+      <div
+        class="flex flex-wrap gap-x-4 gap-y-2 mt-auto md:hidden"
+        role="list"
+        aria-label="Select language"
+      >
+        {
+          LOCALES.map((l) => {
+            const href = alternateUrls[l] ?? `${localePrefix(l)}/`;
+            return (
+              <a
+                href={href}
+                hreflang={l}
+                role="listitem"
+                aria-current={l === lang ? "page" : undefined}
+                class:list={[
+                  "text-sm font-semibold tracking-widest uppercase transition-colors",
+                  l === lang ? "text-white" : "text-white/40 hover:text-white",
+                ]}
+              >
+                {l}
+              </a>
+            );
+          })
+        }
+      </div>
+    </nav>
+
+    <!-- Burger button (mobile only) ──────────────────────────────────── -->
+    <button
+      id="burger-btn"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Open navigation"
+      class="relative z-50 flex items-center justify-center min-w-12 aspect-square cursor-pointer md:hidden group"
+    >
+      <span
+        class="relative block w-6 h-0.5 rounded-full bg-white transition-colors duration-300
+        group-aria-expanded:bg-transparent
+        before:content-[''] before:absolute before:left-0 before:w-full before:h-full before:bg-white before:rounded-full before:-top-1.75 before:transition-all before:duration-300
+        group-aria-expanded:before:top-0 group-aria-expanded:before:rotate-45
+        after:content-[''] after:absolute after:left-0 after:w-full after:h-full after:bg-white after:rounded-full after:top-1.75 after:transition-all after:duration-300
+        group-aria-expanded:after:top-0 group-aria-expanded:after:-rotate-45"
+      ></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    const burger = document.getElementById("burger-btn") as HTMLButtonElement;
+    const nav = document.getElementById("site-nav") as HTMLElement;
+    const langBtn = document.getElementById("lang-btn") as HTMLButtonElement;
+    const langList = document.getElementById("lang-list") as HTMLUListElement;
+
+    if (!burger || !nav || !langBtn || !langList) return;
+
+    const isMobile = () => window.innerWidth < 768;
+
+    // Set inert on mobile initially (desktop nav is always accessible)
+    if (isMobile()) nav.setAttribute("inert", "");
+
+    // ── Mobile menu ──────────────────────────────────────────────────────
+    let menuOpen = false;
+
+    function openMenu() {
+      menuOpen = true;
+      burger.setAttribute("aria-expanded", "true");
+      burger.setAttribute("aria-label", "Close navigation");
+      nav.removeAttribute("inert");
+      nav.dataset.open = "";
+      document.body.style.overflow = "hidden";
+      setTimeout(() => (nav.querySelector("a") as HTMLElement)?.focus(), 50);
+    }
+
+    function closeMenu() {
+      menuOpen = false;
+      burger.setAttribute("aria-expanded", "false");
+      burger.setAttribute("aria-label", "Open navigation");
+      nav.setAttribute("inert", "");
+      delete nav.dataset.open;
+      document.body.style.overflow = "";
+    }
+
+    burger.addEventListener("click", () =>
+      menuOpen ? closeMenu() : openMenu(),
+    );
+
+    nav.querySelectorAll("a").forEach((a) =>
+      a.addEventListener("click", () => {
+        if (menuOpen) closeMenu();
+      }),
+    );
+
+    // ── Language dropdown ────────────────────────────────────────────────
+    let dropdownOpen = false;
+
+    function openDropdown() {
+      dropdownOpen = true;
+      langBtn.setAttribute("aria-expanded", "true");
+      langList.removeAttribute("inert");
+      langList.dataset.open = "";
+      setTimeout(
+        () => (langList.querySelector("a") as HTMLElement)?.focus(),
+        50,
+      );
+    }
+
+    function closeDropdown() {
+      dropdownOpen = false;
+      langBtn.setAttribute("aria-expanded", "false");
+      langList.setAttribute("inert", "");
+      delete langList.dataset.open;
+    }
+
+    langBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownOpen ? closeDropdown() : openDropdown();
+    });
+
+    // ── Shared: Escape + click outside ──────────────────────────────────
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      if (dropdownOpen) {
+        closeDropdown();
+        langBtn.focus();
+      } else if (menuOpen) {
+        closeMenu();
+        burger.focus();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (dropdownOpen) {
+        const wrapper = document.getElementById("lang-dropdown");
+        if (!wrapper?.contains(e.target as Node)) closeDropdown();
+      }
+    });
+
+    // ── Resize ──────────────────────────────────────────────────────────
+    window.matchMedia("(min-width: 768px)").addEventListener("change", (e) => {
+      if (e.matches) {
+        // Switched to desktop: remove inert, close mobile menu if open
+        nav.removeAttribute("inert");
+        if (menuOpen) {
+          menuOpen = false;
+          burger.setAttribute("aria-expanded", "false");
+          delete nav.dataset.open;
+          document.body.style.overflow = "";
+        }
+      } else {
+        // Switched to mobile: set inert if closed
+        if (!menuOpen) nav.setAttribute("inert", "");
+      }
+    });
+  }
+
+  initHeader();
+</script>

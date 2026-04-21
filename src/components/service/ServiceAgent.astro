@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets";
+import type { ContactInfo } from "@lib/types";
+import advisorPhoto from "@assets/ivan_uher.webp";
+import ContactAddress from "@components/contact/ContactAddress.astro";
+
+interface Props {
+  agentQuote: string;
+  contact: ContactInfo;
+}
+
+const { agentQuote, contact } = Astro.props;
+---
+
+<section class="section bg-white pt-section-sm">
+  <div
+    class="flex flex-col gap-y-10 md:flex-row md:justify-center md:items-center md:gap-x-section-sm"
+  >
+    <Image
+      src={advisorPhoto}
+      alt={contact.advisorName}
+      class="max-w-xs w-full"
+      loading="lazy"
+    />
+
+    <div class="flex flex-col gap-6 max-w-prose">
+      <blockquote class="text-xl font-semibold">
+        "{agentQuote}"
+      </blockquote>
+
+      <ContactAddress {contact} linksOnly />
+    </div>
+  </div>
+</section>

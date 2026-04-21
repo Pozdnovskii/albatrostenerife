@@ -1,0 +1,47 @@
+---
+import type { ServiceCard } from "@lib/types";
+
+interface Props {
+  service: ServiceCard;
+  href: string;
+}
+
+const { service, href } = Astro.props;
+---
+
+<article class="h-full flex flex-col items-center text-center">
+  {
+    service.cardIconUrl && (
+      <img
+        src={service.cardIconUrl}
+        alt=""
+        aria-hidden="true"
+        width="54"
+        height="43"
+        class="w-[54px] aspect-5/4 mb-6"
+        loading="lazy"
+        decoding="async"
+      />
+    )
+  }
+
+  <h3
+    class:list={[
+      "text-title-sm leading-[1.125] mb-[.33em] sm:min-h-[2lh]",
+      service.name.length < 15 ? "sm:max-w-[8.5ch]" : "sm:max-w-[12ch]",
+    ]}
+  >
+    {service.name}
+  </h3>
+
+  <p class="text-balance mb-6">
+    {service.cardDescription}
+  </p>
+
+  <a
+    href={href}
+    class="mt-auto btn btn-outline"
+  >
+    {service.cardButtonText}
+  </a>
+</article>

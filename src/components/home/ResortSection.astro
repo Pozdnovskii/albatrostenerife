@@ -1,0 +1,51 @@
+---
+import { Image } from "astro:assets";
+import { getContactInfo } from "@lib/queries";
+import { t } from "@i18n/ui";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import resortPhoto from "@assets/home-resort.webp";
+import ContactAddress from "@components/contact/ContactAddress.astro";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+
+const contact = await getContactInfo(lang);
+---
+
+<section id="resort" class="section bg-white">
+  <div
+    class="flex flex-col-reverse items-center gap-y-10 md:flex-row-reverse md:gap-x-[4svw] xl:justify-center"
+  >
+    <div class="max-w-prose">
+      <SectionHeading
+        left
+        smallMargin
+        title={t(lang, "resort.title")}
+        subtitle={t(lang, "resort.subtitle")}
+      />
+
+      {
+        t(lang, "resort.description")
+          .split("\n\n")
+          .map((para) => (
+            <p class="first-of-type:mb-4 last-of-type:mb-8">{para}</p>
+          ))
+      }
+
+      {contact && <ContactAddress contact={contact} />}
+    </div>
+
+    <Image
+      class="md:max-w-1/3"
+      src={resortPhoto}
+      alt={[contact?.locationName, t(lang, "resort.imageAlt")]
+        .filter(Boolean)
+        .join(". ")}
+    />
+  </div>
+</section>

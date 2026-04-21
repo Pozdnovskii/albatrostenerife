@@ -1,0 +1,99 @@
+---
+import { Image } from "astro:assets";
+import type { Post } from "@lib/types";
+import HeadingSmall from "@components/ui/HeadingSmall.astro";
+
+interface Props {
+  post: Post;
+  href: string;
+  level?: 2 | 3;
+}
+
+const { post, href, level = 3 } = Astro.props;
+
+const d = new Date(post.publishedAt);
+const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`;
+const tag = post.tags?.[0] ?? null;
+---
+
+<article
+  class="relative flex flex-col bg-white rounded-xl overflow-clip shadow-sm group"
+>
+  {
+    post.mainImage && (
+      <div class="aspect-4/3 overflow-hidden bg-gray-100 shrink-0">
+        <Image
+          src={post.mainImage}
+          alt={post.mainImageAlt ?? post.title}
+          width={640}
+          height={480}
+          loading="lazy"
+          class="w-full h-full object-cover transition-transform duration-500 group-has-[a:hover]:scale-105"
+        />
+      </div>
+    )
+  }
+
+  <div class="flex flex-col flex-1 px-5 py-5">
+    <HeadingSmall {level}>
+      <a
+        href={href}
+        class="after:absolute after:inset-0 hover:text-accent transition-colors"
+      >
+        {post.title}
+      </a>
+    </HeadingSmall>
+
+    <div class="flex items-center gap-4 text-sm text-gray-500 mb-3 -mt-2">
+      <span class="flex items-center gap-1.5">
+        <svg
+          class="w-3.5 aspect-square shrink-0"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <rect x="1" y="2" width="14" height="13" rx="1.5"></rect>
+          <path d="M1 6h14M5 1v2M11 1v2"></path>
+        </svg>
+        <time datetime={post.publishedAt}>{date}</time>
+      </span>
+      {
+        tag && (
+          <span class="flex items-center gap-1.5">
+            <svg
+              class="w-3.5 aspect-square shrink-0"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M1 1h6.5l6.5 6.5-6 6L1.5 7V1z" />
+              <circle
+                cx="4.5"
+                cy="4.5"
+                r="1"
+                fill="currentColor"
+                stroke="none"
+              />
+            </svg>
+            {tag.name}
+          </span>
+        )
+      }
+    </div>
+
+    {
+      post.description && (
+        <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+          {post.description}
+        </p>
+      )
+    }
+  </div>
+</article>

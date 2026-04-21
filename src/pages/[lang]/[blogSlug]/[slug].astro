@@ -1,0 +1,67 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { LOCALES, DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { localePrefix } from "@i18n/utils";
+import {
+  getAllPaths,
+  getPostDetail,
+  getPosts,
+  getBlogSlugs,
+  sanityOgImage,
+} from "@lib/queries";
+import PostPage from "@components/blog/PostPage.astro";
+
+export async function getStaticPaths() {
+  const [allPaths, blogSlugs] = await Promise.all([
+    getAllPaths(),
+    getBlogSlugs(),
+  ]);
+
+  const postPaths = allPaths.filter((p) => p.type === "post");
+  const nonEnLangs = LOCALES.filter((l) => l !== DEFAULT_LOCALE);
+
+  return postPaths.flatMap((p) =>
+    nonEnLangs.flatMap((lang) => {
+      const blogSlug = blogSlugs?.[lang] ?? "blog";
+      const postSlug = p.slugs[lang] ?? p.enSlug;
+      return [{
+        params: { lang, blogSlug, slug: postSlug },
+        props: { enSlug: p.enSlug, slugs: p.slugs, blogSlugs },
+      }];
+    })
+  );
+}
+
+const { lang, blogSlug } = Astro.params as { lang: Locale; blogSlug: string };
+const { enSlug, slugs, blogSlugs } = Astro.props as {
+  enSlug: string;
+  slugs: Partial<Record<Locale, string>>;
+  blogSlugs: Partial<Record<Locale, string>>;
+};
+
+const [post, relatedPosts] = await Promise.all([
+  getPostDetail(lang, enSlug),
+  getPosts(lang, 3, enSlug),
+]);
+
+const alternateUrls = Object.fromEntries(
+  LOCALES.map((l) => {
+    const prefix = localePrefix(l);
+    const bs = l === DEFAULT_LOCALE ? "blog" : (blogSlugs?.[l] ?? "blog");
+    const ps = slugs[l] ?? enSlug;
+    return [l, `${Astro.url.origin}${prefix}/${bs}/${ps}`];
+  })
+) as Record<Locale, string>;
+---
+
+<Layout
+  title={post?.metaTitle ?? post?.title ?? ""}
+  description={post?.metaDescription ?? post?.description ?? ""}
+  {lang}
+  {alternateUrls}
+  ogImage={sanityOgImage(post?.mainImage)}
+  ogType="article"
+>
+  {post && <PostPage {post} {lang} {relatedPosts} {blogSlug} />}
+</Layout>

@@ -1,0 +1,94 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-accent: oklch(72% 0.12 78);
+  --color-accent-darker: oklch(from var(--color-accent) 66% c h);
+
+  --text-title: clamp(2rem, 1.5rem + 2.5svw, 3rem);
+  --text-title-sm: clamp(1.5rem, 1.25rem + 1.2svw, 2rem);
+  --text-title-big: clamp(2.375rem, 1.75rem + 3.125svw, 3.75rem);
+
+  --spacing-svw: min(3svw, 48px);
+  --spacing-section: max(90px, calc(var(--spacing-svw) * 4));
+  --spacing-section-sm: calc(var(--spacing-section) / 2);
+  --spacing-section-xs: calc(var(--spacing-section) / 3);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-black text-white font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  address {
+    font-style: normal;
+  }
+
+  button {
+    background-color: none;
+  }
+
+  .section,
+  #header,
+  #footer {
+    @apply flex justify-center;
+    & > div {
+      @apply w-full px-svw 2xl:container 2xl:mx-auto;
+    }
+  }
+
+  .section {
+    @apply py-section;
+
+    &:not(#hero) {
+      @apply text-black;
+    }
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: #000;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
+
+@utility btn {
+  @apply flex justify-center w-fit px-6 py-2.5 text-center rounded-md border border-accent transition-colors cursor-pointer md:border-2;
+}
+
+@utility btn-solid {
+  @apply bg-accent text-white border-transparent hover:bg-accent-darker;
+}
+
+@utility btn-outline {
+  @apply hover:bg-accent hover:text-white;
+}
+
+@utility btn-big {
+  @apply w-full py-3.5 tracking-[0.25em] uppercase max-w-80 md:py-4;
+}

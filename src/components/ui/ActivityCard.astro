@@ -1,0 +1,42 @@
+---
+import { Image } from "astro:assets";
+import type { Activity } from "@lib/types";
+import ArrowIcon from "@assets/svg/activities_arrow.svg";
+
+interface Props {
+  activity: Activity;
+}
+
+const { activity } = Astro.props;
+---
+
+<article
+  class="group relative overflow-hidden aspect-2/3 text-white rounded-md shadow-blue-300/60 shadow-lg transition-shadow duration-500 has-[a:hover]:shadow-2xl"
+>
+  <div
+    class="relative z-1 w-full h-full flex flex-col justify-end items-center text-center px-svw py-6 bg-linear-to-b from-40% from-transparent to-black/60"
+  >
+    <h3 class="font-sans font-medium text-xl mb-1">{activity.name}</h3>
+    <a
+      href={activity.url}
+      target="_blank"
+      rel="noopener"
+      class="flex items-center gap-2 text-lg after:absolute after:inset-0"
+    >
+      <ArrowIcon aria-hidden="true" class="w-[.7lh] aspect-square shrink-0" />
+      {activity.buttonText}
+    </a>
+  </div>
+
+  {
+    activity.imageUrl && (
+      <Image
+        src={activity.imageUrl}
+        alt={activity.alt ?? activity.name}
+        width={600}
+        height={800}
+        class="absolute inset-0 h-full transition-transform duration-500 group-has-[a:hover]:scale-105"
+      />
+    )
+  }
+</article>

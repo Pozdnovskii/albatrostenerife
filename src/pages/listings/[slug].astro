@@ -1,0 +1,66 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { DEFAULT_LOCALE, LOCALES } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { localePrefix } from "@i18n/utils";
+import {
+  getAllPaths,
+  getPropertyDetail,
+  getProperties,
+  getListingsSlugs,
+  sanityOgImage,
+} from "@lib/queries";
+import PropertyPage from "@components/listings/property/PropertyPage.astro";
+
+export async function getStaticPaths() {
+  const [allPaths, listingsSlugs] = await Promise.all([
+    getAllPaths(),
+    getListingsSlugs(),
+  ]);
+
+  return allPaths
+    .filter((p) => p.type === "property")
+    .map((p) => ({
+      params: { slug: p.enSlug },
+      props: { enSlug: p.enSlug, slugs: p.slugs, listingsSlugs },
+    }));
+}
+
+const { enSlug, slugs, listingsSlugs } = Astro.props as {
+  enSlug: string;
+  slugs: Partial<Record<Locale, string>>;
+  listingsSlugs: Partial<Record<Locale, string>>;
+};
+const lang = DEFAULT_LOCALE;
+const listingsSlug = listingsSlugs[lang] ?? "listings";
+
+const [property, relatedProperties] = await Promise.all([
+  getPropertyDetail(lang, enSlug),
+  getProperties(lang, 3, enSlug),
+]);
+
+const alternateUrls = Object.fromEntries(
+  LOCALES.map((l) => {
+    const prefix = localePrefix(l);
+    const ls =
+      l === DEFAULT_LOCALE ? "listings" : (listingsSlugs?.[l] ?? "listings");
+    const ps = slugs[l] ?? enSlug;
+    return [l, `${Astro.url.origin}${prefix}/${ls}/${ps}`];
+  }),
+) as Record<Locale, string>;
+---
+
+<Layout
+  title={property?.metaTitle ?? property?.title ?? ""}
+  description={property?.metaDescription ?? ""}
+  {lang}
+  {alternateUrls}
+  ogImage={sanityOgImage(property?.images?.[0])}
+  ogType="article"
+>
+  {
+    property && (
+      <PropertyPage {property} {lang} {relatedProperties} {listingsSlug} />
+    )
+  }
+</Layout>

@@ -1,11 +1,26 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "@layouts/Layout.astro";
+import HomePage from "@components/home/HomePage.astro";
+import SchemaOrg from "@components/seo/SchemaOrg.astro";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import { buildAlternateUrls } from "@i18n/utils";
+import { getHomepageSeo, getContactInfo, getReviewCount, sanityOgImage } from "@lib/queries";
+import { homeSchema } from "@lib/schema";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const [seo, contact, reviewCount] = await Promise.all([
+  getHomepageSeo(DEFAULT_LOCALE),
+  getContactInfo(DEFAULT_LOCALE),
+  getReviewCount(),
+]);
+const alternateUrls = buildAlternateUrls(Astro.url.origin);
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title={seo?.metaTitle ?? "Albatros Tenerife"}
+  description={seo?.metaDescription ?? ""}
+  alternateUrls={alternateUrls}
+  ogImage={sanityOgImage(seo?.ogImageUrl)}
+>
+  <SchemaOrg schema={homeSchema({ ...(contact ?? {}), reviewCount })} slot="head" />
+  <HomePage lang={DEFAULT_LOCALE} />
 </Layout>

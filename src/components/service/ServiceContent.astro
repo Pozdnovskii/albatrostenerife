@@ -1,0 +1,81 @@
+---
+import type { ServicePageData } from "@lib/types";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+
+interface Props {
+  service: ServicePageData;
+}
+
+const { service } = Astro.props;
+---
+
+<section class="section bg-white py-section-sm">
+  <div class="grid sm:grid-cols-2 sm:gap-x-10">
+    <SectionHeading
+      title={service.pageHeading}
+      subtitle={service.pageSubtitle ?? undefined}
+      level={2}
+      small
+      left
+      class="sm:col-span-2"
+    />
+
+    {
+      service.description?.map((block) => (
+        <p class="sm:col-span-2 max-w-prose mb-8">
+          {block.children.map((span) =>
+            span.marks.includes("strong") ? (
+              <span class="font-semibold">{span.text}</span>
+            ) : (
+              span.text
+            ),
+          )}
+        </p>
+      ))
+    }
+
+    {
+      service.featureLists.map((list) => (
+        <section class="not-last:max-sm:mb-8">
+          <h3 class="font-sans font-semibold text-xl mb-2">{list.title}</h3>
+          <ul class="space-y-3">
+            {list.items.map((item) => (
+              <li class="flex gap-2">
+                {item.emoji && <span aria-hidden="true">{item.emoji}</span>}
+                <p class="text-pretty">
+                  <span class="font-semibold">{item.title}</span>
+                  {item.description &&
+                    (item.description.startsWith(" -") ? (
+                      <>&nbsp;{item.description}</>
+                    ) : (
+                      item.description
+                    ))}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</section>
+
+{
+  (service.ctaText || service.cardButtonText) && (
+    <section class="section bg-white py-section-sm">
+      <div class="flex flex-col items-center text-center gap-6">
+        {service.ctaText && (
+          <p class="text-title-sm font-serif ">📮 {service.ctaText}</p>
+        )}
+        {service.cardButtonText && (
+          <a
+            href={service.ctaHref ? `/${service.ctaHref}` : "#contact"}
+            class="btn btn-solid"
+          >
+            {service.cardButtonText}
+          </a>
+        )}
+      </div>
+    </section>
+  )
+}

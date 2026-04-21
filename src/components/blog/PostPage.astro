@@ -1,0 +1,93 @@
+---
+import { Image } from "astro:assets";
+import type { Post } from "@lib/types";
+import type { Locale } from "@i18n/config";
+import { t } from "@i18n/ui";
+import { localePrefix } from "@i18n/utils";
+import { blogPostSchema } from "@lib/schema";
+import SchemaOrg from "@components/seo/SchemaOrg.astro";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import BlogList from "@components/blog/BlogList.astro";
+import PostBody from "@components/blog/PostBody.astro";
+import ContactSection from "@components/contact/ContactSection.astro";
+
+interface Props {
+  post: Post;
+  lang: Locale;
+  relatedPosts: Post[];
+  blogSlug: string;
+}
+
+const { post, lang, relatedPosts, blogSlug } = Astro.props;
+const origin = Astro.url.origin;
+const prefix = localePrefix(lang);
+const blogUrl = `${origin}${prefix}/${blogSlug}`;
+const pageUrl = String(Astro.url);
+const breadcrumbs = [
+  { name: "Home", url: origin },
+  { name: t(lang, "blog.pageTitle"), url: blogUrl },
+  { name: post.title, url: pageUrl },
+];
+
+const d = new Date(post.publishedAt);
+const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`;
+---
+
+<SchemaOrg schema={blogPostSchema(post, pageUrl, lang, breadcrumbs)} />
+
+<section class="section bg-white lg:py-section-sm">
+  <div>
+    <SectionHeading title={post.title} level={1} big left smallMargin />
+    <div class="flex items-center gap-4 text-sm text-gray-500">
+      <time datetime={post.publishedAt}>{date}</time>
+      {post.tags.map((tag) => <span class="text-accent">{tag.name}</span>)}
+    </div>
+  </div>
+</section>
+
+{
+  post.mainImage && (
+    <div class="section py-0 pb-section-xs">
+      <div>
+        <div class="rounded-xl overflow-hidden aspect-video">
+          <Image
+            src={post.mainImage}
+            alt={post.mainImageAlt ?? post.title}
+            width={1200}
+            height={675}
+            loading="eager"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+{
+  post.body && post.body.length > 0 && (
+    <section class="section bg-white">
+      <div>
+        <PostBody body={post.body} {lang} {blogSlug} />
+      </div>
+    </section>
+  )
+}
+
+{
+  relatedPosts.length > 0 && (
+    <section class="section bg-gray-100">
+      <div>
+        <SectionHeading
+          title={t(lang, "blog.relatedPosts")}
+          level={2}
+          left
+          smallMargin
+        />
+        <BlogList posts={relatedPosts} {lang} {blogSlug} />
+      </div>
+    </section>
+  )
+}
+
+<ContactSection {lang} />

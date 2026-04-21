@@ -1,0 +1,33 @@
+---
+import Layout from "@layouts/Layout.astro";
+import ListingsPage from "@components/listings/ListingsPage.astro";
+import { DEFAULT_LOCALE, LOCALES } from "@i18n/config";
+import { localePrefix } from "@i18n/utils";
+import { t } from "@i18n/ui";
+import { getPageContent, getListingsSlugs, sanityOgImage } from "@lib/queries";
+import type { Locale } from "@i18n/config";
+
+const lang = DEFAULT_LOCALE;
+
+const [seo, listingsSlugs] = await Promise.all([
+  getPageContent(lang, "listings"),
+  getListingsSlugs(),
+]);
+
+const alternateUrls = Object.fromEntries(
+  LOCALES.map((l) => {
+    const slug = l === DEFAULT_LOCALE ? "listings" : (listingsSlugs?.[l] ?? "listings");
+    return [l, `${Astro.url.origin}${localePrefix(l)}/${slug}`];
+  })
+) as Record<Locale, string>;
+---
+
+<Layout
+  title={seo?.metaTitle ?? t(lang, "listings.pageTitle")}
+  description={seo?.metaDescription ?? ""}
+  {lang}
+  {alternateUrls}
+  ogImage={sanityOgImage(seo?.ogImageUrl)}
+>
+  <ListingsPage {lang} />
+</Layout>

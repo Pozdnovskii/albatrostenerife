@@ -1,0 +1,35 @@
+---
+import Layout from "@layouts/Layout.astro";
+import HomePage from "@components/home/HomePage.astro";
+import SchemaOrg from "@components/seo/SchemaOrg.astro";
+import { LOCALES, DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { buildAlternateUrls } from "@i18n/utils";
+import { getHomepageSeo, getContactInfo, getReviewCount, sanityOgImage } from "@lib/queries";
+import { homeSchema } from "@lib/schema";
+
+export function getStaticPaths() {
+  return LOCALES.filter((l) => l !== DEFAULT_LOCALE).map((lang) => ({
+    params: { lang },
+  }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+const [seo, contact, reviewCount] = await Promise.all([
+  getHomepageSeo(lang),
+  getContactInfo(lang),
+  getReviewCount(),
+]);
+const alternateUrls = buildAlternateUrls(Astro.url.origin);
+---
+
+<Layout
+  title={seo?.metaTitle ?? "Albatros Tenerife"}
+  description={seo?.metaDescription ?? ""}
+  {lang}
+  alternateUrls={alternateUrls}
+  ogImage={sanityOgImage(seo?.ogImageUrl)}
+>
+  <SchemaOrg schema={homeSchema({ ...(contact ?? {}), reviewCount })} slot="head" />
+  <HomePage {lang} />
+</Layout>
