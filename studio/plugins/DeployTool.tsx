@@ -4,7 +4,7 @@ import { RocketIcon } from "@sanity/icons";
 
 type Status = "idle" | "deploying" | "success" | "error";
 
-const HOOK_URL = import.meta.env.SANITY_STUDIO_DEPLOY_HOOK as string | undefined;
+const HOOK_URL = import.meta.env.PUBLIC_SANITY_STUDIO_DEPLOY_HOOK as string | undefined;
 
 export function DeployTool() {
   const [status, setStatus] = useState<Status>("idle");

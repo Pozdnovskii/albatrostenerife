@@ -20,6 +20,15 @@ export const property = defineType({
   ],
 
   fields: [
+    defineField({
+      name: "hidden",
+      title: "Hide from site",
+      description: "If checked, this property will not appear on the website",
+      type: "boolean",
+      initialValue: false,
+      group: "display",
+    }),
+
     translatedField("title", "Title"),
 
     // ── SEO ──────────────────────────────────────────────────────────────────

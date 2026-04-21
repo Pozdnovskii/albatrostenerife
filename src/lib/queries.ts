@@ -25,7 +25,9 @@ export function slugsProjection(field = "slug") {
 }
 
 /** Converts a Sanity asset URL to an og:image URL (1200×630, jpg). */
-export function sanityOgImage(url: string | null | undefined): string | undefined {
+export function sanityOgImage(
+  url: string | null | undefined,
+): string | undefined {
   if (!url) return undefined;
   return `${url}?w=1200&h=630&fit=crop&fm=jpg&q=85`;
 }
@@ -37,8 +39,14 @@ export function sanityOgImage(url: string | null | undefined): string | undefine
 export async function getAllPaths(): Promise<UnifiedPath[]> {
   const result = await sanityClient.fetch<{
     pages: { enSlug: string | null; slugs: Partial<Record<Locale, string>> }[];
-    services: { enSlug: string | null; slugs: Partial<Record<Locale, string>> }[];
-    properties: { enSlug: string | null; slugs: Partial<Record<Locale, string>> }[];
+    services: {
+      enSlug: string | null;
+      slugs: Partial<Record<Locale, string>>;
+    }[];
+    properties: {
+      enSlug: string | null;
+      slugs: Partial<Record<Locale, string>>;
+    }[];
     posts: { enSlug: string | null; slugs: Partial<Record<Locale, string>> }[];
   }>(`{
     "pages": *[_type == "seoSettings" && isHomepage != true]{
@@ -62,23 +70,41 @@ export async function getAllPaths(): Promise<UnifiedPath[]> {
   return [
     ...result.pages
       .filter((p) => !!p.enSlug)
-      .map((p) => ({ type: "page" as const, enSlug: p.enSlug!, slugs: p.slugs })),
+      .map((p) => ({
+        type: "page" as const,
+        enSlug: p.enSlug!,
+        slugs: p.slugs,
+      })),
     ...result.services
       .filter((s) => !!s.enSlug)
-      .map((s) => ({ type: "service" as const, enSlug: s.enSlug!, slugs: s.slugs })),
+      .map((s) => ({
+        type: "service" as const,
+        enSlug: s.enSlug!,
+        slugs: s.slugs,
+      })),
     ...result.properties
       .filter((p) => !!p.enSlug)
-      .map((p) => ({ type: "property" as const, enSlug: p.enSlug!, slugs: p.slugs })),
+      .map((p) => ({
+        type: "property" as const,
+        enSlug: p.enSlug!,
+        slugs: p.slugs,
+      })),
     ...result.posts
       .filter((p) => !!p.enSlug)
-      .map((p) => ({ type: "post" as const, enSlug: p.enSlug!, slugs: p.slugs })),
+      .map((p) => ({
+        type: "post" as const,
+        enSlug: p.enSlug!,
+        slugs: p.slugs,
+      })),
   ];
 }
 
 // ── Page content ──────────────────────────────────────────────────────────────
 
 /** Homepage SEO — identified by isHomepage flag, not a slug. */
-export async function getHomepageSeo(lang: Locale): Promise<PageContent | null> {
+export async function getHomepageSeo(
+  lang: Locale,
+): Promise<PageContent | null> {
   return sanityClient.fetch(
     `*[_type == "seoSettings" && isHomepage == true][0]{
       title,
@@ -86,11 +112,14 @@ export async function getHomepageSeo(lang: Locale): Promise<PageContent | null> 
       "metaDescription": translations[$lang].metaDescription,
       "ogImageUrl":      ogImage.asset->url
     }`,
-    { lang }
+    { lang },
   );
 }
 
-export async function getPageContent(lang: Locale, enSlug: string): Promise<PageContent | null> {
+export async function getPageContent(
+  lang: Locale,
+  enSlug: string,
+): Promise<PageContent | null> {
   return sanityClient.fetch(
     `*[_type == "seoSettings" && translations.en.slug.current == $enSlug][0]{
       title,
@@ -98,11 +127,14 @@ export async function getPageContent(lang: Locale, enSlug: string): Promise<Page
       "metaDescription": translations[$lang].metaDescription,
       "ogImageUrl":      ogImage.asset->url
     }`,
-    { lang, enSlug }
+    { lang, enSlug },
   );
 }
 
-export async function getServicePageData(lang: Locale, enSlug: string): Promise<ServicePageData | null> {
+export async function getServicePageData(
+  lang: Locale,
+  enSlug: string,
+): Promise<ServicePageData | null> {
   return sanityClient.fetch(
     `*[_type == "service" && slug.en.current == $enSlug][0]{
       "title":           coalesce(pageTitle[$lang], pageTitle.en),
@@ -129,7 +161,7 @@ export async function getServicePageData(lang: Locale, enSlug: string): Promise<
       "imageDesktop":    imageDesktop.asset->{ "url": url, "width": metadata.dimensions.width, "height": metadata.dimensions.height },
       "imageMobile":     imageMobile.asset->{ "url": url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }
     }`,
-    { lang, enSlug }
+    { lang, enSlug },
   );
 }
 
@@ -142,7 +174,7 @@ export async function getContactInfo(lang: Locale) {
       address, phone, email, advisorName,
       "advisorTitle": coalesce(advisorTitle[$lang], advisorTitle.en)
     }`,
-    { lang }
+    { lang },
   );
 }
 
@@ -158,7 +190,7 @@ export async function getReviews(lang: Locale): Promise<Review[]> {
       "text":     coalesce(text[$lang], text.en),
       "photoUrl": photo.asset->url
     }`,
-    { lang }
+    { lang },
   );
 }
 
@@ -171,30 +203,38 @@ export async function getActivities(lang: Locale): Promise<Activity[]> {
       "imageUrl":   image.asset->url,
       "alt":        coalesce(image.alt[$lang], image.alt.en)
     }`,
-    { lang }
+    { lang },
   );
 }
 
-export async function getLegalPageData(lang: Locale, key: string): Promise<LegalPageData | null> {
+export async function getLegalPageData(
+  lang: Locale,
+  key: string,
+): Promise<LegalPageData | null> {
   return sanityClient.fetch(
     `*[_type == "legalPage" && key == $key][0]{
       "heading": coalesce(heading[$lang], heading.en),
       "body":    coalesce(body[$lang], body.en)
     }`,
-    { lang, key }
+    { lang, key },
   );
 }
 
 /** Per-language slugs for the listings index page (from seoSettings). */
-export async function getListingsSlugs(): Promise<Partial<Record<Locale, string>>> {
+export async function getListingsSlugs(): Promise<
+  Partial<Record<Locale, string>>
+> {
   return sanityClient.fetch(
     `*[_type == "seoSettings" && translations.en.slug.current == "listings"][0]{
       ${LOCALES.map((l) => `"${l}": translations.${l}.slug.current`).join(", ")}
-    }`
+    }`,
   );
 }
 
-export async function getPropertyDetail(lang: Locale, enSlug: string): Promise<Property | null> {
+export async function getPropertyDetail(
+  lang: Locale,
+  enSlug: string,
+): Promise<Property | null> {
   return sanityClient.fetch(
     `*[_type == "property" && slug.en.current == $enSlug][0]{
       "title":           coalesce(title[$lang], title.en),
@@ -216,17 +256,35 @@ export async function getPropertyDetail(lang: Locale, enSlug: string): Promise<P
       videoUrl,
       virtualTourUrl
     }`,
-    { lang, enSlug }
+    { lang, enSlug },
   );
 }
 
-export async function getProperties(lang: Locale, limit?: number, excludeEnSlug?: string): Promise<Property[]> {
+export async function getProperties(
+  lang: Locale,
+  limit?: number,
+  excludeEnSlug?: string,
+): Promise<Property[]> {
   const filter = excludeEnSlug
-    ? `*[_type == "property" && slug.en.current != $excludeEnSlug]`
-    : `*[_type == "property"]`;
+    ? `*[_type == "property" && hidden != true && slug.en.current != $excludeEnSlug]`
+    : `*[_type == "property" && hidden != true]`;
   const slice = limit != null ? `[0...$limit]` : ``;
   return sanityClient.fetch(
-    `${filter} | order(coalesce(pinnedToTop, false) desc, coalesce(featured, false) desc, coalesce(pinOrder, 9999) asc, _createdAt desc)${slice} {
+    `${filter} | order(
+      select(
+        "off-market" in coalesce(labels[]->key.current, [])                                                                                              => 9,
+        status->key.current == "sale" && !("sold" in coalesce(labels[]->key.current, [])) && !("reserved" in coalesce(labels[]->key.current, []))        => 1,
+        status->key.current == "sale" && "reserved" in coalesce(labels[]->key.current, [])                                                              => 2,
+        status->key.current == "rent" && !("rented" in coalesce(labels[]->key.current, [])) && !("reserved" in coalesce(labels[]->key.current, []))      => 3,
+        status->key.current == "rent" && "reserved" in coalesce(labels[]->key.current, [])                                                              => 4,
+        status->key.current == "sale" && "sold"     in coalesce(labels[]->key.current, [])                                                              => 5,
+        status->key.current == "rent" && "rented"   in coalesce(labels[]->key.current, [])                                                              => 6,
+        9
+      ) asc,
+      coalesce(pinnedToTop, false) desc,
+      coalesce(pinOrder, 9999) asc,
+      _createdAt desc
+    )${slice} {
       "title":        coalesce(title[$lang], title.en),
       price,
       bedrooms,
@@ -239,21 +297,24 @@ export async function getProperties(lang: Locale, limit?: number, excludeEnSlug?
       "propertyType": propertyType->{ "name": coalesce(name[$lang], name.en) },
       "images":       gallery[0..2][].asset->url
     }`,
-    { lang, limit, excludeEnSlug }
+    { lang, limit, excludeEnSlug },
   );
 }
-
 
 /** Per-language slugs for the blog index page (from seoSettings). */
 export async function getBlogSlugs(): Promise<Partial<Record<Locale, string>>> {
   return sanityClient.fetch(
     `*[_type == "seoSettings" && translations.en.slug.current == "blog"][0]{
       ${LOCALES.map((l) => `"${l}": translations.${l}.slug.current`).join(", ")}
-    }`
+    }`,
   );
 }
 
-export async function getPosts(lang: Locale, limit?: number, excludeEnSlug?: string): Promise<Post[]> {
+export async function getPosts(
+  lang: Locale,
+  limit?: number,
+  excludeEnSlug?: string,
+): Promise<Post[]> {
   const filter = excludeEnSlug
     ? `*[_type == "blogPost" && slug.en.current != $excludeEnSlug]`
     : `*[_type == "blogPost"]`;
@@ -268,11 +329,14 @@ export async function getPosts(lang: Locale, limit?: number, excludeEnSlug?: str
       "tags":         coalesce(tags[]->{  "name": coalesce(name[$lang], name.en) }, []),
       "slug":         coalesce(slug[$lang].current, slug.en.current)
     }`,
-    { lang, limit, excludeEnSlug }
+    { lang, limit, excludeEnSlug },
   );
 }
 
-export async function getPostDetail(lang: Locale, enSlug: string): Promise<Post | null> {
+export async function getPostDetail(
+  lang: Locale,
+  enSlug: string,
+): Promise<Post | null> {
   return sanityClient.fetch(
     `*[_type == "blogPost" && slug.en.current == $enSlug][0]{
       "title":           coalesce(title[$lang], title.en),
@@ -302,7 +366,7 @@ export async function getPostDetail(lang: Locale, enSlug: string): Promise<Post 
       "metaTitle":       coalesce(metaTitle[$lang], metaTitle.en),
       "metaDescription": coalesce(metaDescription[$lang], metaDescription.en)
     }`,
-    { lang, enSlug }
+    { lang, enSlug },
   );
 }
 
@@ -315,6 +379,6 @@ export async function getServices(lang: Locale): Promise<ServiceCard[]> {
       "cardIconUrl":     cardIcon.asset->url,
       "slug":            coalesce(slug[$lang].current, slug.en.current)
     }`,
-    { lang }
+    { lang },
   );
 }
