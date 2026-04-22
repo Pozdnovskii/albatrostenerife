@@ -117,6 +117,12 @@ export type Post = {
   // — detail-only (absent on card queries) —
   body?: unknown[] | null;
   faq?: { question: string; answer: string }[] | null;
+  ctaTitle?: string | null;
+  ctaText?: unknown[] | null;
+  ctaButton?: {
+    label: string;
+    page: { _type: string; isHomepage: boolean; slug: string | null } | null;
+  } | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
 };

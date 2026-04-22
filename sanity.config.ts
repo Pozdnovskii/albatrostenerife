@@ -20,6 +20,7 @@ import { legalPage } from "@studio/schemas/legalPage";
 import { blogCategory } from "@studio/schemas/blogCategory";
 import { blogTag } from "@studio/schemas/blogTag";
 import { blogPost } from "@studio/schemas/blogPost";
+import { blogCta } from "@studio/schemas/blogCta";
 import { contactSubmission } from "@studio/schemas/contactSubmission";
 
 export default defineConfig({
@@ -60,6 +61,7 @@ export default defineConfig({
                     S.divider(),
                     S.documentTypeListItem("blogCategory").title("Categories"),
                     S.documentTypeListItem("blogTag").title("Tags"),
+                    S.documentTypeListItem("blogCta").title("CTA Buttons"),
                   ]),
               ),
             S.divider(),
@@ -104,6 +106,7 @@ export default defineConfig({
       blogCategory,
       blogTag,
       blogPost,
+      blogCta,
       contactSubmission,
     ],
   },

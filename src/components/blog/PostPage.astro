@@ -10,6 +10,8 @@ import SectionHeading from "@components/ui/SectionHeading.astro";
 import BlogList from "@components/blog/BlogList.astro";
 import PostBody from "@components/blog/PostBody.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
+import PostCta from "@components/blog/PostCta.astro";
+import { getContactInfo } from "@lib/queries";
 import advisorPhoto from "@assets/ivan_uher.webp";
 
 interface Props {
@@ -20,6 +22,7 @@ interface Props {
 }
 
 const { post, lang, relatedPosts, blogSlug } = Astro.props;
+const contact = post.ctaTitle ? await getContactInfo(lang) : null;
 const origin = Astro.url.origin;
 const prefix = localePrefix(lang);
 const blogUrl = `${origin}${prefix}/${blogSlug}`;
@@ -98,7 +101,7 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
 
 {
   post.body && post.body.length > 0 && (
-    <section class="section bg-white pt-0">
+    <section class="section bg-white pt-0 pb-section-xs">
       <div class="max-w-5xl prose prose-a:text-accent">
         <PostBody body={post.body} {lang} {blogSlug} />
         {post.faq && post.faq.length > 0 && (
@@ -120,7 +123,10 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
   )
 }
 
-<ContactSection {lang} left class="[&>div]:max-w-5xl" />
+{post.ctaTitle
+  ? <PostCta {post} {lang} {contact} {blogSlug} />
+  : <ContactSection {lang} left class="[&>div]:max-w-5xl" />
+}
 
 {
   relatedPosts.length > 0 && (

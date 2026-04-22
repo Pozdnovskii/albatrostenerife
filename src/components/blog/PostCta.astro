@@ -1,0 +1,133 @@
+---
+import { t } from "@i18n/ui";
+import { localePrefix } from "@i18n/utils";
+import { DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import type { Post, ContactInfo } from "@lib/types";
+
+interface Props {
+  post: Post;
+  lang?: Locale;
+  contact: ContactInfo | null;
+  blogSlug?: string;
+}
+
+const { post, lang = DEFAULT_LOCALE, contact, blogSlug = "blog" } = Astro.props;
+const prefix = localePrefix(lang);
+
+// CTA button href
+const page = post.ctaButton?.page ?? null;
+const ctaHref = page
+  ? page.isHomepage
+    ? `${prefix}/`
+    : `${prefix}/${page.slug ?? ""}`
+  : null;
+
+// WhatsApp link
+const waHref = contact
+  ? `https://wa.me/${contact.phone.replace(/\D/g, "")}`
+  : null;
+
+// Minimal portable text renderer — paragraphs with bold, italic, internal + external links
+type PTSpan = { _key: string; _type: "span"; text: string; marks: string[] };
+type InternalRef = {
+  _type: string;
+  isHomepage: boolean;
+  slug: string | null;
+} | null;
+type PTLink = {
+  _key: string;
+  _type: string;
+  href?: string;
+  blank?: boolean;
+  internalRef?: InternalRef;
+};
+type PTBlock = {
+  _key: string;
+  _type: "block";
+  children: PTSpan[];
+  markDefs: PTLink[];
+};
+
+function resolveHref(link: PTLink): string {
+  const ref = link.internalRef;
+  if (ref) {
+    if (ref.isHomepage) return `${prefix}/`;
+    if (ref._type === "blogPost")
+      return `${prefix}/${blogSlug}/${ref.slug ?? ""}`;
+    return `${prefix}/${ref.slug ?? ""}`;
+  }
+  return link.href ?? "#";
+}
+
+function inlineHTML(children: PTSpan[], markDefs: PTLink[]): string {
+  return children
+    .map((span) => {
+      let html = span.text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      for (const mark of span.marks) {
+        const link = markDefs.find((m) => m._key === mark);
+        if (link) {
+          const href = resolveHref(link);
+          const extras = link.blank
+            ? ' target="_blank" rel="noopener noreferrer"'
+            : "";
+          html = `<a href="${href}"${extras} class="underline hover:no-underline transition-colors">${html}</a>`;
+        } else if (mark === "strong") html = `<strong>${html}</strong>`;
+        else if (mark === "em") html = `<em>${html}</em>`;
+      }
+      return html;
+    })
+    .join("");
+}
+---
+
+<section class="section bg-white lg:pt-section-sm">
+  <div class="max-w-5xl">
+    <div
+      class="bg-gray-50 rounded-lg p-4 border border-accent-lighter/66 sm:p-svw sm:text-center md:flex md:flex-col md:items-center"
+    >
+      <h2 class="text-2xl font-medium mb-4 md:text-3xl">{post.ctaTitle}</h2>
+
+      {
+        post.ctaText &&
+          (post.ctaText as PTBlock[]).map((block) => (
+            <p
+              class="text-gray-700 mb-3 last-of-type:mb-6 md:max-w-prose"
+              set:html={inlineHTML(block.children, block.markDefs)}
+            />
+          ))
+      }
+
+      <div
+        class="flex flex-col gap-y-3 mb-3 max-sm:*:w-auto sm:gap-x-4 sm:flex-row justify-center"
+      >
+        {
+          waHref && (
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-solid"
+            >
+              WhatsApp
+            </a>
+          )
+        }
+        {
+          ctaHref && post.ctaButton?.label && (
+            <a href={ctaHref} class="btn btn-outline">
+              {post.ctaButton.label}
+            </a>
+          )
+        }
+      </div>
+
+      <span class="block text-sm text-gray-500 leading-tight"
+        >{t(lang, "blog.ctaReplyNote")}</span
+      >
+    </div>
+  </div>
+</section>

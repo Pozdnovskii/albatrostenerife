@@ -167,6 +167,16 @@ export async function getServicePageData(
 
 // ── Home sections ─────────────────────────────────────────────────────────────
 
+/** Resolves the lang-specific slug for the "contact" seoSettings page. */
+export async function getContactPageSlug(lang: Locale): Promise<string | null> {
+  return sanityClient.fetch(
+    `*[_type == "seoSettings" && translations.en.slug.current == "contact"][0]{
+      "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
+    }.slug`,
+    { lang },
+  );
+}
+
 export async function getContactInfo(lang: Locale) {
   return sanityClient.fetch<ContactInfo | null>(
     `*[_type == "contactInfo"][0]{
@@ -348,7 +358,8 @@ export async function getPostDetail(
       "slug":            coalesce(slug[$lang].current, slug.en.current),
       "body":            coalesce(body[$lang], body.en)[]{
         ...,
-        _type == "image" => { ..., "asset": asset->{ url } },
+        _type == "image"    => { ..., "asset": asset->{ url } },
+        _type == "photoRow" => { "left": left{ "asset": asset->{ url }, alt }, "right": right{ "asset": asset->{ url }, alt } },
         markDefs[]{
           ...,
           "internalRef": internalLink->{
@@ -367,6 +378,39 @@ export async function getPostDetail(
       "faq":             faq[]{
         "question": coalesce(question[$lang], question.en),
         "answer":   coalesce(answer[$lang], answer.en)
+      },
+      "ctaTitle":        coalesce(ctaTitle[$lang], ctaTitle.en),
+      "ctaText":         coalesce(ctaText[$lang], ctaText.en)[]{
+        _key, _type, style,
+        children[]{ _key, _type, text, marks },
+        markDefs[]{
+          _key, _type, href, blank,
+          "internalRef": internalLink->{
+            _type,
+            "isHomepage": select(_type == "seoSettings" => isHomepage, false),
+            "slug": select(
+              _type == "seoSettings" => select(
+                isHomepage == true => null,
+                coalesce(translations[$lang].slug.current, translations.en.slug.current)
+              ),
+              coalesce(slug[$lang].current, slug.en.current)
+            )
+          }
+        }
+      },
+      "ctaButton":       ctaButton->{
+        "label": coalesce(label[$lang], label.en),
+        "page":  page->{
+          _type,
+          "isHomepage": select(_type == "seoSettings" => isHomepage, false),
+          "slug": select(
+            _type == "seoSettings" => select(
+              isHomepage == true => null,
+              coalesce(translations[$lang].slug.current, translations.en.slug.current)
+            ),
+            coalesce(slug[$lang].current, slug.en.current)
+          )
+        }
       },
       "metaTitle":       coalesce(metaTitle[$lang], metaTitle.en),
       "metaDescription": coalesce(metaDescription[$lang], metaDescription.en)

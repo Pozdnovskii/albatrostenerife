@@ -37,16 +37,25 @@ type ImageBlock = {
   caption?: string;
 };
 
-type Block = TextBlock | ImageBlock;
+type PhotoSide = { asset: { url: string } | null; alt?: string } | null;
+type PhotoRowBlock = {
+  _key: string;
+  _type: "photoRow";
+  left: PhotoSide;
+  right: PhotoSide;
+};
+
+type Block = TextBlock | ImageBlock | PhotoRowBlock;
 
 type TextChunk = { kind: "block"; block: TextBlock };
 type ImageChunk = { kind: "image"; block: ImageBlock };
+type PhotoRowChunk = { kind: "photoRow"; block: PhotoRowBlock };
 type ListChunk = {
   kind: "list";
   listItem: "bullet" | "number";
   items: TextBlock[];
 };
-type Chunk = TextChunk | ImageChunk | ListChunk;
+type Chunk = TextChunk | ImageChunk | PhotoRowChunk | ListChunk;
 
 interface Props {
   body: unknown[];
@@ -106,6 +115,8 @@ const chunks: Chunk[] = [];
 for (const raw of body as Block[]) {
   if (raw._type === "image") {
     chunks.push({ kind: "image", block: raw });
+  } else if (raw._type === "photoRow") {
+    chunks.push({ kind: "photoRow", block: raw });
   } else if (raw._type === "block" && raw.listItem) {
     const last = chunks.at(-1);
     if (last?.kind === "list" && last.listItem === raw.listItem) {
@@ -140,6 +151,35 @@ for (const raw of body as Block[]) {
       );
     }
 
+    // Two photos
+    if (chunk.kind === "photoRow") {
+      const { left, right } = chunk.block;
+      return (
+        <div class="not-prose grid gap-y-2 md:grid-cols-2 md:gap-x-4 my-6">
+          {left?.asset?.url && (
+            <Image
+              src={left.asset.url}
+              alt={left.alt ?? ""}
+              width={600}
+              height={450}
+              loading="lazy"
+              class="w-full h-full object-cover rounded-xl"
+            />
+          )}
+          {right?.asset?.url && (
+            <Image
+              src={right.asset.url}
+              alt={right.alt ?? ""}
+              width={600}
+              height={450}
+              loading="lazy"
+              class="w-full h-full object-cover rounded-xl"
+            />
+          )}
+        </div>
+      );
+    }
+
     // List
     if (chunk.kind === "list") {
       const Tag = chunk.listItem === "bullet" ? "ul" : "ol";
@@ -153,7 +193,7 @@ for (const raw of body as Block[]) {
     }
 
     // Text block
-    const { block } = chunk;
+    const { block } = chunk as TextChunk;
     const html = inlineHTML(block.children, block.markDefs);
 
     if (block.style === "h2") return <h2 set:html={html} />;

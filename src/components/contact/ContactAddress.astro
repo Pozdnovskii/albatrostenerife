@@ -7,12 +7,13 @@ interface Props {
   contact: ContactInfo;
   class?: string;
   linksOnly?: boolean;
+  emailHref?: string;
 }
 
-const { contact, class: cls, linksOnly = false } = Astro.props;
+const { contact, class: cls, linksOnly = false, emailHref } = Astro.props;
 
 const telHref = `https://wa.me/${contact.phone.replace(/\D/g, "")}`;
-const mailHref = `mailto:${contact.email}`;
+const mailHref = emailHref ?? `mailto:${contact.email}`;
 ---
 
 <address class:list={[cls]}>

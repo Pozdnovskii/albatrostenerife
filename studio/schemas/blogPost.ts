@@ -17,6 +17,7 @@ export const blogPost = defineType({
     { name: "seo", title: "SEO" },
     { name: "meta", title: "Meta" },
     { name: "content", title: "Content" },
+    { name: "cta", title: "CTA" },
   ],
 
   fields: [
@@ -180,6 +181,33 @@ export const blogPost = defineType({
                 }),
               ],
             }),
+            defineArrayMember({
+              type: "object",
+              name: "photoRow",
+              title: "Two Photos",
+              fields: [
+                defineField({
+                  name: "left",
+                  title: "Left photo",
+                  type: "image",
+                  fields: [
+                    defineField({ name: "alt", title: "Alt text", type: "string" }),
+                  ],
+                }),
+                defineField({
+                  name: "right",
+                  title: "Right photo",
+                  type: "image",
+                  fields: [
+                    defineField({ name: "alt", title: "Alt text", type: "string" }),
+                  ],
+                }),
+              ],
+              preview: {
+                select: { media: "left" },
+                prepare: ({ media }) => ({ title: "Two Photos", media }),
+              },
+            }),
           ],
         }),
       ),
@@ -206,6 +234,79 @@ export const blogPost = defineType({
           },
         }),
       ],
+    }),
+
+    // ── CTA ───────────────────────────────────────────────────────────────────
+    translatedField("ctaTitle", "CTA Title", { required: false, group: "cta" }),
+
+    defineField({
+      name: "ctaText",
+      title: "CTA Text",
+      type: "object",
+      group: "cta",
+      fields: LANGUAGES.map((lang) =>
+        defineField({
+          name: lang,
+          title: LANGUAGE_TITLES[lang as Locale],
+          type: "array",
+          of: [
+            defineArrayMember({
+              type: "block",
+              styles: [{ title: "Normal", value: "normal" }],
+              lists: [],
+              marks: {
+                decorators: [
+                  { title: "Bold", value: "strong" },
+                  { title: "Italic", value: "em" },
+                ],
+                annotations: [
+                  defineField({
+                    name: "link",
+                    type: "object",
+                    title: "Link",
+                    fields: [
+                      defineField({
+                        name: "internalLink",
+                        type: "reference",
+                        title: "Internal page",
+                        to: [
+                          { type: "blogPost" },
+                          { type: "service" },
+                          { type: "seoSettings" },
+                        ],
+                        options: { disableNew: true },
+                      }),
+                      defineField({
+                        name: "href",
+                        type: "url",
+                        title: "External URL",
+                        description: "Use only if linking outside the site",
+                        validation: (r) =>
+                          r.uri({ scheme: ["http", "https", "mailto", "tel"] }),
+                      }),
+                      defineField({
+                        name: "blank",
+                        type: "boolean",
+                        title: "Open in new tab",
+                        initialValue: false,
+                      }),
+                    ],
+                  }),
+                ],
+              },
+            }),
+          ],
+        }),
+      ),
+    }),
+
+    defineField({
+      name: "ctaButton",
+      title: "CTA Button",
+      type: "reference",
+      group: "cta",
+      to: [{ type: "blogCta" }],
+      options: { disableNew: false },
     }),
   ],
 

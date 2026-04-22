@@ -7,9 +7,10 @@ import ContactAddress from "@components/contact/ContactAddress.astro";
 interface Props {
   agentQuote: string;
   contact: ContactInfo;
+  emailHref?: string;
 }
 
-const { agentQuote, contact } = Astro.props;
+const { agentQuote, contact, emailHref } = Astro.props;
 ---
 
 <section class="section bg-white pt-section-sm">
@@ -28,7 +29,7 @@ const { agentQuote, contact } = Astro.props;
         "{agentQuote}"
       </blockquote>
 
-      <ContactAddress {contact} linksOnly />
+      <ContactAddress {contact} {emailHref} linksOnly />
     </div>
   </div>
 </section>
