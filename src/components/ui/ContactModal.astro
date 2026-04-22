@@ -5,9 +5,10 @@ import ContactForm from "@components/contact/ContactForm.astro";
 
 interface Props {
   lang?: Locale;
+  showAptNo?: boolean;
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
+const { lang = DEFAULT_LOCALE, showAptNo = false } = Astro.props;
 ---
 
 <dialog
@@ -22,7 +23,7 @@ const { lang = DEFAULT_LOCALE } = Astro.props;
   >
     ✕
   </button>
-  <ContactForm {lang} />
+  <ContactForm {lang} {showAptNo} />
 </dialog>
 
 <script>

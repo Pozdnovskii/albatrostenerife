@@ -5,9 +5,10 @@ import { t } from "@i18n/ui";
 
 interface Props {
   lang?: Locale;
+  showAptNo?: boolean;
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
+const { lang = DEFAULT_LOCALE, showAptNo = false } = Astro.props;
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
 const labelClass = "block font-medium mb-1";
@@ -79,6 +80,19 @@ const inputClass =
     />
   </div>
 
+  {showAptNo && (
+    <div class="sm:max-md:col-span-2 lg:col-span-2">
+      <label for="aptNo" class={labelClass}>Apt. No.</label>
+      <input
+        type="text"
+        id="aptNo"
+        name="aptNo"
+        placeholder="e.g. 3B"
+        class={inputClass}
+      />
+    </div>
+  )}
+
   <div class="sm:max-md:col-span-2 lg:col-span-2">
     <label for="message" class={labelClass}>{t(lang, "form.message")}</label>
     <textarea
@@ -110,7 +124,7 @@ const inputClass =
   <button
     id="form-submit"
     type="submit"
-    class="py-4 bg-accent/84 text-white text-lg cursor-pointer transition-colors rounded-lg sm:max-md:col-span-2 lg:col-span-2 hover:bg-accent disabled:opacity-60 disabled:cursor-not-allowed"
+    class="py-4 bg-accent text-white text-lg cursor-pointer transition-colors rounded-lg sm:max-md:col-span-2 lg:col-span-2 hover:bg-accent/84 disabled:opacity-60 disabled:cursor-not-allowed"
   >
     {t(lang, "form.submit")}
   </button>

@@ -3,6 +3,7 @@
 
 @theme {
   --color-accent: oklch(55% 0.14 70);
+  --color-accent-lighter: oklch(from var(--color-accent) 84% c h);
   --color-accent-darker: oklch(from var(--color-accent) 66% c h);
 
   --text-title: clamp(2rem, 1.5rem + 2.5svw, 3rem);

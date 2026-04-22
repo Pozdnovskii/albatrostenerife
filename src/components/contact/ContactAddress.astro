@@ -11,7 +11,7 @@ interface Props {
 
 const { contact, class: cls, linksOnly = false } = Astro.props;
 
-const telHref = `tel:${contact.phone.replace(/\s/g, "")}`;
+const telHref = `https://wa.me/${contact.phone.replace(/\D/g, "")}`;
 const mailHref = `mailto:${contact.email}`;
 ---
 

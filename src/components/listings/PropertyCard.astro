@@ -114,45 +114,31 @@ const price = property.price
       class="flex overflow-x-scroll snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>li]:snap-center [&>li]:shrink-0 [&>li]:w-full [&>li]:aspect-4/3 [&>li]:overflow-hidden"
     >
       {
-        property.images.map((url, i) => (
-          <li class="bg-gray-200">
-            <Image
-              src={url}
-              alt={i === 0 ? property.title : `${property.title} – ${i + 1}`}
-              width={640}
-              height={480}
-              loading="lazy"
-              class="w-full h-full object-cover transition-transform duration-500 group-has-[a:hover]:scale-105"
-            />
-          </li>
-        ))
+        property.images.map((url, i) => {
+          const isLast = i === property.images.length - 1;
+          return (
+            <li class="relative bg-gray-200">
+              <Image
+                src={url}
+                alt={i === 0 ? property.title : `${property.title} – ${i + 1}`}
+                width={640}
+                height={480}
+                loading="lazy"
+                class="w-full h-full object-cover transition-transform duration-500 group-has-[a:hover]:scale-105"
+              />
+              {isLast && property.images.length > 1 && (
+                <a
+                  href={href}
+                  class="absolute inset-0 z-1 px-[48px] flex flex-wrap justify-center items-center content-center gap-2 bg-black/60 backdrop-blur-xs text-xl text-white text-center transition-colors hover:bg-black/70 hover:text-accent-lighter"
+                >
+                  <span>📷 +{property.images.length} photos |</span>
+                  <span>View listing →</span>
+                </a>
+              )}
+            </li>
+          );
+        })
       }
-
-      <!-- view more slide -->
-      <li>
-        <a
-          href={href}
-          class="w-full h-full flex flex-col-reverse items-center justify-center gap-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors"
-        >
-          <span class="text-sm font-medium tracking-wide"
-            >{t(lang, "listings.viewMore")}</span
-          >
-          <svg
-            class="w-8 aspect-square"
-            viewBox="0 0 48 48"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="6" y="10" width="36" height="28" rx="2"></rect>
-            <circle cx="18" cy="22" r="4"></circle>
-            <path d="M6 32l9-8 7 6 6-5 14 11"></path>
-          </svg>
-        </a>
-      </li>
     </ul>
 
     <!-- prev / next -->
