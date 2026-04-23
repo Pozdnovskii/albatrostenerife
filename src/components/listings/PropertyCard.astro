@@ -114,30 +114,18 @@ const price = property.price
       class="flex overflow-x-scroll snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>li]:snap-center [&>li]:shrink-0 [&>li]:w-full [&>li]:aspect-4/3 [&>li]:overflow-hidden"
     >
       {
-        property.images.map((url, i) => {
-          const isLast = i === property.images.length - 1;
-          return (
-            <li class="relative bg-gray-200">
-              <Image
-                src={url}
-                alt={i === 0 ? property.title : `${property.title} – ${i + 1}`}
-                width={640}
-                height={480}
-                loading="lazy"
-                class="w-full h-full object-cover transition-transform duration-500 group-has-[a:hover]:scale-105"
-              />
-              {isLast && property.images.length > 1 && (
-                <a
-                  href={href}
-                  class="absolute inset-0 z-1 px-[48px] flex flex-wrap justify-center items-center content-center gap-2 bg-black/60 backdrop-blur-xs text-xl text-white text-center transition-colors hover:bg-black/70 hover:text-accent-lighter"
-                >
-                  <span>📷 +{property.images.length} photos |</span>
-                  <span>View listing →</span>
-                </a>
-              )}
-            </li>
-          );
-        })
+        property.images.map((url, i) => (
+          <li class="bg-gray-200">
+            <Image
+              src={url}
+              alt={i === 0 ? property.title : `${property.title} – ${i + 1}`}
+              width={640}
+              height={480}
+              loading="lazy"
+              class="w-full h-full object-cover transition-transform duration-500 group-has-[a:hover]:scale-105"
+            />
+          </li>
+        ))
       }
     </ul>
 
@@ -163,5 +151,5 @@ const price = property.price
   import { initSlider } from "@/scripts/slider";
   document
     .querySelectorAll<HTMLElement>("[data-prop-slider]")
-    .forEach((el) => initSlider(el));
+    .forEach((el) => initSlider(el, { infinite: true }));
 </script>

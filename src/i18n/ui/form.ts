@@ -2,10 +2,8 @@ import type { Locale } from "../config";
 
 export const form = {
   en: {
-    "form.firstName": "First Name",
+    "form.firstName": "Your Name",
     "form.firstName.placeholder": "Enter your name",
-    "form.lastName": "Last Name",
-    "form.lastName.placeholder": "Enter your last name",
     "form.email": "Email",
     "form.email.placeholder": "Enter your email",
     "form.phone": "Phone",
@@ -18,10 +16,8 @@ export const form = {
     "form.error": "Something went wrong. Please try again or contact us directly.",
   },
   cs: {
-    "form.firstName": "Jméno",
+    "form.firstName": "Vaše jméno",
     "form.firstName.placeholder": "Zadejte své jméno",
-    "form.lastName": "Příjmení",
-    "form.lastName.placeholder": "Zadejte své příjmení",
     "form.email": "E-mail",
     "form.email.placeholder": "Zadejte svůj e-mail",
     "form.phone": "Telefon",
@@ -31,10 +27,8 @@ export const form = {
     "form.submit": "Odeslat",
   },
   pl: {
-    "form.firstName": "Imię",
-    "form.firstName.placeholder": "Wpisz swoje imię i nazwisko",
-    "form.lastName": "Nazwisko",
-    "form.lastName.placeholder": "Wpisz swoje nazwisko",
+    "form.firstName": "Twoje imię",
+    "form.firstName.placeholder": "Wpisz swoje imię",
     "form.email": "E-mail",
     "form.email.placeholder": "Wprowadź swój adres e-mail",
     "form.phone": "Telefon",
@@ -44,10 +38,8 @@ export const form = {
     "form.submit": "Prześlij",
   },
   hu: {
-    "form.firstName": "Keresztnév",
+    "form.firstName": "Az Ön neve",
     "form.firstName.placeholder": "Írja be a nevét",
-    "form.lastName": "Vezetéknév",
-    "form.lastName.placeholder": "Írja be a vezetéknevét",
     "form.email": "E-mail",
     "form.email.placeholder": "Írja be az e-mail címét",
     "form.phone": "Telefon",
@@ -57,10 +49,8 @@ export const form = {
     "form.submit": "Küldje be a",
   },
   it: {
-    "form.firstName": "Nome",
+    "form.firstName": "Il tuo nome",
     "form.firstName.placeholder": "Inserire il proprio nome",
-    "form.lastName": "Cognome",
-    "form.lastName.placeholder": "Inserire il proprio cognome",
     "form.email": "Email",
     "form.email.placeholder": "Inserisci il tuo indirizzo e-mail",
     "form.phone": "Telefono",
@@ -70,10 +60,8 @@ export const form = {
     "form.submit": "Invia",
   },
   es: {
-    "form.firstName": "Nombre",
+    "form.firstName": "Su nombre",
     "form.firstName.placeholder": "Introduzca su nombre",
-    "form.lastName": "Apellido",
-    "form.lastName.placeholder": "Introduzca su apellido",
     "form.email": "Correo electrónico",
     "form.email.placeholder": "Introduzca su dirección de correo electrónico",
     "form.phone": "Teléfono",

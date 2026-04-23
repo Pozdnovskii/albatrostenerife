@@ -305,7 +305,7 @@ export async function getProperties(
       "status":       status->{ "name": coalesce(name[$lang], name.en), "key": key },
       "labels":       labels[]->{ "name": coalesce(name[$lang], name.en), "key": key },
       "propertyType": propertyType->{ "name": coalesce(name[$lang], name.en) },
-      "images":       gallery[0..2][].asset->url
+      "images":       gallery[].asset->url
     }`,
     { lang, limit, excludeEnSlug },
   );

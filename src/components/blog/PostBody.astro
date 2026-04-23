@@ -92,10 +92,12 @@ function inlineHTML(children: PTSpan[], markDefs: PTLink[]): string {
         const link = markDefs.find((m) => m._key === mark);
         if (link) {
           const href = resolveHref(link);
-          const extras = link.blank
-            ? ' target="_blank" rel="noopener noreferrer"'
-            : "";
-          html = `<a href="${href}"${extras} class="text-accent underline hover:no-underline transition-colors">${html}</a>`;
+          const isDownload = href.startsWith("http://localhost:4321/downloads/");
+          const extras = [
+            link.blank ? 'target="_blank" rel="noopener noreferrer"' : "",
+            isDownload ? "download" : "",
+          ].filter(Boolean).join(" ");
+          html = `<a href="${href}"${extras ? " " + extras : ""} class="text-accent underline hover:no-underline transition-colors">${html}</a>`;
         } else if (mark === "strong")
           html = `<strong class="font-semibold">${html}</strong>`;
         else if (mark === "em") html = `<em>${html}</em>`;

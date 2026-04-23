@@ -34,9 +34,8 @@ const inputClass =
     class="hidden"
   />
 
-  <div>
-    <label for="firstName" class={labelClass}>{t(lang, "form.firstName")}</label
-    >
+  <div class:list={[!showAptNo && "sm:max-md:col-span-2 lg:col-span-2"]}>
+    <label for="firstName" class={labelClass}>{t(lang, "form.firstName")}</label>
     <input
       type="text"
       id="firstName"
@@ -46,16 +45,18 @@ const inputClass =
     />
   </div>
 
-  <div>
-    <label for="lastName" class={labelClass}>{t(lang, "form.lastName")}</label>
-    <input
-      type="text"
-      id="lastName"
-      name="lastName"
-      placeholder={t(lang, "form.lastName.placeholder")}
-      class={inputClass}
-    />
-  </div>
+  {showAptNo && (
+    <div>
+      <label for="aptNo" class={labelClass}>Apt. No.</label>
+      <input
+        type="text"
+        id="aptNo"
+        name="aptNo"
+        placeholder="e.g. 3B"
+        class={inputClass}
+      />
+    </div>
+  )}
 
   <div>
     <label for="email" class={labelClass}>{t(lang, "form.email")}</label>
@@ -79,19 +80,6 @@ const inputClass =
       class={inputClass}
     />
   </div>
-
-  {showAptNo && (
-    <div class="sm:max-md:col-span-2 lg:col-span-2">
-      <label for="aptNo" class={labelClass}>Apt. No.</label>
-      <input
-        type="text"
-        id="aptNo"
-        name="aptNo"
-        placeholder="e.g. 3B"
-        class={inputClass}
-      />
-    </div>
-  )}
 
   <div class="sm:max-md:col-span-2 lg:col-span-2">
     <label for="message" class={labelClass}>{t(lang, "form.message")}</label>
