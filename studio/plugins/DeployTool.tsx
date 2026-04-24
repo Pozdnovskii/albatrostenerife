@@ -4,25 +4,18 @@ import { RocketIcon } from "@sanity/icons";
 
 type Status = "idle" | "deploying" | "success" | "error";
 
-const HOOK_URL = import.meta.env.PUBLIC_SANITY_STUDIO_DEPLOY_HOOK as string | undefined;
-
 export function DeployTool() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   async function handleDeploy() {
-    if (!HOOK_URL) {
-      setErrorMsg("SANITY_STUDIO_DEPLOY_HOOK env var is not set.");
-      setStatus("error");
-      return;
-    }
-
     setStatus("deploying");
     setErrorMsg("");
 
     try {
-      const res = await fetch(HOOK_URL, { method: "POST" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const res = await fetch("/api/deploy", { method: "POST" });
+      const json = await res.json() as { ok: boolean; error?: string };
+      if (!json.ok) throw new Error(json.error ?? `HTTP ${res.status}`);
       setStatus("success");
       setTimeout(() => setStatus("idle"), 5000);
     } catch (err) {
@@ -41,7 +34,7 @@ export function DeployTool() {
             Triggers a rebuild and deployment of{" "}
             <strong>albatrostenerife.com</strong> via Cloudflare Workers.
             <br />
-            The build usually takes 1–2 minutes.
+            The build usually takes 10 minutes.
           </Text>
 
           {status === "idle" && (
