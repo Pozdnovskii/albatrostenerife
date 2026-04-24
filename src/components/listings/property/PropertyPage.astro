@@ -74,14 +74,14 @@ const breadcrumbs = [
     class="hidden lg:block lg:sticky lg:top-10 lg:py-section-xs lg:pr-svw 2xl:pr-0"
   >
     <div class="rounded-xl bg-white p-6 text-black">
-      <ContactForm {lang} />
+      <ContactForm {lang} sourceName={property.enTitle ?? property.title} />
     </div>
   </aside>
 </div>
 
 <!-- Mobile contact section: full ContactSection (form + agent card) -->
 <div class="lg:hidden">
-  <ContactSection {lang} />
+  <ContactSection {lang} sourceName={property.enTitle ?? property.title} />
 </div>
 
 {

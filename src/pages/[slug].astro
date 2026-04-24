@@ -57,7 +57,7 @@ if (type === "service") {
     )
   }
   {type === "page" && enSlug === "contact" && <SchemaOrg schema={contactSchema(String(Astro.url), lang)} />}
-  {type === "page" && enSlug === "contact" && <ContactSection {lang} level={1} />}
+  {type === "page" && enSlug === "contact" && <ContactSection {lang} level={1} sourceName="Contact Page" />}
   {type === "page" && enSlug === "inquiry-form" && <SellersPage {lang} />}
   {type === "page" && enSlug !== "contact" && enSlug !== "inquiry-form" && legalData && <LegalPage data={legalData} />}
   {

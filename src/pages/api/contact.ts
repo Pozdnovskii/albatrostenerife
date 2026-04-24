@@ -8,13 +8,14 @@ import { adminNotificationEmail, clientConfirmationEmail } from "@lib/email";
 // ── Zod schema ────────────────────────────────────────────────────────────────
 
 const ContactSchema = z.object({
-  firstName: z.string().max(100).optional(),
-  aptNo:     z.string().max(20).optional(),
-  email:     z.email(),
-  phone:     z.string().max(50).optional(),
-  message:   z.string().max(3000).optional(),
-  lang:      z.string(),
-  source:    z.string(),
+  firstName:  z.string().max(100).optional(),
+  aptNo:      z.string().max(20).optional(),
+  email:      z.email(),
+  phone:      z.string().max(50).optional(),
+  message:    z.string().max(3000).optional(),
+  lang:       z.string(),
+  source:     z.string().optional(),
+  sourceName: z.string().optional(),
 });
 
 // ── POST handler ──────────────────────────────────────────────────────────────
@@ -61,7 +62,7 @@ export const POST = async ({ request }: { request: Request }) => {
     return fail(msg);
   }
 
-  const { firstName, aptNo, email, phone, message, lang, source } = parsed.data;
+  const { firstName, aptNo, email, phone, message, lang, source, sourceName } = parsed.data;
 
   // ── Save to Sanity ────────────────────────────────────────────────────────
   const writeToken = import.meta.env.SANITY_API_WRITE_TOKEN;
@@ -82,7 +83,7 @@ export const POST = async ({ request }: { request: Request }) => {
         phone: phone || null,
         message: message || null,
         lang,
-        source,
+        sourceName: sourceName || null,
         submittedAt: new Date().toISOString(),
       });
     } catch (err) {
@@ -114,12 +115,12 @@ export const POST = async ({ request }: { request: Request }) => {
         );
       } catch { /* non-critical */ }
 
-      const admin = adminNotificationEmail({ firstName, aptNo, email, phone, message, lang, source });
+      const admin = adminNotificationEmail({ firstName, aptNo, email, phone, message, lang, source, sourceName });
       const confirmation = clientConfirmationEmail(lang, firstName, toEmail, contactPhone);
 
       await Promise.all([
-        // Notification to Ivan
-        resend.emails.send({ from, to, subject: admin.subject, html: admin.html }),
+        // Notification to Ivan — reply-to goes directly to client
+        resend.emails.send({ from, to, replyTo: email, subject: admin.subject, html: admin.html }),
         // Confirmation to client
         resend.emails.send({ from, to: email, replyTo: to, subject: confirmation.subject, html: confirmation.html }),
       ]);

@@ -154,16 +154,18 @@ export function adminNotificationEmail(data: {
   phone?: string | null;
   message?: string | null;
   lang: string;
-  source: string;
+  source?: string | null;
+  sourceName?: string | null;
 }): { subject: string; html: string } {
-  const { firstName, aptNo, email, phone, message, lang, source } = data;
+  const { firstName, aptNo, email, phone, message, lang, source, sourceName } = data;
+  const pageLabel = sourceName || "Contact Form";
 
   const rows = [
-    firstName ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;width:100px;font-family:Arial,sans-serif;">Name</td><td style="padding:8px 0;font-size:14px;color:#111;font-family:Arial,sans-serif;">${firstName}</td></tr>` : "",
-    aptNo     ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;">Apt. No.</td><td style="padding:8px 0;font-size:14px;color:#111;font-family:Arial,sans-serif;">${aptNo}</td></tr>` : "",
+    `<tr><td style="padding:8px 0;color:#666;font-size:14px;width:100px;font-family:Arial,sans-serif;">Name</td><td style="padding:8px 0;font-size:14px;font-family:Arial,sans-serif;${firstName ? "color:#111;" : "color:#aaa;font-style:italic;"}">${firstName ?? "Not provided"}</td></tr>`,
+    aptNo ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;">Apt. No.</td><td style="padding:8px 0;font-size:14px;color:#111;font-family:Arial,sans-serif;">${aptNo}</td></tr>` : "",
     `<tr><td style="padding:8px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;">Email</td><td style="padding:8px 0;font-size:14px;font-family:Arial,sans-serif;"><a href="mailto:${email}" style="color:${ACCENT};">${email}</a></td></tr>`,
-    phone     ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;">Phone</td><td style="padding:8px 0;font-size:14px;color:#111;font-family:Arial,sans-serif;"><a href="tel:${phone}" style="color:${ACCENT};">${phone}</a></td></tr>` : "",
-    message   ? `<tr><td colspan="2" style="padding:16px 0 0;font-family:Arial,sans-serif;"><p style="margin:0 0 8px;color:#666;font-size:14px;">Message</p><p style="margin:0;font-size:14px;color:#111;line-height:1.6;white-space:pre-wrap;">${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></td></tr>` : "",
+    phone ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;">Phone</td><td style="padding:8px 0;font-size:14px;color:#111;font-family:Arial,sans-serif;"><a href="tel:${phone}" style="color:${ACCENT};">${phone}</a></td></tr>` : "",
+    `<tr><td colspan="2" style="padding:16px 0 0;font-family:Arial,sans-serif;"><p style="margin:0 0 8px;color:#666;font-size:14px;">Message</p><p style="margin:0;font-size:14px;line-height:1.6;white-space:pre-wrap;${message ? "color:#111;" : "color:#aaa;font-style:italic;"}">${message ? message.replace(/</g, "&lt;").replace(/>/g, "&gt;") : "Not provided"}</p></td></tr>`,
   ].filter(Boolean).join("\n");
 
   const html = `<!DOCTYPE html>
@@ -194,7 +196,8 @@ export function adminNotificationEmail(data: {
         <!-- Meta -->
         <tr>
           <td style="background:#f9f9f9;padding:16px 32px;border-top:1px solid #e5e5e5;">
-            <p style="margin:0;font-size:11px;color:#aaa;">Language: ${lang} &nbsp;·&nbsp; Source: ${source}</p>
+            <p style="margin:0 0 4px;font-size:11px;color:#aaa;">Language: ${lang.toUpperCase()} &nbsp;·&nbsp; Page: ${pageLabel}</p>
+            ${source ? `<p style="margin:0;font-size:11px;"><a href="${source}" style="color:${ACCENT};">${source}</a></p>` : ""}
           </td>
         </tr>
 
@@ -204,5 +207,5 @@ export function adminNotificationEmail(data: {
 </body>
 </html>`;
 
-  return { subject: `New inquiry from ${firstName ?? email}`, html };
+  return { subject: `Park Albatros: ${pageLabel} [${lang.toUpperCase()}]`, html };
 }

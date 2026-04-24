@@ -12,7 +12,7 @@ export const contactSubmission = defineType({
     defineField({ name: "phone",       title: "Phone",        type: "string" }),
     defineField({ name: "message",     title: "Message",      type: "text" }),
     defineField({ name: "lang",        title: "Language",     type: "string" }),
-    defineField({ name: "source",      title: "Source page",  type: "string" }),
+    defineField({ name: "sourceName",  title: "Page",         type: "string" }),
     defineField({ name: "submittedAt", title: "Submitted at", type: "datetime" }),
   ],
 

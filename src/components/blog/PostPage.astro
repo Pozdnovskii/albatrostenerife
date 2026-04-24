@@ -125,7 +125,7 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
 
 {post.ctaTitle
   ? <PostCta {post} {lang} {contact} {blogSlug} />
-  : <ContactSection {lang} left class="[&>div]:max-w-5xl" />
+  : <ContactSection {lang} left class="[&>div]:max-w-5xl" sourceName={`Blog: ${post.enTitle ?? post.title}`} />
 }
 
 {

@@ -6,9 +6,11 @@ import { t } from "@i18n/ui";
 interface Props {
   lang?: Locale;
   showAptNo?: boolean;
+  /** English label used in admin email subject, e.g. "Rental Management" */
+  sourceName?: string;
 }
 
-const { lang = DEFAULT_LOCALE, showAptNo = false } = Astro.props;
+const { lang = DEFAULT_LOCALE, showAptNo = false, sourceName } = Astro.props;
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
 const labelClass = "block font-medium mb-1";
@@ -23,7 +25,8 @@ const inputClass =
   class="grid grid-cols-1 gap-y-5 sm:max-md:grid-cols-2 sm:gap-x-4 lg:grid-cols-2"
 >
   <input type="hidden" name="lang" value={lang} />
-  <input type="hidden" name="source" value={Astro.url.pathname} />
+  <input type="hidden" name="source" value={Astro.url.href} />
+  <input type="hidden" name="sourceName" value={sourceName ?? ""} />
   <!-- honeypot -->
   <input
     type="text"

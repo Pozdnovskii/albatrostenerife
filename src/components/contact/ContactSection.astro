@@ -14,6 +14,7 @@ interface Props {
   subtitle?: string;
   left?: boolean;
   class?: string;
+  sourceName?: string;
 }
 
 const {
@@ -23,6 +24,7 @@ const {
   subtitle = t(lang, "contact.subtitle"),
   left = false,
   class: cls,
+  sourceName = "Contact Form",
 } = Astro.props;
 
 const contact = await getContactInfo(lang);
@@ -34,7 +36,7 @@ const contact = await getContactInfo(lang);
   >
     <div class="grow max-w-xl">
       <SectionHeading left {level} {title} {subtitle} smallMargin />
-      <ContactForm lang={lang} />
+      <ContactForm lang={lang} {sourceName} />
     </div>
 
     {contact && <AgentCard contact={contact} level={level === 1 ? 2 : 3} />}

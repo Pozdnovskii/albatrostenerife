@@ -138,6 +138,7 @@ export async function getServicePageData(
   return sanityClient.fetch(
     `*[_type == "service" && slug.en.current == $enSlug][0]{
       "title":           coalesce(pageTitle[$lang], pageTitle.en),
+      "enTitle":         pageTitle.en,
       "pageHeading":     coalesce(pageHeading[$lang], pageHeading.en),
       "pageSubtitle":    coalesce(pageSubtitle[$lang], pageSubtitle.en),
       "description":     coalesce(description[$lang], description.en),
@@ -248,6 +249,7 @@ export async function getPropertyDetail(
   return sanityClient.fetch(
     `*[_type == "property" && slug.en.current == $enSlug][0]{
       "title":           coalesce(title[$lang], title.en),
+      "enTitle":         title.en,
       price,
       bedrooms,
       bathrooms,
@@ -350,6 +352,7 @@ export async function getPostDetail(
   return sanityClient.fetch(
     `*[_type == "blogPost" && slug.en.current == $enSlug][0]{
       "title":           coalesce(title[$lang], title.en),
+      "enTitle":         title.en,
       "description":     coalesce(description[$lang], description.en),
       "mainImage":       mainImage.asset->url,
       "mainImageAlt":    coalesce(mainImage.alt[$lang], mainImage.alt.en),

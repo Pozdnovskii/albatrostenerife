@@ -30,7 +30,8 @@ export type LegalPageData = {
 };
 
 export type ServicePageData = {
-  title: string;        // pageTitle — hero h1
+  title: string;        // pageTitle — hero h1 (localized)
+  enTitle: string | null; // pageTitle in English — for email subject
   pageHeading: string;  // pageHeading — section heading below hero
   pageSubtitle: string | null;
   description: PTBlock[] | null;
@@ -83,6 +84,7 @@ export type Activity = {
 export type Property = {
   // — shared by card and detail —
   title: string;
+  enTitle?: string | null;
   slug: string;
   price: number | null;
   bedrooms: number | null;
@@ -108,6 +110,7 @@ export type Property = {
 export type Post = {
   // — shared by card and detail —
   title: string;
+  enTitle?: string | null;
   slug: string;
   description: string | null;
   mainImage: string | null;
