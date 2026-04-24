@@ -4,3 +4,4 @@ Disallow: /studio/
 Disallow: /downloads/
 
 Sitemap: https://albatrostenerife.com/sitemap-index.xml
+LLMs: https://albatrostenerife.com/llms.txt

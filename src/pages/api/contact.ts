@@ -8,7 +8,7 @@ import { createClient } from "@sanity/client";
 
 const ContactSchema = z.object({
   firstName: z.string().max(100).optional(),
-  lastName:  z.string().max(100).optional(),
+  aptNo:     z.string().max(20).optional(),
   email:     z.email(),
   phone:     z.string().max(50).optional(),
   message:   z.string().max(3000).optional(),
@@ -60,7 +60,7 @@ export const POST = async ({ request }: { request: Request }) => {
     return fail(msg);
   }
 
-  const { firstName, lastName, email, phone, message, lang, source } = parsed.data;
+  const { firstName, aptNo, email, phone, message, lang, source } = parsed.data;
 
   // ── Save to Sanity ────────────────────────────────────────────────────────
   const writeToken = import.meta.env.SANITY_API_WRITE_TOKEN;
@@ -76,7 +76,7 @@ export const POST = async ({ request }: { request: Request }) => {
       await sanity.create({
         _type: "contactSubmission",
         firstName,
-        lastName,
+        aptNo: aptNo || null,
         email,
         phone: phone || null,
         message: message || null,
@@ -100,10 +100,11 @@ export const POST = async ({ request }: { request: Request }) => {
       await resend.emails.send({
         from,
         to,
-        subject: `New inquiry from ${firstName} ${lastName}`,
+        subject: `New inquiry from ${firstName ?? email}`,
         html: `
           <h2>New contact form submission</h2>
-          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          ${firstName ? `<p><strong>Name:</strong> ${firstName}</p>` : ""}
+          ${aptNo ? `<p><strong>Apt. No.:</strong> ${aptNo}</p>` : ""}
           <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
           ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ""}
           ${message ? `<p><strong>Message:</strong><br>${message.replace(/\n/g, "<br>")}</p>` : ""}

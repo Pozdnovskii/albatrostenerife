@@ -1,5 +1,5 @@
 import type { Property, Post } from "./types";
-import type { Locale } from "./config";
+import type { Locale } from "@i18n/config";
 
 const SITE = "https://albatrostenerife.com";
 const ORG_ID = `${SITE}/#organization`;

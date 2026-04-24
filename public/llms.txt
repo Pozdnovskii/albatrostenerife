@@ -1,0 +1,60 @@
+# Albatros Tenerife Real Estate
+
+> Real estate agency specialising in apartment sales, rentals, and property management at Park Albatros Resort in Golf del Sur, Tenerife, Spain.
+
+## About
+
+Albatros Tenerife is a boutique real estate agency operating exclusively within Park Albatros Resort — a gated residential complex of 310 apartments located in Golf del Sur, San Miguel de Abona, Tenerife (Canary Islands, Spain). The agency is run by Ivan Uher, a licensed real estate advisor with deep knowledge of the local market.
+
+The resort offers a heated pool, landscaped gardens, on-site dining, and 24/7 reception. It is popular with holidaymakers, retirees, and investors from Central and Eastern Europe.
+
+## Services
+
+- **Apartment Sales** — buying and selling apartments within Park Albatros Resort; full transaction support including legal checks, notary coordination, and post-sale assistance.
+- **Long-term Rentals** — placing tenants in owner-held apartments; rental contract management, tenant screening.
+- **Holiday Rentals** — short-term rental management for investment owners; listing, guest communication, cleaning coordination.
+- **Property Management** — on-site management for non-resident owners; maintenance, utility payments, key holding.
+- **Valuations** — market appraisals for sale or rental pricing.
+- **Inquiry Form** — buyers can submit a property search request specifying budget, size, and preferences.
+
+## Properties
+
+All listings are apartments within Park Albatros Resort. Typical properties: studios and one/two-bedroom apartments. Price range: from approx. €80,000 (studio) to €200,000+ (two-bedroom with sea view). Available for sale and for long-term rent.
+
+Property detail pages include: photos, description, price, bedrooms, bathrooms, area (m²), property type, status (for sale / for rent), labels (reserved / sold / rented), virtual tour link where available.
+
+## Location
+
+Park Albatros Resort
+Golf del Sur, San Miguel de Abona
+Tenerife, Canary Islands, Spain
+
+Golf del Sur is a golf and residential community on the south coast of Tenerife, approximately 15 minutes from Tenerife South Airport (TFS). The area has a warm, dry climate year-round.
+
+## Languages
+
+The website is fully available in six languages:
+- English (default, no URL prefix) — albatrostenerife.com
+- Czech — albatrostenerife.com/cs/
+- Polish — albatrostenerife.com/pl/
+- Hungarian — albatrostenerife.com/hu/
+- Italian — albatrostenerife.com/it/
+- Spanish — albatrostenerife.com/es/
+
+## Blog
+
+The blog covers topics relevant to buyers and owners: buying process in Spain, NIE number, taxes, residency, property management tips, life in Tenerife, activities, and local area guides.
+
+## Contact
+
+- **WhatsApp / Phone:** available on the contact page
+- **Email:** info@albatrostenerife.com
+- **Response time:** typically same day, including evenings and weekends
+
+## Key Pages
+
+- [Home](https://albatrostenerife.com/) — overview, featured listings, services, reviews
+- [Listings](https://albatrostenerife.com/listings/) — all available apartments for sale and rent
+- [Contact](https://albatrostenerife.com/contact/) — contact form, phone, email, address
+- [Inquiry Form](https://albatrostenerife.com/inquiry-form/) — submit a property search request
+- [Blog](https://albatrostenerife.com/blog/) — articles about buying in Tenerife, living in Golf del Sur, property investment

@@ -92,7 +92,7 @@ function inlineHTML(children: PTSpan[], markDefs: PTLink[]): string {
         const link = markDefs.find((m) => m._key === mark);
         if (link) {
           const href = resolveHref(link);
-          const isDownload = href.startsWith("http://localhost:4321/downloads/");
+          const isDownload = href.startsWith("https://albatrostenerife.com/downloads/");
           const extras = [
             link.blank ? 'target="_blank" rel="noopener noreferrer"' : "",
             isDownload ? "download" : "",
