@@ -19,7 +19,9 @@ import SellersPage from "@components/contact/SellersPage.astro";
 
 export async function getStaticPaths() {
   const paths = await getAllPaths();
-  return paths.map((p) => ({ params: { slug: p.enSlug }, props: p }));
+  return paths
+    .filter((p) => p.type !== "property" && p.type !== "post")
+    .map((p) => ({ params: { slug: p.enSlug }, props: p }));
 }
 
 const { type, enSlug, slugs } = Astro.props as UnifiedPath;
