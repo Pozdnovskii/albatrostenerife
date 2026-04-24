@@ -97,7 +97,7 @@ export const POST = async ({ request }: { request: Request }) => {
   if (resendKey) {
     try {
       const resend = new Resend(resendKey);
-      const from    = import.meta.env.RESEND_FROM || "noreply@albatrostenerife.com";
+      const from    = import.meta.env.RESEND_FROM || "info@albatrostenerife.com";
       const to      = import.meta.env.RESEND_TO   || "info@albatrostenerife.com";
       const toEmail = import.meta.env.RESEND_TO   || "info@albatrostenerife.com";
 
@@ -120,9 +120,9 @@ export const POST = async ({ request }: { request: Request }) => {
 
       await Promise.all([
         // Notification to Ivan — reply-to goes directly to client
-        resend.emails.send({ from, to, replyTo: email, subject: admin.subject, html: admin.html }),
+        resend.emails.send({ from, to, replyTo: email, subject: admin.subject, html: admin.html, text: admin.text }),
         // Confirmation to client
-        resend.emails.send({ from, to: email, replyTo: to, subject: confirmation.subject, html: confirmation.html }),
+        resend.emails.send({ from, to: email, replyTo: to, subject: confirmation.subject, html: confirmation.html, text: confirmation.text }),
       ]);
     } catch (err) {
       console.error("Resend failed:", err);

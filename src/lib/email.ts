@@ -70,11 +70,25 @@ export function clientConfirmationEmail(
   firstName: string | null | undefined,
   contactEmail: string,
   contactPhone: string | null | undefined,
-): { subject: string; html: string } {
+): { subject: string; html: string; text: string } {
   const t = getLang(lang);
   const waHref = contactPhone
     ? `https://wa.me/${contactPhone.replace(/\D/g, "")}`
     : null;
+
+  const text = [
+    t.greeting(firstName),
+    "",
+    t.body,
+    "",
+    "---",
+    t.contact,
+    ...(waHref ? [`WhatsApp: ${waHref}`] : []),
+    `Email: ${contactEmail}`,
+    "---",
+    t.footer,
+    SITE_URL,
+  ].join("\n");
 
   const html = `<!DOCTYPE html>
 <html lang="${lang}">
@@ -142,7 +156,7 @@ export function clientConfirmationEmail(
 </body>
 </html>`;
 
-  return { subject: t.subject, html };
+  return { subject: t.subject, html, text };
 }
 
 // ── Admin notification ─────────────────────────────────────────────────────────
@@ -156,7 +170,7 @@ export function adminNotificationEmail(data: {
   lang: string;
   source?: string | null;
   sourceName?: string | null;
-}): { subject: string; html: string } {
+}): { subject: string; html: string; text: string } {
   const { firstName, aptNo, email, phone, message, lang, source, sourceName } = data;
   const pageLabel = sourceName || "Contact Form";
 
@@ -207,5 +221,24 @@ export function adminNotificationEmail(data: {
 </body>
 </html>`;
 
-  return { subject: `Park Albatros: ${pageLabel} [${lang.toUpperCase()}]`, html };
+  const text = [
+    `NEW INQUIRY — Park Albatros`,
+    "",
+    `Name:    ${firstName ?? "Not provided"}`,
+    ...(aptNo ? [`Apt. No.: ${aptNo}`] : []),
+    `Email:   ${email}`,
+    ...(phone ? [`Phone:   ${phone}`] : []),
+    "",
+    `Message:\n${message ?? "Not provided"}`,
+    "",
+    "---",
+    `Language: ${lang.toUpperCase()}  |  Page: ${pageLabel}`,
+    ...(source ? [source] : []),
+  ].join("\n");
+
+  const subject = source?.includes("/listings/")
+    ? "Park Albatros inquiry"
+    : `Park Albatros: ${pageLabel} [${lang.toUpperCase()}]`;
+
+  return { subject, html, text };
 }
