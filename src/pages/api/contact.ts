@@ -3,6 +3,7 @@ export const prerender = false;
 import { z } from "zod";
 import { Resend } from "resend";
 import { createClient } from "@sanity/client";
+import { adminNotificationEmail, clientConfirmationEmail } from "@lib/email";
 
 // ── Zod schema ────────────────────────────────────────────────────────────────
 
@@ -95,23 +96,33 @@ export const POST = async ({ request }: { request: Request }) => {
   if (resendKey) {
     try {
       const resend = new Resend(resendKey);
-      const from = import.meta.env.RESEND_FROM || "noreply@albatrostenerife.com";
-      const to   = import.meta.env.RESEND_TO   || "info@albatrostenerife.com";
-      await resend.emails.send({
-        from,
-        to,
-        subject: `New inquiry from ${firstName ?? email}`,
-        html: `
-          <h2>New contact form submission</h2>
-          ${firstName ? `<p><strong>Name:</strong> ${firstName}</p>` : ""}
-          ${aptNo ? `<p><strong>Apt. No.:</strong> ${aptNo}</p>` : ""}
-          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-          ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ""}
-          ${message ? `<p><strong>Message:</strong><br>${message.replace(/\n/g, "<br>")}</p>` : ""}
-          <hr>
-          <p style="color:#888;font-size:12px">Language: ${lang} · Source: ${source}</p>
-        `,
-      });
+      const from    = import.meta.env.RESEND_FROM || "noreply@albatrostenerife.com";
+      const to      = import.meta.env.RESEND_TO   || "info@albatrostenerife.com";
+      const toEmail = import.meta.env.RESEND_TO   || "info@albatrostenerife.com";
+
+      // Fetch contact phone for the confirmation email
+      let contactPhone: string | null = null;
+      try {
+        const sanityRead = createClient({
+          projectId: "nr9v3mei",
+          dataset: "production",
+          apiVersion: "2026-04-10",
+          useCdn: true,
+        });
+        contactPhone = await sanityRead.fetch<string | null>(
+          `*[_type == "contactInfo"][0].phone`
+        );
+      } catch { /* non-critical */ }
+
+      const admin = adminNotificationEmail({ firstName, aptNo, email, phone, message, lang, source });
+      const confirmation = clientConfirmationEmail(lang, firstName, toEmail, contactPhone);
+
+      await Promise.all([
+        // Notification to Ivan
+        resend.emails.send({ from, to, subject: admin.subject, html: admin.html }),
+        // Confirmation to client
+        resend.emails.send({ from, to: email, replyTo: to, subject: confirmation.subject, html: confirmation.html }),
+      ]);
     } catch (err) {
       console.error("Resend failed:", err);
       // Still succeed — data is in Sanity

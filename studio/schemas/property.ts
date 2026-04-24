@@ -209,12 +209,11 @@ export const property = defineType({
       group: "media",
     }),
     defineField({
-      name: "virtualTourEmbed",
-      title: "Virtual Tour Embed Code",
-      type: "text",
-      rows: 3,
+      name: "virtualTourUrl",
+      title: "Virtual Tour URL",
+      type: "url",
       description:
-        "Paste the full <iframe> embed code from your virtual tour provider",
+        "Paste the URL from Matterport, iGuide, or any virtual tour provider (e.g. https://my.matterport.com/show/?m=...)",
       group: "media",
     }),
   ],
