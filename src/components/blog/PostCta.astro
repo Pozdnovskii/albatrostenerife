@@ -19,7 +19,7 @@ const prefix = localePrefix(lang);
 const page = post.ctaButton?.page ?? null;
 const ctaHref = page
   ? page.isHomepage
-    ? `${prefix}/`
+    ? (prefix || "/")
     : `${prefix}/${page.slug ?? ""}`
   : null;
 
@@ -52,7 +52,7 @@ type PTBlock = {
 function resolveHref(link: PTLink): string {
   const ref = link.internalRef;
   if (ref) {
-    if (ref.isHomepage) return `${prefix}/`;
+    if (ref.isHomepage) return prefix || "/";
     if (ref._type === "blogPost")
       return `${prefix}/${blogSlug}/${ref.slug ?? ""}`;
     return `${prefix}/${ref.slug ?? ""}`;

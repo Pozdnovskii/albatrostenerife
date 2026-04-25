@@ -15,7 +15,7 @@ const { lang = DEFAULT_LOCALE, alternateUrls = {}, navItems } = Astro.props;
 const prefix = localePrefix(lang);
 
 function buildHref(item: NavItem): string {
-  if (item.page.isHomepage) return `${prefix}/`;
+  if (item.page.isHomepage) return prefix || "/";
   return `${prefix}/${item.page.slug}`;
 }
 
@@ -32,7 +32,7 @@ function isActive(href: string) {
   <div class="flex items-center justify-between py-3">
     <!-- Logo -->
     <a
-      href={`${prefix}/`}
+      href={prefix || "/"}
       aria-label="Albatros home"
       class="relative z-50 shrink-0"
     >

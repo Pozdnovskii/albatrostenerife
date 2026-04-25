@@ -71,7 +71,7 @@ const prefix = localePrefix(lang);
 function resolveHref(link: PTLink): string {
   const ref = link.internalRef;
   if (ref) {
-    if (ref.isHomepage) return `${prefix}/`;
+    if (ref.isHomepage) return prefix || "/";
     if (ref._type === "blogPost")
       return `${prefix}/${blogSlug}/${ref.slug ?? ""}`;
     // service or seoSettings — slug is the full path segment

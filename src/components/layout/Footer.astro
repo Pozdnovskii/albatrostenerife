@@ -16,7 +16,7 @@ const year = new Date().getFullYear();
 const prefix = localePrefix(lang);
 
 function buildHref(item: NavItem): string {
-  if (item.page.isHomepage) return `${prefix}/`;
+  if (item.page.isHomepage) return prefix || "/";
   return `${prefix}/${item.page.slug}`;
 }
 ---
