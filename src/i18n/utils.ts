@@ -15,7 +15,7 @@ export function getLangFromUrl(url: URL): Locale {
 /**
  * Builds alternateUrls for hreflang + language switcher.
  * slugs: per-locale path segment from Sanity (e.g. "buyers", "kupujici").
- * Locales without a slug fall back to the locale homepage (${prefix}/).
+ * Locales without a slug fall back to the EN slug, or to the locale homepage if no EN slug.
  */
 export function buildAlternateUrls(
   origin: string,
@@ -25,7 +25,29 @@ export function buildAlternateUrls(
   return Object.fromEntries(
     LOCALES.map((l) => {
       const slug = slugs[l] ?? defaultSlug;
-      return [l, slug ? `${origin}${localePrefix(l)}/${slug}/` : `${origin}${localePrefix(l)}/`];
+      const home = l === DEFAULT_LOCALE ? `${origin}/` : `${origin}${localePrefix(l)}`;
+      return [l, slug ? `${origin}${localePrefix(l)}/${slug}` : home];
+    })
+  ) as Record<Locale, string>;
+}
+
+/**
+ * Builds alternateUrls for nested routes like /blog/post-slug/ or /listings/property-slug/.
+ * indexSlugs: per-locale slug for the index page (e.g. "blog", "clanek").
+ * itemSlugs: per-locale slug for the item (e.g. the post or property slug).
+ */
+export function buildNestedAlternateUrls(
+  origin: string,
+  indexSlugs: Partial<Record<Locale, string>>,
+  itemSlugs: Partial<Record<Locale, string>>
+): Record<Locale, string> {
+  const defaultIndex = indexSlugs[DEFAULT_LOCALE];
+  const defaultItem = itemSlugs[DEFAULT_LOCALE];
+  return Object.fromEntries(
+    LOCALES.map((l) => {
+      const indexSlug = indexSlugs[l] ?? defaultIndex;
+      const itemSlug = itemSlugs[l] ?? defaultItem;
+      return [l, `${origin}${localePrefix(l)}/${indexSlug}/${itemSlug}`];
     })
   ) as Record<Locale, string>;
 }

@@ -36,8 +36,8 @@ const ogImageUrl = ogImage ?? `${origin}/og.png`;
 // Build full hreflang map: merge alternateUrls with fallbacks
 function localePath(l: Locale) {
   if (alternateUrls[l]) return alternateUrls[l]!;
-  const prefix = l === DEFAULT_LOCALE ? "" : `/${l}`;
-  return `${origin}${prefix}/`;
+  if (l === DEFAULT_LOCALE) return `${origin}/`;
+  return `${origin}/${l}`;
 }
 ---
 

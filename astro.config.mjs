@@ -8,7 +8,7 @@ import sanity from "@sanity/astro";
 
 export default defineConfig({
   site: "https://albatrostenerife.com",
-  trailingSlash: "always",
+  trailingSlash: "never",
 
   integrations: [
     sitemap({

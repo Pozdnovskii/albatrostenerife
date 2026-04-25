@@ -108,7 +108,7 @@ function isActive(href: string) {
         >
           {
             LOCALES.map((l) => {
-              const href = alternateUrls[l] ?? `${localePrefix(l)}/`;
+              const href = alternateUrls[l] ?? (l === DEFAULT_LOCALE ? "/" : `${localePrefix(l)}`);
               return (
                 <li role="option" aria-selected={l === lang}>
                   <a
@@ -138,7 +138,7 @@ function isActive(href: string) {
       >
         {
           LOCALES.map((l) => {
-            const href = alternateUrls[l] ?? `${localePrefix(l)}/`;
+            const href = alternateUrls[l] ?? (l === DEFAULT_LOCALE ? "/" : `${localePrefix(l)}`);
             return (
               <a
                 href={href}

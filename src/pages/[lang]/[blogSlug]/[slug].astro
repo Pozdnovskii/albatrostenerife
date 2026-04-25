@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { LOCALES, DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
-import { localePrefix } from "@i18n/utils";
+import { buildNestedAlternateUrls } from "@i18n/utils";
 import {
   getAllPaths,
   getPostDetail,
@@ -45,14 +45,7 @@ const [post, relatedPosts] = await Promise.all([
   getPosts(lang, 3, enSlug),
 ]);
 
-const alternateUrls = Object.fromEntries(
-  LOCALES.map((l) => {
-    const prefix = localePrefix(l);
-    const bs = l === DEFAULT_LOCALE ? "blog" : (blogSlugs?.[l] ?? "blog");
-    const ps = slugs[l] ?? enSlug;
-    return [l, `${Astro.url.origin}${prefix}/${bs}/${ps}`];
-  })
-) as Record<Locale, string>;
+const alternateUrls = buildNestedAlternateUrls(Astro.url.origin, blogSlugs, slugs);
 ---
 
 <Layout
