@@ -27,9 +27,9 @@ const {
 
 const origin = Astro.url.origin;
 
-// Canonical: prefer explicit prop, otherwise use current URL as-is (trailingSlash: "always" ensures consistency)
+// Canonical: prefer explicit prop, otherwise use current URL with .html stripped (build.format: "file" artifact)
 const rawUrl = Astro.url.toString();
-const canonical = Astro.props.canonical ?? rawUrl;
+const canonical = Astro.props.canonical ?? rawUrl.replace(/\.html$/, "");
 
 const ogImageUrl = ogImage ?? `${origin}/og.png`;
 
