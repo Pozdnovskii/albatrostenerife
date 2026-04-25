@@ -21,10 +21,11 @@ export function buildAlternateUrls(
   origin: string,
   slugs: Partial<Record<Locale, string>> = {}
 ): Record<Locale, string> {
+  const defaultSlug = slugs[DEFAULT_LOCALE];
   return Object.fromEntries(
     LOCALES.map((l) => {
-      const slug = slugs[l];
-      return [l, slug ? `${origin}${localePrefix(l)}/${slug}` : `${origin}${localePrefix(l)}/`];
+      const slug = slugs[l] ?? defaultSlug;
+      return [l, slug ? `${origin}${localePrefix(l)}/${slug}/` : `${origin}${localePrefix(l)}/`];
     })
   ) as Record<Locale, string>;
 }
