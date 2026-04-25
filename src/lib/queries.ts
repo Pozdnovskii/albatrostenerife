@@ -14,6 +14,16 @@ import type {
   UnifiedPath,
 } from "./types";
 
+// ── Build-time promise cache ───────────────────────────────────────────────────
+// Deduplicates identical Sanity fetches within a single build (e.g. getAllPaths
+// called from multiple getStaticPaths, getContactInfo called from index + ResortSection).
+
+const _cache = new Map<string, Promise<unknown>>();
+function cached<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  if (!_cache.has(key)) _cache.set(key, fn());
+  return _cache.get(key) as Promise<T>;
+}
+
 // ── GROQ helpers ──────────────────────────────────────────────────────────────
 
 /** Builds a GROQ inline object with one key per locale pointing to a slug field.
@@ -36,7 +46,8 @@ export function sanityOgImage(
 
 /** Returns every routable document across all types, normalised to UnifiedPath.
  *  Add new types here as the project grows — page files filter by `type`. */
-export async function getAllPaths(): Promise<UnifiedPath[]> {
+export function getAllPaths(): Promise<UnifiedPath[]> {
+  return cached("getAllPaths", async () => {
   const result = await sanityClient.fetch<{
     pages: { enSlug: string | null; slugs: Partial<Record<Locale, string>> }[];
     services: {
@@ -97,22 +108,23 @@ export async function getAllPaths(): Promise<UnifiedPath[]> {
         slugs: p.slugs,
       })),
   ];
+  });
 }
 
 // ── Page content ──────────────────────────────────────────────────────────────
 
 /** Homepage SEO — identified by isHomepage flag, not a slug. */
-export async function getHomepageSeo(
-  lang: Locale,
-): Promise<PageContent | null> {
-  return sanityClient.fetch(
-    `*[_type == "seoSettings" && isHomepage == true][0]{
+export function getHomepageSeo(lang: Locale): Promise<PageContent | null> {
+  return cached(`getHomepageSeo:${lang}`, () =>
+    sanityClient.fetch(
+      `*[_type == "seoSettings" && isHomepage == true][0]{
       title,
       "metaTitle":       translations[$lang].metaTitle,
       "metaDescription": translations[$lang].metaDescription,
       "ogImageUrl":      ogImage.asset->url
     }`,
-    { lang },
+      { lang },
+    ),
   );
 }
 
@@ -169,28 +181,34 @@ export async function getServicePageData(
 // ── Home sections ─────────────────────────────────────────────────────────────
 
 /** Resolves the lang-specific slug for the "contact" seoSettings page. */
-export async function getContactPageSlug(lang: Locale): Promise<string | null> {
-  return sanityClient.fetch(
-    `*[_type == "seoSettings" && translations.en.slug.current == "contact"][0]{
+export function getContactPageSlug(lang: Locale): Promise<string | null> {
+  return cached(`getContactPageSlug:${lang}`, () =>
+    sanityClient.fetch(
+      `*[_type == "seoSettings" && translations.en.slug.current == "contact"][0]{
       "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
     }.slug`,
-    { lang },
+      { lang },
+    ),
   );
 }
 
-export async function getContactInfo(lang: Locale) {
-  return sanityClient.fetch<ContactInfo | null>(
-    `*[_type == "contactInfo"][0]{
+export function getContactInfo(lang: Locale): Promise<ContactInfo | null> {
+  return cached(`getContactInfo:${lang}`, () =>
+    sanityClient.fetch<ContactInfo | null>(
+      `*[_type == "contactInfo"][0]{
       "locationName": coalesce(locationName[$lang], locationName.en),
       address, phone, email, advisorName,
       "advisorTitle": coalesce(advisorTitle[$lang], advisorTitle.en)
     }`,
-    { lang },
+      { lang },
+    ),
   );
 }
 
-export async function getReviewCount(): Promise<number> {
-  return sanityClient.fetch(`count(*[_type == "review"])`);
+export function getReviewCount(): Promise<number> {
+  return cached("getReviewCount", () =>
+    sanityClient.fetch(`count(*[_type == "review"])`),
+  );
 }
 
 export async function getReviews(lang: Locale): Promise<Review[]> {
@@ -232,13 +250,13 @@ export async function getLegalPageData(
 }
 
 /** Per-language slugs for the listings index page (from seoSettings). */
-export async function getListingsSlugs(): Promise<
-  Partial<Record<Locale, string>>
-> {
-  return sanityClient.fetch(
-    `*[_type == "seoSettings" && translations.en.slug.current == "listings"][0]{
+export function getListingsSlugs(): Promise<Partial<Record<Locale, string>>> {
+  return cached("getListingsSlugs", () =>
+    sanityClient.fetch(
+      `*[_type == "seoSettings" && translations.en.slug.current == "listings"][0]{
       ${LOCALES.map((l) => `"${l}": translations.${l}.slug.current`).join(", ")}
     }`,
+    ),
   );
 }
 
@@ -314,11 +332,13 @@ export async function getProperties(
 }
 
 /** Per-language slugs for the blog index page (from seoSettings). */
-export async function getBlogSlugs(): Promise<Partial<Record<Locale, string>>> {
-  return sanityClient.fetch(
-    `*[_type == "seoSettings" && translations.en.slug.current == "blog"][0]{
+export function getBlogSlugs(): Promise<Partial<Record<Locale, string>>> {
+  return cached("getBlogSlugs", () =>
+    sanityClient.fetch(
+      `*[_type == "seoSettings" && translations.en.slug.current == "blog"][0]{
       ${LOCALES.map((l) => `"${l}": translations.${l}.slug.current`).join(", ")}
     }`,
+    ),
   );
 }
 
