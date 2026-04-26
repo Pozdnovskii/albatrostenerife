@@ -46,7 +46,7 @@ const breadcrumbs = [
 
 <!-- Desktop: two-column grid. Mobile: single column. -->
 <div
-  class="bg-white md:bg-gray-100 lg:grid lg:grid-cols-[1fr_24rem] lg:items-start"
+  class="bg-white md:bg-gray-100 lg:grid lg:grid-cols-[1fr_24rem] lg:items-start xl:grid-cols-[1fr_28rem]"
 >
   <!-- Left: property content -->
   <div>
@@ -74,7 +74,7 @@ const breadcrumbs = [
     class="hidden lg:block lg:sticky lg:top-10 lg:py-section-xs lg:pr-svw 2xl:pr-0"
   >
     <div class="rounded-xl bg-white p-6 text-black">
-      <ContactForm {lang} sourceName={property.enTitle ?? property.title} />
+      <ContactForm {lang} sourceName={property.enTitle ?? property.title} singleCol />
     </div>
   </aside>
 </div>

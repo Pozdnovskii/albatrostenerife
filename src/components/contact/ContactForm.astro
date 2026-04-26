@@ -8,9 +8,11 @@ interface Props {
   showAptNo?: boolean;
   /** English label used in admin email subject, e.g. "Rental Management" */
   sourceName?: string;
+  /** Force single-column layout (e.g. narrow sidebar) */
+  singleCol?: boolean;
 }
 
-const { lang = DEFAULT_LOCALE, showAptNo = false, sourceName } = Astro.props;
+const { lang = DEFAULT_LOCALE, showAptNo = false, sourceName, singleCol = false } = Astro.props;
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
 const labelClass = "block font-medium mb-1";
@@ -61,24 +63,28 @@ const inputClass =
     </div>
   )}
 
-  <div>
+  <div class:list={[singleCol && "sm:max-md:col-span-2 lg:col-span-2"]}>
     <label for="email" class={labelClass}>{t(lang, "form.email")}</label>
     <input
       type="email"
       id="email"
       name="email"
       required
+      autocomplete="email"
       placeholder={t(lang, "form.email.placeholder")}
       class={inputClass}
     />
   </div>
 
-  <div>
+  <div class:list={[singleCol && "sm:max-md:col-span-2 lg:col-span-2"]}>
     <label for="phone" class={labelClass}>{t(lang, "form.phone")}</label>
     <input
       type="tel"
       id="phone"
       name="phone"
+      inputmode="tel"
+      autocomplete="tel"
+      pattern="[\+\d\s\-()\[\]]{6,20}"
       placeholder={t(lang, "form.phone.placeholder")}
       class={inputClass}
     />
