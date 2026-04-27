@@ -176,19 +176,17 @@ export function clientConfirmationEmail(
 
             <!-- Contact buttons -->
             <table cellpadding="0" cellspacing="0">
-              <tr>
-                ${waHref ? `
-                <td style="padding-right:12px;">
-                  <a href="${waHref}" style="display:inline-block;background:${ACCENT};color:#ffffff;text-decoration:none;font-size:14px;font-family:Arial,sans-serif;padding:10px 20px;border-radius:6px;">
-                    WhatsApp
-                  </a>
-                </td>` : ""}
-                <td>
-                  <a href="mailto:${contactEmail}" style="display:inline-block;background:#111111;color:#ffffff;text-decoration:none;font-size:14px;font-family:Arial,sans-serif;padding:10px 20px;border-radius:6px;">
-                    ${contactEmail}
-                  </a>
-                </td>
-              </tr>
+              ${waHref ? `
+              <tr><td style="padding-bottom:8px;">
+                <a href="${waHref}" style="display:inline-block;background:${ACCENT};color:#ffffff;text-decoration:none;font-size:14px;font-family:Arial,sans-serif;padding:10px 20px;border-radius:6px;">
+                  WhatsApp
+                </a>
+              </td></tr>` : ""}
+              <tr><td>
+                <a href="mailto:${contactEmail}" style="display:inline-block;background:#111111;color:#ffffff;text-decoration:none;font-size:14px;font-family:Arial,sans-serif;padding:10px 20px;border-radius:6px;">
+                  ${contactEmail}
+                </a>
+              </td></tr>
             </table>
           </td>
         </tr>
