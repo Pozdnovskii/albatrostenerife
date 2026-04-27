@@ -172,7 +172,9 @@ export async function getServicePageData(
       "metaDescription": coalesce(metaDescription[$lang], metaDescription.en),
       "slugs":           { ${slugsProjection()} },
       "imageDesktop":    imageDesktop.asset->{ "url": url, "width": metadata.dimensions.width, "height": metadata.dimensions.height },
-      "imageMobile":     imageMobile.asset->{ "url": url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }
+      "imageMobile":     imageMobile.asset->{ "url": url, "width": metadata.dimensions.width, "height": metadata.dimensions.height },
+      "formMessagePlaceholder": formMessagePlaceholder[$lang],
+      "formSubmitText":         formSubmitText[$lang]
     }`,
     { lang, enSlug },
   );
@@ -187,6 +189,20 @@ export function getContactPageSlug(lang: Locale): Promise<string | null> {
       `*[_type == "seoSettings" && translations.en.slug.current == "contact"][0]{
       "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
     }.slug`,
+      { lang },
+    ),
+  );
+}
+
+export function getPrivacyPolicyPage(
+  lang: Locale,
+): Promise<{ slug: string | null; title: string | null } | null> {
+  return cached(`getPrivacyPolicyPage:${lang}`, () =>
+    sanityClient.fetch(
+      `*[_type == "seoSettings" && translations.en.slug.current == "privacy-policy"][0]{
+      "slug":  coalesce(translations[$lang].slug.current, translations.en.slug.current),
+      "title": coalesce(translations[$lang].metaTitle, title)
+    }`,
       { lang },
     ),
   );

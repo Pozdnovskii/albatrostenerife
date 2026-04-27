@@ -48,6 +48,8 @@ export type ServicePageData = {
   slugs: Partial<Record<Locale, string>>;
   imageDesktop: { url: string; width: number; height: number } | null;
   imageMobile: { url: string; width: number; height: number } | null;
+  formMessagePlaceholder: string | null;
+  formSubmitText: string | null;
 };
 
 // ── Components ────────────────────────────────────────────────────────────────

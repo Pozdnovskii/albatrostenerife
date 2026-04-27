@@ -7,9 +7,11 @@ interface Props {
   lang?: Locale;
   showAptNo?: boolean;
   sourceName?: string;
+  messagePlaceholder?: string | null;
+  submitText?: string | null;
 }
 
-const { lang = DEFAULT_LOCALE, showAptNo = false, sourceName } = Astro.props;
+const { lang = DEFAULT_LOCALE, showAptNo = false, sourceName, messagePlaceholder, submitText } = Astro.props;
 ---
 
 <dialog
@@ -24,7 +26,7 @@ const { lang = DEFAULT_LOCALE, showAptNo = false, sourceName } = Astro.props;
   >
     ✕
   </button>
-  <ContactForm {lang} {showAptNo} {sourceName} />
+  <ContactForm {lang} {showAptNo} {sourceName} {messagePlaceholder} {submitText} />
 </dialog>
 
 <script>

@@ -16,6 +16,7 @@ export const service = defineType({
     { name: "card", title: "Card", default: true },
     { name: "seo", title: "SEO" },
     { name: "page", title: "Page" },
+    { name: "form", title: "Form" },
   ],
 
   fields: [
@@ -159,11 +160,21 @@ export const service = defineType({
       ],
     }),
 
-    translatedField("ctaText", "CTA Text", { group: "page" }),
     translatedField("agentQuote", "Agent Quote", {
       type: "text",
       rows: 5,
       group: "page",
+    }),
+
+    // ── Form ──────────────────────────────────────────────────────────────────
+    translatedField("ctaText", "CTA Text", { group: "form" }),
+    translatedField("formMessagePlaceholder", "Message Placeholder", {
+      required: false,
+      group: "form",
+    }),
+    translatedField("formSubmitText", "Submit Button Text", {
+      required: false,
+      group: "form",
     }),
   ],
 

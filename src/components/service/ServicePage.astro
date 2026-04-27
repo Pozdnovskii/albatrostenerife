@@ -38,4 +38,4 @@ const breadcrumbs = [
 {contact && service.agentQuote && (
   <ServiceAgent agentQuote={service.agentQuote} {contact} emailHref={contactEmailHref} />
 )}
-<ContactModal {lang} showAptNo sourceName={service.enTitle ?? service.title} />
+<ContactModal {lang} showAptNo sourceName={service.enTitle ?? service.title} messagePlaceholder={service.formMessagePlaceholder} submitText={service.formSubmitText} />

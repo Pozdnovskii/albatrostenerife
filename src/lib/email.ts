@@ -12,50 +12,85 @@ const i18n: Record<string, {
   subject: string;
   greeting: (name?: string | null) => string;
   body: string;
+  explore: string;
+  linkProperties: string;
+  linkServices: string;
+  linkActivities: string;
+  listingsPath: string;
   contact: string;
   footer: string;
 }> = {
   en: {
     subject: "We received your inquiry — Albatros Tenerife",
     greeting: (name) => name ? `Hi ${name},` : "Hello,",
-    body: "Thank you for reaching out! We have received your message and will get back to you shortly. We typically reply the same day, including evenings and weekends.",
-    contact: "If you have any urgent questions, feel free to contact us directly:",
-    footer: "Albatros Tenerife · Park Albatros Resort, Golf del Sur, Tenerife",
+    body: "Thank you for reaching out. We've received your message and will get back to you within 24 hours.",
+    explore: "While you wait, you're welcome to explore what we offer:",
+    linkProperties: "Properties in Golf del Sur",
+    linkServices: "Services",
+    linkActivities: "Activities",
+    listingsPath: "/listings",
+    contact: "If you have any urgent questions, contact us directly:",
+    footer: "Albatros Tenerife – Real Estate & Services · Park Albatros · Golf del Sur, Tenerife",
   },
   cs: {
     subject: "Přijali jsme váš dotaz — Albatros Tenerife",
     greeting: (name) => name ? `Dobrý den, ${name},` : "Dobrý den,",
-    body: "Děkujeme za váš dotaz! Obdrželi jsme vaši zprávu a brzy se vám ozveme. Obvykle odpovídáme ten samý den, i večer a o víkendech.",
+    body: "Děkujeme za váš dotaz. Obdrželi jsme vaši zprávu a ozveme se vám do 24 hodin.",
+    explore: "Mezitím se můžete podívat na naši nabídku:",
+    linkProperties: "Nemovitosti na Golf del Sur",
+    linkServices: "Služby",
+    linkActivities: "Aktivity",
+    listingsPath: "/cs/nemovitosti",
     contact: "Pro urgentní dotazy nás kontaktujte přímo:",
-    footer: "Albatros Tenerife · Park Albatros Resort, Golf del Sur, Tenerife",
+    footer: "Albatros Tenerife – Nemovitosti & Služby · Park Albatros · Golf del Sur, Tenerife",
   },
   pl: {
     subject: "Otrzymaliśmy Twoje zapytanie — Albatros Tenerife",
     greeting: (name) => name ? `Witaj, ${name},` : "Witaj,",
-    body: "Dziękujemy za kontakt! Otrzymaliśmy Twoją wiadomość i wkrótce się odezwiemy. Zazwyczaj odpowiadamy tego samego dnia, również wieczorami i w weekendy.",
+    body: "Dziękujemy za kontakt. Otrzymaliśmy Twoją wiadomość i odpowiemy w ciągu 24 godzin.",
+    explore: "W międzyczasie zapraszamy do zapoznania się z naszą ofertą:",
+    linkProperties: "Nieruchomości na Golf del Sur",
+    linkServices: "Usługi",
+    linkActivities: "Aktywności",
+    listingsPath: "/pl/listy",
     contact: "W pilnych sprawach skontaktuj się z nami bezpośrednio:",
-    footer: "Albatros Tenerife · Park Albatros Resort, Golf del Sur, Tenerife",
+    footer: "Albatros Tenerife – Nieruchomości & Usługi · Park Albatros · Golf del Sur, Tenerife",
   },
   hu: {
     subject: "Megkaptuk megkeresését — Albatros Tenerife",
     greeting: (name) => name ? `Kedves ${name},` : "Kedves Érdeklődő,",
-    body: "Köszönjük megkeresését! Megkaptuk üzenetét, és hamarosan felvesszük Önnel a kapcsolatot. Általában ugyanazon a napon válaszolunk, este és hétvégén is.",
+    body: "Köszönjük megkeresését. Megkaptuk üzenetét, és 24 órán belül válaszolunk.",
+    explore: "Addig is, tekintse meg kínálatunkat:",
+    linkProperties: "Ingatlanok a Golf del Sur-on",
+    linkServices: "Szolgáltatások",
+    linkActivities: "Tevékenységek",
+    listingsPath: "/hu/listak",
     contact: "Sürgős kérdések esetén vegye fel velünk a kapcsolatot közvetlenül:",
-    footer: "Albatros Tenerife · Park Albatros Resort, Golf del Sur, Tenerife",
+    footer: "Albatros Tenerife – Ingatlan & Szolgáltatások · Park Albatros · Golf del Sur, Tenerife",
   },
   it: {
     subject: "Abbiamo ricevuto la sua richiesta — Albatros Tenerife",
     greeting: (name) => name ? `Gentile ${name},` : "Gentile Cliente,",
-    body: "Grazie per averci contattato! Abbiamo ricevuto il suo messaggio e la contatteremo a breve. Di solito rispondiamo nella stessa giornata, anche la sera e nei fine settimana.",
+    body: "Grazie per averci contattato. Abbiamo ricevuto il suo messaggio e le risponderemo entro 24 ore.",
+    explore: "Nel frattempo, esplori la nostra offerta:",
+    linkProperties: "Proprietà a Golf del Sur",
+    linkServices: "Servizi",
+    linkActivities: "Attività",
+    listingsPath: "/it/annunci",
     contact: "Per domande urgenti, ci contatti direttamente:",
-    footer: "Albatros Tenerife · Park Albatros Resort, Golf del Sur, Tenerife",
+    footer: "Albatros Tenerife – Immobiliare & Servizi · Park Albatros · Golf del Sur, Tenerife",
   },
   es: {
     subject: "Hemos recibido su consulta — Albatros Tenerife",
     greeting: (name) => name ? `Estimado/a ${name},` : "Estimado/a Cliente,",
-    body: "¡Gracias por ponerse en contacto con nosotros! Hemos recibido su mensaje y nos pondremos en contacto con usted en breve. Normalmente respondemos el mismo día, incluso por la noche y los fines de semana.",
+    body: "Gracias por contactarnos. Hemos recibido su mensaje y le responderemos en un plazo de 24 horas.",
+    explore: "Mientras tanto, le invitamos a explorar nuestra oferta:",
+    linkProperties: "Propiedades en Golf del Sur",
+    linkServices: "Servicios",
+    linkActivities: "Actividades",
+    listingsPath: "/es/listados",
     contact: "Para preguntas urgentes, contáctenos directamente:",
-    footer: "Albatros Tenerife · Park Albatros Resort, Golf del Sur, Tenerife",
+    footer: "Albatros Tenerife – Inmobiliaria & Servicios · Park Albatros · Golf del Sur, Tenerife",
   },
 };
 
@@ -81,13 +116,17 @@ export function clientConfirmationEmail(
     "",
     t.body,
     "",
+    t.explore,
+    `→ ${t.linkProperties}: ${SITE_URL}${t.listingsPath}`,
+    `→ ${t.linkServices}: ${SITE_URL}/#services`,
+    `→ ${t.linkActivities}: ${SITE_URL}/#activities`,
+    "",
     "---",
     t.contact,
     ...(waHref ? [`WhatsApp: ${waHref}`] : []),
     `Email: ${contactEmail}`,
     "---",
     t.footer,
-    SITE_URL,
   ].join("\n");
 
   const html = `<!DOCTYPE html>
@@ -115,6 +154,20 @@ export function clientConfirmationEmail(
           <td style="padding:40px 40px 32px;">
             <p style="margin:0 0 16px;font-size:16px;color:#111;">${t.greeting(firstName)}</p>
             <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#333;">${t.body}</p>
+
+            <!-- Explore links -->
+            <p style="margin:0 0 12px;font-size:14px;color:#555;">${t.explore}</p>
+            <table cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+              <tr><td style="padding:4px 0;font-size:14px;color:#333;font-family:Arial,sans-serif;">
+                → <a href="${SITE_URL}${t.listingsPath}" style="color:${ACCENT};text-decoration:none;">${t.linkProperties}</a>
+              </td></tr>
+              <tr><td style="padding:4px 0;font-size:14px;color:#333;font-family:Arial,sans-serif;">
+                → <a href="${SITE_URL}/#services" style="color:${ACCENT};text-decoration:none;">${t.linkServices}</a>
+              </td></tr>
+              <tr><td style="padding:4px 0;font-size:14px;color:#333;font-family:Arial,sans-serif;">
+                → <a href="${SITE_URL}/#activities" style="color:${ACCENT};text-decoration:none;">${t.linkActivities}</a>
+              </td></tr>
+            </table>
 
             <!-- Divider -->
             <hr style="border:none;border-top:1px solid #e5e5e5;margin:0 0 24px;">
