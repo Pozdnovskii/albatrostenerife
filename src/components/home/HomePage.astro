@@ -1,5 +1,6 @@
 ---
 import type { Locale } from "@i18n/config";
+import type { Review } from "@lib/types";
 import HeroSection from "./HeroSection.astro";
 import ResortSection from "./ResortSection.astro";
 import ListingsSection from "./ListingsSection.astro";
@@ -11,9 +12,10 @@ import BlogSection from "./BlogSection.astro";
 
 interface Props {
   lang: Locale;
+  reviews: Review[];
 }
 
-const { lang } = Astro.props;
+const { lang, reviews } = Astro.props;
 ---
 
 <HeroSection {lang} />
@@ -21,6 +23,6 @@ const { lang } = Astro.props;
 <ListingsSection {lang} />
 <ServicesSection {lang} />
 <ActivitiesSection {lang} />
-<ReviewsSection {lang} />
+<ReviewsSection {lang} {reviews} />
 <ContactSection {lang} sourceName="Home Page" />
 <BlogSection {lang} />

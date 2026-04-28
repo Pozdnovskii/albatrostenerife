@@ -4,16 +4,15 @@ import SliderButton from "@components/ui/SliderButton.astro";
 import { t } from "@i18n/ui";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
+import type { Review } from "@lib/types";
 import SectionHeading from "@components/ui/SectionHeading.astro";
-import { getReviews } from "@lib/queries";
 
 interface Props {
   lang?: Locale;
+  reviews: Review[];
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
-
-const reviews = await getReviews(lang);
+const { lang = DEFAULT_LOCALE, reviews } = Astro.props;
 ---
 
 <section id="reviews" class="section bg-gray-100">

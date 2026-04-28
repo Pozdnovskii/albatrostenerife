@@ -227,20 +227,20 @@ export function getReviewCount(): Promise<number> {
   );
 }
 
-export async function getReviews(lang: Locale): Promise<Review[]> {
-  return sanityClient.fetch(
+export function getReviews(lang: Locale): Promise<Review[]> {
+  return cached(`getReviews:${lang}`, () => sanityClient.fetch(
     `*[_type == "review"] | order(order asc) {
       "name":     coalesce(name[$lang], name.en),
       "location": coalesce(location[$lang], location.en),
       "text":     coalesce(text[$lang], text.en),
-      "photoUrl": photo.asset->url
+      "photoUrl": photo.asset->url + "?w=192"
     }`,
     { lang },
-  );
+  ));
 }
 
-export async function getActivities(lang: Locale): Promise<Activity[]> {
-  return sanityClient.fetch(
+export function getActivities(lang: Locale): Promise<Activity[]> {
+  return cached(`getActivities:${lang}`, () => sanityClient.fetch(
     `*[_type == "activity"] | order(order asc) {
       "name":       coalesce(name[$lang], name.en),
       "buttonText": coalesce(buttonText[$lang], buttonText.en),
@@ -249,7 +249,7 @@ export async function getActivities(lang: Locale): Promise<Activity[]> {
       "alt":        coalesce(image.alt[$lang], image.alt.en)
     }`,
     { lang },
-  );
+  ));
 }
 
 export async function getLegalPageData(
@@ -458,8 +458,8 @@ export async function getPostDetail(
   );
 }
 
-export async function getServices(lang: Locale): Promise<ServiceCard[]> {
-  return sanityClient.fetch(
+export function getServices(lang: Locale): Promise<ServiceCard[]> {
+  return cached(`getServices:${lang}`, () => sanityClient.fetch(
     `*[_type == "service"] | order(order asc) {
       "name":            coalesce(name[$lang], name.en),
       "cardDescription": coalesce(cardDescription[$lang], cardDescription.en),
@@ -468,5 +468,5 @@ export async function getServices(lang: Locale): Promise<ServiceCard[]> {
       "slug":            coalesce(slug[$lang].current, slug.en.current)
     }`,
     { lang },
-  );
+  ));
 }

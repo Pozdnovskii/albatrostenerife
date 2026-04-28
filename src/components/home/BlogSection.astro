@@ -32,6 +32,6 @@ const blogHref = `${localePrefix(lang)}/${blogSlug}`;
 
     <BlogList {posts} {lang} {blogSlug} class="mb-10" />
 
-    <a href={blogHref} class="btn btn-outline mx-auto"> View All Posts </a>
+    <a href={blogHref} class="btn btn-outline mx-auto">{t(lang, "blog.viewAll")}</a>
   </div>
 </section>

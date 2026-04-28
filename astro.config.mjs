@@ -9,7 +9,7 @@ import sanity from "@sanity/astro";
 export default defineConfig({
   site: "https://albatrostenerife.com",
   trailingSlash: "never",
-  build: { format: "file" },
+  build: { format: "file", inlineStylesheets: "always" },
 
   integrations: [
     sitemap({
@@ -38,7 +38,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      exclude: ["@sanity/client", "@sanity/image-url"],
+      exclude: ["@sanity/client"],
       include: ["@sanity/eventsource"],
     },
   },
@@ -50,7 +50,7 @@ export default defineConfig({
 
   experimental: {
     // Rust-based compiler: faster .astro file parsing than the default Go compiler
-    // rustCompiler: true,
+    rustCompiler: true,
     // Queue-based rendering instead of recursion: less memory, faster builds
     // Node pooling reuses component nodes across renders (default pool: 1000)
     queuedRendering: { enabled: true },
