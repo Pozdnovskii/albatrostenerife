@@ -21,13 +21,13 @@ const [desktop, mobile, slugs] = await Promise.all([
     src: desktopSrc,
     widths: [1024, 1440, 1920],
     sizes: "100vw",
-    format: "webp",
+    format: "avif",
   }),
   getImage({
     src: mobileSrc,
     widths: [390, 640, 828],
     sizes: "100vw",
-    format: "webp",
+    format: "avif",
   }),
   sanityClient.fetch<{ btn1: string | null; btn2: string | null }>(
     `{
