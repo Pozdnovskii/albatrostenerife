@@ -77,8 +77,7 @@ export default defineConfig({
     // 'node' runs prerendered pages in Node.js at build time so Sharp works correctly.
     // On-demand rendered pages (e.g. contact form endpoint) still run in workerd.
     prerenderEnvironment: "node",
-    // Disable Cloudflare's image-transform endpoint (requires cloudflare:workers runtime).
-    // All image optimisation is handled by Sharp at build time via astro/assets.
-    imageService: "passthrough",
+    // 'compile' uses Sharp at build time for prerendered pages.
+    imageService: "custom",
   }),
 });
