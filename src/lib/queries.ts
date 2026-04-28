@@ -341,7 +341,7 @@ export async function getProperties(
       "status":       status->{ "name": coalesce(name[$lang], name.en), "key": key },
       "labels":       labels[]->{ "name": coalesce(name[$lang], name.en), "key": key },
       "propertyType": propertyType->{ "name": coalesce(name[$lang], name.en) },
-      "images":       gallery[].asset->url
+      "images":       gallery[].asset->url + "?w=960"
     }`,
     { lang, limit, excludeEnSlug },
   );
@@ -371,7 +371,7 @@ export async function getPosts(
     `${filter} | order(publishedAt desc)${slice} {
       "title":        coalesce(title[$lang], title.en),
       "description":  coalesce(description[$lang], description.en),
-      "mainImage":    mainImage.asset->url,
+      "mainImage":    mainImage.asset->url + "?w=960",
       "mainImageAlt": coalesce(mainImage.alt[$lang], mainImage.alt.en),
       publishedAt,
       "tags":         coalesce(tags[]->{  "name": coalesce(name[$lang], name.en) }, []),
@@ -390,7 +390,7 @@ export async function getPostDetail(
       "title":           coalesce(title[$lang], title.en),
       "enTitle":         title.en,
       "description":     coalesce(description[$lang], description.en),
-      "mainImage":       mainImage.asset->url,
+      "mainImage":       mainImage.asset->url + "?w=1880",
       "mainImageAlt":    coalesce(mainImage.alt[$lang], mainImage.alt.en),
       publishedAt,
       "tags":            tags[]->{  "name": coalesce(name[$lang], name.en) },
