@@ -60,8 +60,14 @@ const reviews = await getReviews(lang);
 
 <script>
   import { initSlider } from "@/scripts/slider";
-  setTimeout(() => {
-    const el = document.querySelector<HTMLElement>("[data-reviews-slider]");
-    if (el) initSlider(el, { infinite: true });
-  }, 0);
+  const el = document.querySelector<HTMLElement>("[data-reviews-slider]");
+  if (el) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      if (entries[0].isIntersecting) {
+        initSlider(el, { infinite: true });
+        obs.disconnect();
+      }
+    });
+    observer.observe(el);
+  }
 </script>

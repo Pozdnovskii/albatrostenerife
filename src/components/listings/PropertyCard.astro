@@ -150,9 +150,15 @@ const price = property.price
 
 <script>
   import { initSlider } from "@/scripts/slider";
-  setTimeout(() => {
-    document
-      .querySelectorAll<HTMLElement>("[data-prop-slider]")
-      .forEach((el) => initSlider(el, { infinite: true }));
-  }, 0);
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        initSlider(entry.target as HTMLElement, { infinite: true });
+        obs.unobserve(entry.target);
+      }
+    });
+  });
+  document
+    .querySelectorAll<HTMLElement>("[data-prop-slider]")
+    .forEach((el) => observer.observe(el));
 </script>
