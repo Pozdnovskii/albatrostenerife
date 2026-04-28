@@ -28,6 +28,7 @@ const [desktop, mobile, slugs] = await Promise.all([
     widths: [390, 640, 828],
     sizes: "100vw",
     format: "avif",
+    quality: 45,
   }),
   sanityClient.fetch<{ btn1: string | null; btn2: string | null }>(
     `{

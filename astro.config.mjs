@@ -66,8 +66,8 @@ export default defineConfig({
     service: {
       entrypoint: "astro/assets/services/sharp",
       config: {
-        webp: { effort: 6, quality: 65 },
-        avif: { effort: 6, quality: 65 },
+        webp: { effort: 6, quality: 75 },
+        avif: { effort: 6, quality: 75 },
       },
     },
   },
