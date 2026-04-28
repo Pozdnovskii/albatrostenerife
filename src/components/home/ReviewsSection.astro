@@ -60,6 +60,8 @@ const reviews = await getReviews(lang);
 
 <script>
   import { initSlider } from "@/scripts/slider";
-  const el = document.querySelector<HTMLElement>("[data-reviews-slider]");
-  if (el) initSlider(el, { infinite: true });
+  setTimeout(() => {
+    const el = document.querySelector<HTMLElement>("[data-reviews-slider]");
+    if (el) initSlider(el, { infinite: true });
+  }, 0);
 </script>

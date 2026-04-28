@@ -122,6 +122,7 @@ const price = property.price
               width={640}
               height={480}
               loading="lazy"
+              sizes="(min-width: 1024px) calc(33vw - 24px), (min-width: 640px) calc(50vw - 24px), 100vw"
               class="w-full h-full object-cover transition-transform duration-500 group-has-[a:hover]:scale-105"
             />
           </li>
@@ -149,7 +150,9 @@ const price = property.price
 
 <script>
   import { initSlider } from "@/scripts/slider";
-  document
-    .querySelectorAll<HTMLElement>("[data-prop-slider]")
-    .forEach((el) => initSlider(el, { infinite: true }));
+  setTimeout(() => {
+    document
+      .querySelectorAll<HTMLElement>("[data-prop-slider]")
+      .forEach((el) => initSlider(el, { infinite: true }));
+  }, 0);
 </script>
