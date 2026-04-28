@@ -64,34 +64,6 @@ export const POST = async ({ request }: { request: Request }) => {
 
   const { firstName, aptNo, email, phone, message, lang, source, sourceName } = parsed.data;
 
-  // ── Save to Sanity ────────────────────────────────────────────────────────
-  const writeToken = import.meta.env.SANITY_API_WRITE_TOKEN;
-  if (writeToken) {
-    try {
-      const sanity = createClient({
-        projectId: "nr9v3mei",
-        dataset: "production",
-        apiVersion: "2026-04-10",
-        token: writeToken,
-        useCdn: false,
-      });
-      await sanity.create({
-        _type: "contactSubmission",
-        firstName,
-        aptNo: aptNo || null,
-        email,
-        phone: phone || null,
-        message: message || null,
-        lang,
-        sourceName: sourceName || null,
-        submittedAt: new Date().toISOString(),
-      });
-    } catch (err) {
-      console.error("Sanity write failed:", err);
-      // Don't block the response — email is the fallback
-    }
-  }
-
   // ── Send email via Resend ─────────────────────────────────────────────────
   const resendKey = import.meta.env.RESEND_API_KEY;
   if (resendKey) {

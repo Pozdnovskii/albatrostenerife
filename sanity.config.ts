@@ -21,7 +21,6 @@ import { blogCategory } from "@studio/schemas/blogCategory";
 import { blogTag } from "@studio/schemas/blogTag";
 import { blogPost } from "@studio/schemas/blogPost";
 import { blogCta } from "@studio/schemas/blogCta";
-import { contactSubmission } from "@studio/schemas/contactSubmission";
 
 export default defineConfig({
   name: "albatros-realestate",
@@ -73,8 +72,6 @@ export default defineConfig({
             S.documentTypeListItem("seoSettings").title("SEO Settings"),
             S.documentTypeListItem("navigation").title("Navigation"),
             S.documentTypeListItem("contactInfo").title("Contact Info"),
-            S.divider(),
-            S.documentTypeListItem("contactSubmission").title("Submissions"),
           ]),
     }),
     visionTool(),
@@ -107,7 +104,6 @@ export default defineConfig({
       blogTag,
       blogPost,
       blogCta,
-      contactSubmission,
     ],
   },
 });
