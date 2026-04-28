@@ -50,7 +50,7 @@ export default defineConfig({
 
   experimental: {
     // Rust-based compiler: faster .astro file parsing than the default Go compiler
-    rustCompiler: true,
+    // rustCompiler: true,
     // Queue-based rendering instead of recursion: less memory, faster builds
     // Node pooling reuses component nodes across renders (default pool: 1000)
     queuedRendering: { enabled: true },
