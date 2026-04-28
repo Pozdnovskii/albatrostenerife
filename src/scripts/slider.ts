@@ -18,19 +18,23 @@ export function initSlider(
 
   const prevBtn = container.querySelector<HTMLButtonElement>("[data-prev]");
   const nextBtn = container.querySelector<HTMLButtonElement>("[data-next]");
-  const w = () => track.offsetWidth;
   let timer: ReturnType<typeof setTimeout>;
 
   if (infinite) {
     const realSlides = Array.from(track.children) as HTMLElement[];
     const total = realSlides.length;
 
+    // Read width before DOM mutations to avoid forced reflow
+    let trackWidth = track.offsetWidth;
+    new ResizeObserver(() => { trackWidth = track.offsetWidth; }).observe(track);
+    const w = () => trackWidth;
+
     // Prepend clone of last slide, append clone of first slide
     track.appendChild(realSlides[0].cloneNode(true));
     track.insertBefore(realSlides[total - 1].cloneNode(true), realSlides[0]);
 
     let current = 1;
-    track.scrollLeft = w();
+    track.scrollLeft = trackWidth;
 
     const goTo = (index: number, smooth = true) => {
       current = index;
@@ -52,6 +56,9 @@ export function initSlider(
   } else {
     const total = track.children.length;
     let current = 0;
+    let trackWidth = 0;
+    const w = () => trackWidth || (trackWidth = track.offsetWidth);
+    new ResizeObserver(() => { trackWidth = 0; }).observe(track);
 
     const goTo = (n: number, smooth = true) => {
       current = Math.max(0, Math.min(n, total - 1));
@@ -69,6 +76,9 @@ export function initSlider(
 
     prevBtn?.addEventListener("click", () => goTo(current - 1));
     nextBtn?.addEventListener("click", () => goTo(current + 1));
-    goTo(0, false);
+
+    // Set initial button states without reading offsetWidth
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = total <= 1;
   }
 }
