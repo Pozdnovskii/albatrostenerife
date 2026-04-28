@@ -153,8 +153,8 @@ const price = property.price
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        initSlider(entry.target as HTMLElement);
         obs.unobserve(entry.target);
+        setTimeout(() => initSlider(entry.target as HTMLElement), 0);
       }
     });
   });

@@ -64,8 +64,8 @@ const reviews = await getReviews(lang);
   if (el) {
     const observer = new IntersectionObserver((entries, obs) => {
       if (entries[0].isIntersecting) {
-        initSlider(el, { infinite: true });
         obs.disconnect();
+        setTimeout(() => initSlider(el, { infinite: true }), 0);
       }
     });
     observer.observe(el);
