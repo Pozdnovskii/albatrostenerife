@@ -1,46 +1,50 @@
-# Astro Starter Kit: Basics
+# Albatros Tenerife — Real Estate Website
 
-```sh
-npm create astro@latest -- --template basics
+Astro 6 + Sanity + Cloudflare Workers + Tailwind v4
+
+## Stack
+
+- **Frontend:** Astro 6, Tailwind v4, React (islands)
+- **CMS:** Sanity v5 (Studio at `/studio`)
+- **Hosting:** Cloudflare Workers
+- **Email:** Resend
+- **i18n:** EN (default, no prefix), CS, PL, HU, IT, ES
+
+## Local Development
+
+```bash
+npm install
+npm run dev        # Astro dev server → localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Environment Variables
 
-## 🚀 Project Structure
+Copy `.env.example` to `.env` and fill in:
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```
+SANITY_PROJECT_ID=
+SANITY_DATASET=
+SANITY_API_TOKEN=       # read-only token
+RESEND_API_KEY=
+RESEND_FROM=
+RESEND_TO=
+TURNSTILE_SECRET_KEY=
+PUBLIC_TURNSTILE_SITE_KEY=
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Sanity Studio
 
-## 🧞 Commands
+Local: `localhost:4321/studio`
+Cloud: `albatros-tenerife.sanity.studio`
 
-All commands are run from the root of the project, from a terminal:
+Deploy studio to cloud:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```bash
+npx sanity deploy
+```
 
-## 👀 Want to learn more?
+## Deploy
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Push to `main` → Cloudflare Workers auto-builds via GitHub integration.
+
+Manual deploy via Cloudflare dashboard or wrangler.
