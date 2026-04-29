@@ -71,6 +71,9 @@ const { headerNav, footerNav } = await sanityClient.fetch<{
       <slot />
     </main>
     <Footer lang={lang} navItems={footerNav?.items ?? []} />
-    <script is:inline async src="https://cloud.umami.is/script.js" data-website-id="6d267fb3-2235-4b00-910c-ba6378c8d786"></script>
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="62a2070f-d111-493b-9aaa-fb16e704f8aa"></script>
   </body>
 </html>

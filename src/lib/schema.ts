@@ -231,7 +231,6 @@ export function serviceSchema(
         name,
         ...(description ? { description } : {}),
         url,
-        inLanguage: lang,
         provider: { "@id": ORG_ID },
         areaServed: {
           "@type": "Place",
