@@ -17,7 +17,6 @@ import { contactInfo } from "@studio/schemas/contactInfo";
 import { service } from "@studio/schemas/service";
 import { activity } from "@studio/schemas/activity";
 import { legalPage } from "@studio/schemas/legalPage";
-import { blogCategory } from "@studio/schemas/blogCategory";
 import { blogTag } from "@studio/schemas/blogTag";
 import { blogPost } from "@studio/schemas/blogPost";
 import { blogCta } from "@studio/schemas/blogCta";
@@ -58,7 +57,6 @@ export default defineConfig({
                   .items([
                     S.documentTypeListItem("blogPost").title("Posts"),
                     S.divider(),
-                    S.documentTypeListItem("blogCategory").title("Categories"),
                     S.documentTypeListItem("blogTag").title("Tags"),
                     S.documentTypeListItem("blogCta").title("CTA Buttons"),
                   ]),
@@ -100,7 +98,6 @@ export default defineConfig({
       service,
       activity,
       legalPage,
-      blogCategory,
       blogTag,
       blogPost,
       blogCta,

@@ -294,6 +294,7 @@ export async function getPropertyDetail(
       "labels":          labels[]->{ "name": coalesce(name[$lang], name.en), "key": key },
       "propertyType":    propertyType->{ "name": coalesce(name[$lang], name.en) },
       "images":          gallery[].asset->url,
+      "galleryImages":   gallery[]{"url": asset->url, "alt": coalesce(alt[$lang], alt.en)},
       "description":     coalesce(description[$lang], description.en),
       year,
       "features":        features[]->{ "name": coalesce(name[$lang], name.en) },

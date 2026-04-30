@@ -78,18 +78,6 @@ export const blogPost = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
-      name: "categories",
-      title: "Categories",
-      type: "array",
-      group: "meta",
-      of: [
-        defineArrayMember({
-          type: "reference",
-          to: [{ type: "blogCategory" }],
-        }),
-      ],
-    }),
-    defineField({
       name: "tags",
       title: "Tags",
       type: "array",

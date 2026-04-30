@@ -250,12 +250,26 @@ export function blogPostSchema(
   lang: Locale,
   breadcrumbs: BreadcrumbItem[]
 ) {
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      { "@id": ORG_ID },
-      buildBlogPosting(post, url, lang),
-      buildBreadcrumb(breadcrumbs, `${url}#breadcrumb`),
-    ],
-  };
+  const graph: unknown[] = [
+    { "@id": ORG_ID },
+    buildBlogPosting(post, url, lang),
+    buildBreadcrumb(breadcrumbs, `${url}#breadcrumb`),
+  ];
+
+  if (post.faq?.length) {
+    graph.push({
+      "@type": "FAQPage",
+      "@id": `${url}#faq`,
+      mainEntity: post.faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
 }

@@ -98,6 +98,7 @@ export type Property = {
   propertyType: { name: string } | null;
   images: string[];
   // — detail-only (absent on card queries) —
+  galleryImages?: { url: string; alt: string | null }[];
   description?: PTBlock[] | null;
   year?: number | null;
   features?: { name: string }[] | null;
@@ -107,6 +108,15 @@ export type Property = {
   videoUrl?: string | null;
   virtualTourUrl?: string | null;
 };
+
+export function propertyImageAlt(
+  image: { alt: string | null },
+  index: number,
+  title: string
+): string {
+  if (image.alt) return image.alt;
+  return index === 0 ? title : `${title} ${index + 1}`;
+}
 
 
 export type Post = {

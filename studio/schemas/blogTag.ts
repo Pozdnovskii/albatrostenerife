@@ -1,6 +1,5 @@
-import { defineField, defineType } from "sanity";
-import { translatedField, LANGUAGES, LANGUAGE_TITLES, DEFAULT_LOCALE } from "../lib/constants";
-import type { Locale } from "@i18n/config";
+import { defineType } from "sanity";
+import { translatedField, DEFAULT_LOCALE } from "../lib/constants";
 
 export const blogTag = defineType({
   name: "blogTag",
@@ -9,21 +8,6 @@ export const blogTag = defineType({
 
   fields: [
     translatedField("name", "Name"),
-
-    defineField({
-      name: "slug",
-      title: "Slugs",
-      type: "object",
-      fields: LANGUAGES.map((lang) =>
-        defineField({
-          name: lang,
-          title: LANGUAGE_TITLES[lang as Locale],
-          type: "slug",
-          options: { source: `name.${lang}` },
-          validation: lang === DEFAULT_LOCALE ? (r) => r.required() : undefined,
-        }),
-      ),
-    }),
   ],
 
   orderings: [
