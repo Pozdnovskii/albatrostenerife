@@ -130,6 +130,7 @@ export type Post = {
   publishedAt: string;
   tag: { name: string } | null;
   tagRef?: string | null;
+  tagSlug?: string | null;
   featured?: boolean;
   // — detail-only (absent on card queries) —
   body?: unknown[] | null;

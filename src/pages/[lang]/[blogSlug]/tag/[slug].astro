@@ -18,13 +18,31 @@ export async function getStaticPaths() {
         blogSlug: blogSlugs[lang] ?? "blog",
         slug: tag.slugs[lang] ?? tag.slugs[DEFAULT_LOCALE]!,
       },
-      props: { tagId: tag._id, tagNames: tag.names, tagSlugs: tag.slugs, tagMetaTitles: tag.metaTitles, tagMetaDescriptions: tag.metaDescriptions, blogSlugs },
+      props: {
+        tagId: tag._id,
+        tagNames: tag.names,
+        tagSlugs: tag.slugs,
+        tagMetaTitles: tag.metaTitles,
+        tagMetaDescriptions: tag.metaDescriptions,
+        blogSlugs,
+      },
     })),
   );
 }
 
-const { lang, blogSlug, slug } = Astro.params as { lang: Locale; blogSlug: string; slug: string };
-const { tagId, tagNames, tagSlugs, tagMetaTitles, tagMetaDescriptions, blogSlugs } = Astro.props as {
+const { lang, blogSlug, slug } = Astro.params as {
+  lang: Locale;
+  blogSlug: string;
+  slug: string;
+};
+const {
+  tagId,
+  tagNames,
+  tagSlugs,
+  tagMetaTitles,
+  tagMetaDescriptions,
+  blogSlugs,
+} = Astro.props as {
   tagId: string;
   tagNames: Partial<Record<Locale, string>>;
   tagSlugs: Partial<Record<Locale, string>>;
@@ -34,8 +52,10 @@ const { tagId, tagNames, tagSlugs, tagMetaTitles, tagMetaDescriptions, blogSlugs
 };
 
 const tagName = tagNames[lang] ?? tagNames[DEFAULT_LOCALE] ?? slug;
-const metaTitle = tagMetaTitles?.[lang] ?? tagMetaTitles?.[DEFAULT_LOCALE] ?? tagName;
-const metaDescription = tagMetaDescriptions?.[lang] ?? tagMetaDescriptions?.[DEFAULT_LOCALE] ?? "";
+const metaTitle =
+  tagMetaTitles?.[lang] ?? tagMetaTitles?.[DEFAULT_LOCALE] ?? tagName;
+const metaDescription =
+  tagMetaDescriptions?.[lang] ?? tagMetaDescriptions?.[DEFAULT_LOCALE] ?? "";
 
 const origin = Astro.url.origin;
 const blogUrl = `${origin}${localePrefix(lang)}/${blogSlug}`;
@@ -50,14 +70,5 @@ const alternateUrls = Object.fromEntries(
 ---
 
 <Layout title={metaTitle} description={metaDescription} {lang} {alternateUrls}>
-  <BlogPage
-    {lang}
-    {tagId}
-    title={tagName}
-    breadcrumbs={[
-      { name: "Home", url: origin + "/" },
-      { name: t(lang, "blog.pageTitle"), url: blogUrl },
-      { name: tagName },
-    ]}
-  />
+  <BlogPage {lang} {tagId} title={tagName} />
 </Layout>

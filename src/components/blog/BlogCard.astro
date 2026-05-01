@@ -13,7 +13,8 @@ const { post, href, level = 3 } = Astro.props;
 
 const d = new Date(post.publishedAt);
 const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`;
-const tag = post.tags?.[0] ?? null;
+// const tag = post.tags?.[0] ?? null;
+const tag = post.tag ?? null;
 ---
 
 <article

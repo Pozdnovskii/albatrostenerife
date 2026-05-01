@@ -11,13 +11,27 @@ export async function getStaticPaths() {
   const [tags, blogSlugs] = await Promise.all([getTagPaths(), getBlogSlugs()]);
   return tags.map((tag) => ({
     params: { slug: tag.slugs[DEFAULT_LOCALE]! },
-    props: { tagId: tag._id, tagNames: tag.names, tagSlugs: tag.slugs, tagMetaTitles: tag.metaTitles, tagMetaDescriptions: tag.metaDescriptions, blogSlugs },
+    props: {
+      tagId: tag._id,
+      tagNames: tag.names,
+      tagSlugs: tag.slugs,
+      tagMetaTitles: tag.metaTitles,
+      tagMetaDescriptions: tag.metaDescriptions,
+      blogSlugs,
+    },
   }));
 }
 
 const lang = DEFAULT_LOCALE;
 const { slug } = Astro.params as { slug: string };
-const { tagId, tagNames, tagSlugs, tagMetaTitles, tagMetaDescriptions, blogSlugs } = Astro.props as {
+const {
+  tagId,
+  tagNames,
+  tagSlugs,
+  tagMetaTitles,
+  tagMetaDescriptions,
+  blogSlugs,
+} = Astro.props as {
   tagId: string;
   tagNames: Partial<Record<Locale, string>>;
   tagSlugs: Partial<Record<Locale, string>>;
@@ -28,7 +42,8 @@ const { tagId, tagNames, tagSlugs, tagMetaTitles, tagMetaDescriptions, blogSlugs
 
 const tagName = tagNames[lang] ?? tagNames.en ?? slug;
 const metaTitle = tagMetaTitles?.[lang] ?? tagMetaTitles?.en ?? tagName;
-const metaDescription = tagMetaDescriptions?.[lang] ?? tagMetaDescriptions?.en ?? "";
+const metaDescription =
+  tagMetaDescriptions?.[lang] ?? tagMetaDescriptions?.en ?? "";
 
 const origin = Astro.url.origin;
 const blogSlug = blogSlugs[lang] ?? "blog";
@@ -44,14 +59,5 @@ const alternateUrls = Object.fromEntries(
 ---
 
 <Layout title={metaTitle} description={metaDescription} {lang} {alternateUrls}>
-  <BlogPage
-    {lang}
-    {tagId}
-    title={tagName}
-    breadcrumbs={[
-      { name: "Home", url: origin + "/" },
-      { name: t(lang, "blog.pageTitle"), url: blogUrl },
-      { name: tagName },
-    ]}
-  />
+  <BlogPage {lang} {tagId} title={tagName} />
 </Layout>

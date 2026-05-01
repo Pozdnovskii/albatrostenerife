@@ -423,6 +423,7 @@ export async function getPostDetail(
       publishedAt,
       "tag":             tag->{ "name": coalesce(name[$lang], name.en) },
       "tagRef":          tag._ref,
+      "tagSlug":         tag->slug[$lang].current,
       "slug":            coalesce(slug[$lang].current, slug.en.current),
       "body":            coalesce(body[$lang], body.en)[]{
         ...,
