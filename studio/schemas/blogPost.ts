@@ -1,4 +1,7 @@
+import { createElement } from "react";
+import type React from "react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { TagRadioInput } from "../components/TagRadioInput";
 import {
   translatedField,
   LANGUAGES,
@@ -70,19 +73,27 @@ export const blogPost = defineType({
 
     // ── Meta ──────────────────────────────────────────────────────────────────
     defineField({
+      name: "featured",
+      title: "Featured",
+      type: "boolean",
+      group: "meta",
+      initialValue: false,
+    }),
+    defineField({
+      name: "tag",
+      title: "Tag",
+      type: "reference",
+      to: [{ type: "blogTag" }],
+      group: "meta",
+      components: { input: TagRadioInput },
+    }),
+    defineField({
       name: "publishedAt",
       title: "Published at",
       type: "datetime",
       group: "meta",
       initialValue: () => new Date().toISOString(),
       validation: (r) => r.required(),
-    }),
-    defineField({
-      name: "tags",
-      title: "Tags",
-      type: "array",
-      group: "meta",
-      of: [defineArrayMember({ type: "reference", to: [{ type: "blogTag" }] })],
     }),
 
     // ── Content ───────────────────────────────────────────────────────────────
@@ -104,7 +115,12 @@ export const blogPost = defineType({
                 { title: "H2", value: "h2" },
                 { title: "H3", value: "h3" },
                 { title: "H4", value: "h4" },
-                { title: "Quote", value: "blockquote" },
+                {
+                  title: "Quote",
+                  value: "blockquote",
+                  component: ({ children }: { children: React.ReactNode }) =>
+                    createElement("blockquote", null, children),
+                },
               ],
               lists: [
                 { title: "Bullet", value: "bullet" },
@@ -179,7 +195,11 @@ export const blogPost = defineType({
                   title: "Left photo",
                   type: "image",
                   fields: [
-                    defineField({ name: "alt", title: "Alt text", type: "string" }),
+                    defineField({
+                      name: "alt",
+                      title: "Alt text",
+                      type: "string",
+                    }),
                   ],
                 }),
                 defineField({
@@ -187,7 +207,11 @@ export const blogPost = defineType({
                   title: "Right photo",
                   type: "image",
                   fields: [
-                    defineField({ name: "alt", title: "Alt text", type: "string" }),
+                    defineField({
+                      name: "alt",
+                      title: "Alt text",
+                      type: "string",
+                    }),
                   ],
                 }),
               ],

@@ -34,10 +34,9 @@ const { enSlug, slugs, blogSlugs } = Astro.props as {
 const lang = DEFAULT_LOCALE;
 const blogSlug = blogSlugs[lang] ?? "blog";
 
-const [post, relatedPosts] = await Promise.all([
-  getPostDetail(lang, enSlug),
-  getPosts(lang, 3, enSlug),
-]);
+const post = await getPostDetail(lang, enSlug);
+const tagRef = post?.tagRef ?? undefined;
+const relatedPosts = await getPosts(lang, 3, enSlug, tagRef);
 
 const alternateUrls = buildNestedAlternateUrls(Astro.url.origin, blogSlugs, slugs);
 ---

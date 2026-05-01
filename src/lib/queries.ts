@@ -348,6 +348,27 @@ export async function getProperties(
   );
 }
 
+/** All blog tags with per-locale slugs + names/SEO — used by tag page getStaticPaths. */
+export function getTagPaths(): Promise<{
+  _id: string;
+  slugs: Partial<Record<Locale, string>>;
+  names: Partial<Record<Locale, string>>;
+  metaTitles: Partial<Record<Locale, string>>;
+  metaDescriptions: Partial<Record<Locale, string>>;
+}[]> {
+  return cached("getTagPaths", () =>
+    sanityClient.fetch(
+      `*[_type == "blogTag" && defined(slug.en.current)] | order(name.en asc) {
+        _id,
+        "slugs": { ${slugsProjection()} },
+        "names": name,
+        "metaTitles": metaTitle,
+        "metaDescriptions": metaDescription
+      }`,
+    ),
+  );
+}
+
 /** Per-language slugs for the blog index page (from seoSettings). */
 export function getBlogSlugs(): Promise<Partial<Record<Locale, string>>> {
   return cached("getBlogSlugs", () =>
@@ -363,22 +384,28 @@ export async function getPosts(
   lang: Locale,
   limit?: number,
   excludeEnSlug?: string,
+  tagRef?: string,
 ): Promise<Post[]> {
-  const filter = excludeEnSlug
-    ? `*[_type == "blogPost" && slug.en.current != $excludeEnSlug]`
-    : `*[_type == "blogPost"]`;
+  const conditions = [
+    `_type == "blogPost"`,
+    excludeEnSlug ? `slug.en.current != $excludeEnSlug` : null,
+  ].filter(Boolean).join(" && ");
   const slice = limit != null ? `[0...$limit]` : ``;
+  const order = tagRef
+    ? `order(select(tag._ref == $tagRef => 1, 0) desc, coalesce(featured, false) desc, publishedAt desc)`
+    : `order(coalesce(featured, false) desc, publishedAt desc)`;
   return sanityClient.fetch(
-    `${filter} | order(publishedAt desc)${slice} {
+    `*[${conditions}] | ${order}${slice} {
       "title":        coalesce(title[$lang], title.en),
       "description":  coalesce(description[$lang], description.en),
       "mainImage":    mainImage.asset->url + "?w=960",
       "mainImageAlt": coalesce(mainImage.alt[$lang], mainImage.alt.en),
       publishedAt,
-      "tags":         coalesce(tags[]->{  "name": coalesce(name[$lang], name.en) }, []),
+      "tag":          tag->{ "name": coalesce(name[$lang], name.en) },
+      featured,
       "slug":         coalesce(slug[$lang].current, slug.en.current)
     }`,
-    { lang, limit, excludeEnSlug },
+    { lang, limit, excludeEnSlug, tagRef },
   );
 }
 
@@ -394,7 +421,8 @@ export async function getPostDetail(
       "mainImage":       mainImage.asset->url + "?w=1880",
       "mainImageAlt":    coalesce(mainImage.alt[$lang], mainImage.alt.en),
       publishedAt,
-      "tags":            tags[]->{  "name": coalesce(name[$lang], name.en) },
+      "tag":             tag->{ "name": coalesce(name[$lang], name.en) },
+      "tagRef":          tag._ref,
       "slug":            coalesce(slug[$lang].current, slug.en.current),
       "body":            coalesce(body[$lang], body.en)[]{
         ...,

@@ -86,14 +86,14 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
         <time datetime={post.publishedAt}>{date}</time>
       </span>
       {
-        post.tags.map((tag) => (
+        post.tag && (
           <span class="flex items-center gap-1.5">
             <svg class="w-3.5 aspect-square shrink-0" aria-hidden="true">
               <use href="#icon-tag" />
             </svg>
-            <span>{tag.name}</span>
+            <span>{post.tag.name}</span>
           </span>
-        ))
+        )
       }
     </div>
   </div>

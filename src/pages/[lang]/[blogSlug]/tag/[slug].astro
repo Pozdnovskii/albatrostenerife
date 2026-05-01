@@ -1,0 +1,63 @@
+---
+import Layout from "@layouts/Layout.astro";
+import BlogPage from "@components/blog/BlogPage.astro";
+import { LOCALES, DEFAULT_LOCALE } from "@i18n/config";
+import type { Locale } from "@i18n/config";
+import { t } from "@i18n/ui";
+import { localePrefix } from "@i18n/utils";
+import { getTagPaths, getBlogSlugs } from "@lib/queries";
+
+export async function getStaticPaths() {
+  const [tags, blogSlugs] = await Promise.all([getTagPaths(), getBlogSlugs()]);
+  const nonEnLangs = LOCALES.filter((l) => l !== DEFAULT_LOCALE);
+
+  return tags.flatMap((tag) =>
+    nonEnLangs.map((lang) => ({
+      params: {
+        lang,
+        blogSlug: blogSlugs[lang] ?? "blog",
+        slug: tag.slugs[lang] ?? tag.slugs[DEFAULT_LOCALE]!,
+      },
+      props: { tagId: tag._id, tagNames: tag.names, tagSlugs: tag.slugs, tagMetaTitles: tag.metaTitles, tagMetaDescriptions: tag.metaDescriptions, blogSlugs },
+    })),
+  );
+}
+
+const { lang, blogSlug, slug } = Astro.params as { lang: Locale; blogSlug: string; slug: string };
+const { tagId, tagNames, tagSlugs, tagMetaTitles, tagMetaDescriptions, blogSlugs } = Astro.props as {
+  tagId: string;
+  tagNames: Partial<Record<Locale, string>>;
+  tagSlugs: Partial<Record<Locale, string>>;
+  tagMetaTitles: Partial<Record<Locale, string>>;
+  tagMetaDescriptions: Partial<Record<Locale, string>>;
+  blogSlugs: Partial<Record<Locale, string>>;
+};
+
+const tagName = tagNames[lang] ?? tagNames[DEFAULT_LOCALE] ?? slug;
+const metaTitle = tagMetaTitles?.[lang] ?? tagMetaTitles?.[DEFAULT_LOCALE] ?? tagName;
+const metaDescription = tagMetaDescriptions?.[lang] ?? tagMetaDescriptions?.[DEFAULT_LOCALE] ?? "";
+
+const origin = Astro.url.origin;
+const blogUrl = `${origin}${localePrefix(lang)}/${blogSlug}`;
+
+const alternateUrls = Object.fromEntries(
+  LOCALES.map((l) => {
+    const bs = blogSlugs[l] ?? blogSlugs[DEFAULT_LOCALE] ?? "blog";
+    const ts = tagSlugs[l] ?? tagSlugs[DEFAULT_LOCALE] ?? slug;
+    return [l, `${origin}${localePrefix(l)}/${bs}/tag/${ts}`];
+  }),
+) as Record<Locale, string>;
+---
+
+<Layout title={metaTitle} description={metaDescription} {lang} {alternateUrls}>
+  <BlogPage
+    {lang}
+    {tagId}
+    title={tagName}
+    breadcrumbs={[
+      { name: "Home", url: origin + "/" },
+      { name: t(lang, "blog.pageTitle"), url: blogUrl },
+      { name: tagName },
+    ]}
+  />
+</Layout>

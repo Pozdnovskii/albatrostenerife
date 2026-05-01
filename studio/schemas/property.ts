@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { FeaturesToggleInput } from "../components/FeaturesToggleInput";
+import { StatusRadioInput } from "../components/StatusRadioInput";
 import {
   translatedField,
   LANGUAGES,
@@ -65,7 +67,8 @@ export const property = defineType({
       type: "reference",
       to: [{ type: "propertyStatus" }],
       group: "details",
-      // validation: (r) => r.required(),
+      validation: (r) => r.required(),
+      components: { input: StatusRadioInput },
     }),
 
     defineField({
@@ -118,6 +121,7 @@ export const property = defineType({
       type: "array",
       of: [defineArrayMember({ type: "reference", to: [{ type: "feature" }] })],
       group: "details",
+      components: { input: FeaturesToggleInput },
     }),
 
     defineField({

@@ -128,7 +128,9 @@ export type Post = {
   mainImage: string | null;
   mainImageAlt: string | null;
   publishedAt: string;
-  tags: { name: string }[];
+  tag: { name: string } | null;
+  tagRef?: string | null;
+  featured?: boolean;
   // — detail-only (absent on card queries) —
   body?: unknown[] | null;
   faq?: { question: string; answer: string }[] | null;

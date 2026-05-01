@@ -1,13 +1,43 @@
-import { defineType } from "sanity";
-import { translatedField, DEFAULT_LOCALE } from "../lib/constants";
+import { defineField, defineType } from "sanity";
+import { translatedField, DEFAULT_LOCALE, LANGUAGES, LANGUAGE_TITLES } from "../lib/constants";
+import type { Locale } from "@i18n/config";
+import { ConnectedPostsInput } from "../components/ConnectedPostsInput";
 
 export const blogTag = defineType({
   name: "blogTag",
   title: "Blog Tag",
   type: "document",
 
+  groups: [
+    { name: "seo", title: "SEO" },
+  ],
+
   fields: [
+    defineField({
+      name: "connectedPosts",
+      title: "Connected Posts",
+      type: "string",
+      readOnly: true,
+      components: { input: ConnectedPostsInput },
+    }),
     translatedField("name", "Name"),
+    defineField({
+      name: "slug",
+      title: "Slugs",
+      type: "object",
+      group: "seo",
+      fields: LANGUAGES.map((lang) =>
+        defineField({
+          name: lang,
+          title: LANGUAGE_TITLES[lang as Locale],
+          type: "slug",
+          options: { source: `name.${lang}` },
+          validation: lang === DEFAULT_LOCALE ? (r) => r.required() : undefined,
+        }),
+      ),
+    }),
+    translatedField("metaTitle", "Meta Title", { required: false, group: "seo" }),
+    translatedField("metaDescription", "Meta Description", { required: false, type: "text", rows: 2, group: "seo" }),
   ],
 
   orderings: [

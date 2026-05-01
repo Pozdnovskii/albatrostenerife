@@ -7,30 +7,36 @@ import { localePrefix } from "@i18n/utils";
 import { collectionSchema } from "@lib/schema";
 import SectionHeading from "@components/ui/SectionHeading.astro";
 import BlogList from "@components/blog/BlogList.astro";
+import Breadcrumbs from "@components/ui/Breadcrumbs.astro";
 import SchemaOrg from "@components/seo/SchemaOrg.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
 
 interface Props {
   lang?: Locale;
+  tagId?: string;
+  title?: string;
+  breadcrumbs?: { name: string; url?: string }[];
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
-const [posts, blogSlugs] = await Promise.all([getPosts(lang), getBlogSlugs()]);
+const { lang = DEFAULT_LOCALE, tagId, title, breadcrumbs } = Astro.props;
+const [posts, blogSlugs] = await Promise.all([getPosts(lang, undefined, undefined, tagId), getBlogSlugs()]);
 const blogSlug = blogSlugs[lang] ?? "blog";
 const origin = Astro.url.origin;
 const blogUrl = `${origin}${localePrefix(lang)}/${blogSlug}`;
 const itemUrls = posts.map((p) => `${blogUrl}/${p.slug}`);
+const heading = title ?? t(lang, "blog.pageTitle");
 ---
 
-<SchemaOrg schema={collectionSchema(t(lang, "blog.pageTitle"), blogUrl, lang, itemUrls)} />
+{!tagId && <SchemaOrg schema={collectionSchema(heading, blogUrl, lang, itemUrls)} />}
 
 <section class="section bg-gray-100 lg:pt-section-sm">
   <div>
+    {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
     <SectionHeading
       big
       smallMargin
-      title={t(lang, "blog.pageTitle")}
-      subtitle={t(lang, "blog.pageSubtitle")}
+      title={heading}
+      subtitle={tagId ? undefined : t(lang, "blog.pageSubtitle")}
       level={1}
     />
 
@@ -38,4 +44,4 @@ const itemUrls = posts.map((p) => `${blogUrl}/${p.slug}`);
   </div>
 </section>
 
-<ContactSection {lang} sourceName="Blog" />
+<ContactSection {lang} sourceName={tagId ? `Blog tag: ${heading}` : "Blog"} />
