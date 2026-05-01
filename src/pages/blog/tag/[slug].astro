@@ -1,11 +1,13 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import BlogPage from "@components/blog/BlogPage.astro";
+import SchemaOrg from "@components/seo/SchemaOrg.astro";
 import { DEFAULT_LOCALE, LOCALES } from "@i18n/config";
 import type { Locale } from "@i18n/config";
 import { t } from "@i18n/ui";
 import { localePrefix } from "@i18n/utils";
 import { getTagPaths, getBlogSlugs } from "@lib/queries";
+import { buildBreadcrumb } from "@lib/schema";
 
 export async function getStaticPaths() {
   const [tags, blogSlugs] = await Promise.all([getTagPaths(), getBlogSlugs()]);
@@ -48,6 +50,15 @@ const metaDescription =
 const origin = Astro.url.origin;
 const blogSlug = blogSlugs[lang] ?? "blog";
 const blogUrl = `${origin}/${blogSlug}`;
+const pageUrl = String(Astro.url);
+const breadcrumbSchema = buildBreadcrumb(
+  [
+    { name: "Home", url: origin + "/" },
+    { name: t(lang, "blog.pageTitle"), url: blogUrl },
+    { name: tagName, url: pageUrl },
+  ],
+  `${pageUrl}#breadcrumb`,
+);
 
 const alternateUrls = Object.fromEntries(
   LOCALES.map((l) => {
@@ -59,5 +70,6 @@ const alternateUrls = Object.fromEntries(
 ---
 
 <Layout title={metaTitle} description={metaDescription} {lang} {alternateUrls}>
+  <SchemaOrg schema={{ "@graph": [breadcrumbSchema] }} />
   <BlogPage {lang} {tagId} title={tagName} />
 </Layout>

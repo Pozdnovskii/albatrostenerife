@@ -14,10 +14,9 @@ interface Props {
   lang?: Locale;
   tagId?: string;
   title?: string;
-  breadcrumbs?: { name: string; url?: string }[];
 }
 
-const { lang = DEFAULT_LOCALE, tagId, title, breadcrumbs } = Astro.props;
+const { lang = DEFAULT_LOCALE, tagId, title } = Astro.props;
 const [posts, blogSlugs] = await Promise.all([
   getPosts(lang, undefined, undefined, tagId),
   getBlogSlugs(),
