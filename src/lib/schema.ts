@@ -50,6 +50,7 @@ const ORG = {
 const WEBSITE = {
   "@type": "WebSite",
   "@id": SITE_ID,
+  name: "Park Albatros Tenerife Real Estate",
   url: SITE,
   publisher: { "@id": ORG_ID },
 };
