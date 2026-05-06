@@ -6,12 +6,13 @@ import {
   getAllPaths,
   getPageContent,
   getServicePageData,
+  getServices,
   getLegalPageData,
   sanityOgImage,
 } from "@lib/queries";
 import { contactSchema } from "@lib/schema";
 import SchemaOrg from "@components/seo/SchemaOrg.astro";
-import type { UnifiedPath } from "@lib/types";
+import type { UnifiedPath, ServiceCard } from "@lib/types";
 import ServicePage from "@components/service/ServicePage.astro";
 import LegalPage from "@components/legal/LegalPage.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
@@ -33,13 +34,18 @@ let title = "";
 let description = "";
 let ogImage: string | undefined;
 let serviceData = null;
+let otherServices: ServiceCard[] = [];
 let legalData = null;
 
 if (type === "service") {
-  const data = await getServicePageData(lang, enSlug);
+  const [data, allServices] = await Promise.all([
+    getServicePageData(lang, enSlug),
+    getServices(lang),
+  ]);
   title = data?.metaTitle ?? data?.title ?? "";
   description = data?.metaDescription ?? "";
   serviceData = data;
+  otherServices = allServices.filter(s => s.slug !== enSlug);
 } else {
   const [seo, legal] = await Promise.all([
     getPageContent(lang, enSlug),
@@ -55,7 +61,7 @@ if (type === "service") {
 <Layout {title} {description} {lang} {alternateUrls} {ogImage}>
   {
     type === "service" && serviceData && (
-      <ServicePage service={serviceData} {lang} />
+      <ServicePage service={serviceData} {lang} {otherServices} />
     )
   }
   {type === "page" && enSlug === "contact" && <SchemaOrg schema={contactSchema(String(Astro.url), lang)} />}
