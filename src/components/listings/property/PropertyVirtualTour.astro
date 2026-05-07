@@ -1,6 +1,6 @@
 ---
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
+import { getListingsTexts } from "@lib/queries";
 import PropertySection from "@components/listings/ui/PropertySection.astro";
 
 interface Props {
@@ -9,13 +9,14 @@ interface Props {
 }
 
 const { url, lang } = Astro.props;
+const texts = await getListingsTexts(lang);
 ---
 
-<PropertySection title={t(lang, "listings.virtualTour")}>
+<PropertySection title={texts?.virtualTour ?? ""}>
   <div class="aspect-video mt-5 rounded-md overflow-clip">
     <iframe
       src={url}
-      title={t(lang, "listings.virtualTour")}
+      title={texts?.virtualTour ?? ""}
       class="w-full h-full"
       loading="lazy"
       allow="xr-spatial-tracking"

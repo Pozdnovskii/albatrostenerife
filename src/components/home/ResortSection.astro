@@ -1,9 +1,9 @@
 ---
 import { Image } from "astro:assets";
 import { getContactInfo, getContactPageSlug } from "@lib/queries";
-import { t } from "@i18n/ui";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
+import type { HomePageData } from "@lib/types";
 import { localePrefix } from "@i18n/utils";
 import SectionHeading from "@components/ui/SectionHeading.astro";
 import resortPhoto from "@assets/home-resort.webp";
@@ -11,9 +11,10 @@ import ContactAddress from "@components/contact/ContactAddress.astro";
 
 interface Props {
   lang?: Locale;
+  home?: HomePageData | null;
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
+const { lang = DEFAULT_LOCALE, home } = Astro.props;
 
 const [contact, contactSlug] = await Promise.all([
   getContactInfo(lang),
@@ -30,13 +31,14 @@ const contactEmailHref = contactSlug ? `${localePrefix(lang)}/${contactSlug}` : 
       <SectionHeading
         left
         smallMargin
-        title={t(lang, "resort.title")}
-        subtitle={t(lang, "resort.subtitle")}
+        title={home?.resortTitle ?? "Resort"}
+        subtitle={home?.resortSubtitle ?? ""}
       />
 
       {
-        t(lang, "resort.description")
+        (home?.resortDescription ?? "")
           .split("\n\n")
+          .filter(Boolean)
           .map((para) => (
             <p class="first-of-type:mb-4 last-of-type:mb-8">{para}</p>
           ))
@@ -48,7 +50,7 @@ const contactEmailHref = contactSlug ? `${localePrefix(lang)}/${contactSlug}` : 
     <Image
       class="md:max-w-1/3"
       src={resortPhoto}
-      alt={[contact?.locationName, t(lang, "resort.imageAlt")]
+      alt={[contact?.locationName, home?.resortImageAlt]
         .filter(Boolean)
         .join(". ")}
     />

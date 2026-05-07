@@ -20,6 +20,11 @@ import { legalPage } from "@studio/schemas/legalPage";
 import { blogTag } from "@studio/schemas/blogTag";
 import { blogPost } from "@studio/schemas/blogPost";
 import { blogCta } from "@studio/schemas/blogCta";
+import { homePage } from "@studio/schemas/homePage";
+import { blogTexts } from "@studio/schemas/blogTexts";
+import { notFoundTexts } from "@studio/schemas/notFoundTexts";
+import { sellersTexts } from "@studio/schemas/sellersTexts";
+import { listingsTexts } from "@studio/schemas/listingsTexts";
 
 export default defineConfig({
   name: "albatros-realestate",
@@ -62,10 +67,24 @@ export default defineConfig({
                   ]),
               ),
             S.divider(),
-            S.documentTypeListItem("service").title("Services"),
             S.documentTypeListItem("review").title("Reviews"),
             S.documentTypeListItem("activity").title("Activities"),
-            S.documentTypeListItem("legalPage").title("Legal Pages"),
+            S.divider(),
+            S.listItem()
+              .title("Texts")
+              .child(
+                S.list()
+                  .title("Texts")
+                  .items([
+                    S.documentTypeListItem("homePage").title("Home Page"),
+                    S.documentTypeListItem("blogTexts").title("Blog"),
+                    S.documentTypeListItem("listingsTexts").title("Listings"),
+                    S.documentTypeListItem("sellersTexts").title("Sellers Page"),
+                    S.documentTypeListItem("notFoundTexts").title("404 Not Found"),
+                    S.documentTypeListItem("legalPage").title("Legal Pages"),
+                    S.documentTypeListItem("service").title("Services"),
+                  ]),
+              ),
             S.divider(),
             S.documentTypeListItem("seoSettings").title("SEO Settings"),
             S.documentTypeListItem("navigation").title("Navigation"),
@@ -101,6 +120,11 @@ export default defineConfig({
       blogTag,
       blogPost,
       blogCta,
+      homePage,
+      blogTexts,
+      notFoundTexts,
+      sellersTexts,
+      listingsTexts,
     ],
   },
 });

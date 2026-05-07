@@ -3,22 +3,22 @@ import Layout from "@layouts/Layout.astro";
 import ListingsPage from "@components/listings/ListingsPage.astro";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import { buildAlternateUrls } from "@i18n/utils";
-import { t } from "@i18n/ui";
-import { getPageContent, getListingsSlugs, sanityOgImage } from "@lib/queries";
+import { getPageContent, getListingsSlugs, getListingsTexts, sanityOgImage } from "@lib/queries";
 import type { Locale } from "@i18n/config";
 
 const lang = DEFAULT_LOCALE;
 
-const [seo, listingsSlugs] = await Promise.all([
+const [seo, listingsSlugs, listingsTexts] = await Promise.all([
   getPageContent(lang, "listings"),
   getListingsSlugs(),
+  getListingsTexts(lang),
 ]);
 
 const alternateUrls = buildAlternateUrls(Astro.url.origin, listingsSlugs);
 ---
 
 <Layout
-  title={seo?.metaTitle ?? t(lang, "listings.pageTitle")}
+  title={seo?.metaTitle ?? listingsTexts?.pageTitle ?? ""}
   description={seo?.metaDescription ?? ""}
   {lang}
   {alternateUrls}

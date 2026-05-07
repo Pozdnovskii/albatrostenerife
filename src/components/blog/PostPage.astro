@@ -2,7 +2,6 @@
 import { Image } from "astro:assets";
 import type { Post } from "@lib/types";
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
 import { localePrefix } from "@i18n/utils";
 import { blogPostSchema } from "@lib/schema";
 import SchemaOrg from "@components/seo/SchemaOrg.astro";
@@ -12,7 +11,7 @@ import BlogList from "@components/blog/BlogList.astro";
 import PostBody from "@components/blog/PostBody.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
 import PostCta from "@components/blog/PostCta.astro";
-import { getContactInfo } from "@lib/queries";
+import { getContactInfo, getBlogTexts } from "@lib/queries";
 import advisorPhoto from "@assets/ivan_uher.webp";
 
 interface Props {
@@ -23,19 +22,23 @@ interface Props {
 }
 
 const { post, lang, relatedPosts, blogSlug } = Astro.props;
-const contact = post.ctaTitle ? await getContactInfo(lang) : null;
+const [contact, blogTexts] = await Promise.all([
+  post.ctaTitle ? getContactInfo(lang) : Promise.resolve(null),
+  getBlogTexts(lang),
+]);
 const origin = Astro.url.origin;
 const prefix = localePrefix(lang);
 const blogUrl = `${origin}${prefix}/${blogSlug}`;
 const pageUrl = String(Astro.url);
+const blogPageTitle = blogTexts?.pageTitle ?? "Blog";
 const breadcrumbs = [
   { name: "Home", url: origin },
-  { name: t(lang, "blog.pageTitle"), url: blogUrl },
+  { name: blogPageTitle, url: blogUrl },
   { name: post.title, url: pageUrl },
 ];
 const tagUrl = post.tagSlug ? `${blogUrl}/tag/${post.tagSlug}` : undefined;
 const breadcrumbsNav = [
-  { name: t(lang, "blog.pageTitle"), url: blogUrl },
+  { name: blogPageTitle, url: blogUrl },
   ...(post.tag ? [{ name: post.tag.name, url: tagUrl }] : []),
 ];
 
@@ -131,7 +134,7 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
 }
 
 {post.ctaTitle
-  ? <PostCta {post} {lang} {contact} {blogSlug} />
+  ? <PostCta {post} {lang} {contact} {blogSlug} ctaReplyNote={blogTexts?.ctaReplyNote ?? ""} />
   : <ContactSection {lang} left class="[&>div]:max-w-5xl" sourceName={`Blog: ${post.enTitle ?? post.title}`} />
 }
 
@@ -140,7 +143,7 @@ const date = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1)
     <section class="section bg-gray-100">
       <div>
         <SectionHeading
-          title={t(lang, "blog.relatedPosts")}
+          title={blogTexts?.relatedPosts ?? ""}
           level={2}
           left
           smallMargin

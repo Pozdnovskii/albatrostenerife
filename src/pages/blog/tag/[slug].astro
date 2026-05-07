@@ -4,9 +4,8 @@ import BlogPage from "@components/blog/BlogPage.astro";
 import SchemaOrg from "@components/seo/SchemaOrg.astro";
 import { DEFAULT_LOCALE, LOCALES } from "@i18n/config";
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
 import { localePrefix } from "@i18n/utils";
-import { getTagPaths, getBlogSlugs } from "@lib/queries";
+import { getTagPaths, getBlogSlugs, getBlogTexts } from "@lib/queries";
 import { buildBreadcrumb } from "@lib/schema";
 
 export async function getStaticPaths() {
@@ -47,6 +46,7 @@ const metaTitle = tagMetaTitles?.[lang] ?? tagMetaTitles?.en ?? tagName;
 const metaDescription =
   tagMetaDescriptions?.[lang] ?? tagMetaDescriptions?.en ?? "";
 
+const blogTexts = await getBlogTexts(lang);
 const origin = Astro.url.origin;
 const blogSlug = blogSlugs[lang] ?? "blog";
 const blogUrl = `${origin}/${blogSlug}`;
@@ -54,7 +54,7 @@ const pageUrl = String(Astro.url);
 const breadcrumbSchema = buildBreadcrumb(
   [
     { name: "Home", url: origin + "/" },
-    { name: t(lang, "blog.pageTitle"), url: blogUrl },
+    { name: blogTexts?.pageTitle ?? "Blog", url: blogUrl },
     { name: tagName, url: pageUrl },
   ],
   `${pageUrl}#breadcrumb`,

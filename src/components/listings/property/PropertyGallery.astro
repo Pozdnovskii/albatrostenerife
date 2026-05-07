@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
+import { getListingsTexts } from "@lib/queries";
 import SliderButton from "@components/ui/SliderButton.astro";
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
 }
 
 const { images, title, lang } = Astro.props;
+const texts = await getListingsTexts(lang);
 const trackId = `gallery-${crypto.randomUUID().slice(0, 8)}`;
 const dialogTrackId = `gallery-dialog-${crypto.randomUUID().slice(0, 8)}`;
 
@@ -28,7 +29,7 @@ const gridClass =
   <ul
     id={trackId}
     data-track
-    aria-label={`${t(lang, "listings.photos")}: ${title}`}
+    aria-label={`${texts?.photos ?? ""}: ${title}`}
     class="flex overflow-x-scroll snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>li]:snap-center [&>li]:shrink-0 [&>li]:w-full [&>li]:aspect-4/3 [&>li]:overflow-hidden"
   >
     {images.map((url, i) => (
@@ -76,7 +77,7 @@ const gridClass =
     <button
       data-gallery-open
       data-index="0"
-      aria-label={t(lang, "listings.allPhotos")}
+      aria-label={texts?.allPhotos ?? ""}
       class="block w-full h-130 rounded-xl overflow-hidden cursor-pointer"
     >
       <Image
@@ -94,7 +95,7 @@ const gridClass =
         <button
           data-gallery-open
           data-index={String(i)}
-          aria-label={i === 0 ? t(lang, "listings.allPhotos") : `${title} – ${i + 1}`}
+          aria-label={i === 0 ? (texts?.allPhotos ?? "") : `${title} – ${i + 1}`}
           class:list={["overflow-hidden cursor-pointer block w-full h-full", i === 0 && gridImages.length >= 3 && "row-span-2"]}
         >
           <Image
@@ -128,7 +129,7 @@ const gridClass =
       <circle cx="8.5" cy="8.5" r="1.5" />
       <path d="M21 15l-5-5L5 21" />
     </svg>
-    {t(lang, "listings.allPhotos")} · {images.length}
+    {texts?.allPhotos ?? ""} · {images.length}
   </button>
 </div>
 

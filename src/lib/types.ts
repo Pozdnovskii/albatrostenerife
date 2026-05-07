@@ -20,9 +20,8 @@ export type PageContent = {
   ogImageUrl: string | null;
 };
 
-// Minimal portable text types — description only uses normal + bold
 export type PTSpan = { _key: string; _type: "span"; text: string; marks: string[] };
-export type PTBlock = { _key: string; _type: "block"; style: string; children: PTSpan[] };
+export type PTBlock = { _key: string; _type: "block"; style: string; listItem?: "bullet" | "number"; level?: number; children: PTSpan[] };
 
 export type LegalPageData = {
   heading: string | null;
@@ -143,6 +142,75 @@ export type Post = {
   } | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
+};
+
+export type HomePageData = {
+  heroTitle:         string | null;
+  heroSubtitle:      string | null;
+  heroBtn1:          string | null;
+  heroBtn1Href:      string | null;
+  heroBtn2:          string | null;
+  heroBtn2Href:      string | null;
+  resortTitle:       string | null;
+  resortSubtitle:    string | null;
+  resortDescription: string | null;
+  resortImageAlt:    string | null;
+  listingsTitle:     string | null;
+  listingsSubtitle:  string | null;
+  listingsViewAll:   string | null;
+  servicesTitle:     string | null;
+  servicesSubtitle:  string | null;
+  activitiesTitle:   string | null;
+  activitiesSubtitle:string | null;
+  reviewsTitle:      string | null;
+  reviewsSubtitle:   string | null;
+  contactTitle:      string | null;
+  contactSubtitle:   string | null;
+  blogTitle:         string | null;
+  blogSubtitle:      string | null;
+  blogViewAll:       string | null;
+};
+
+export type NotFoundTextsData = {
+  title:    string | null;
+  subtitle: string | null;
+  back:     string | null;
+};
+
+export type SellersTextsData = {
+  title:    string | null;
+  enTitle:  string | null;
+  subtitle: string | null;
+};
+
+export type ListingsTextsData = {
+  pageTitle:       string | null;
+  pageSubtitle:    string | null;
+  priceOnRequest:  string | null;
+  photos:          string | null;
+  bedroom:         string | null;
+  bath:            string | null;
+  areaSize:        string | null;
+  propertyType:    string | null;
+  price:           string | null;
+  propertyStatus:  string | null;
+  yearBuilt:       string | null;
+  features:        string | null;
+  description:     string | null;
+  details:         string | null;
+  video:           string | null;
+  virtualTour:     string | null;
+  readMore:        string | null;
+  readLess:        string | null;
+  allPhotos:       string | null;
+  otherProperties: string | null;
+};
+
+export type BlogTextsData = {
+  pageTitle:    string | null;
+  pageSubtitle: string | null;
+  relatedPosts: string | null;
+  ctaReplyNote: string | null;
 };
 
 export type ServiceCard = {

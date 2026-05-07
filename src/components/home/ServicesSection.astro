@@ -1,17 +1,18 @@
 ---
-import { t } from "@i18n/ui";
 import { localePrefix } from "@i18n/utils";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
+import type { HomePageData } from "@lib/types";
 import SectionHeading from "@components/ui/SectionHeading.astro";
 import ServiceCard from "@components/service/ServiceCard.astro";
 import { getServices } from "@lib/queries";
 
 interface Props {
   lang?: Locale;
+  home?: HomePageData | null;
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
+const { lang = DEFAULT_LOCALE, home } = Astro.props;
 
 const services = await getServices(lang);
 const prefix = localePrefix(lang);
@@ -20,8 +21,8 @@ const prefix = localePrefix(lang);
 <section id="services" class="section bg-white pb-section-sm">
   <div>
     <SectionHeading
-      title={t(lang, "services.title")}
-      subtitle={t(lang, "services.subtitle")}
+      title={home?.servicesTitle ?? ""}
+      subtitle={home?.servicesSubtitle ?? ""}
     />
     <ul
       class="grid grid-cols-1 gap-y-section-sm sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4"

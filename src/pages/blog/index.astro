@@ -2,24 +2,28 @@
 import Layout from "@layouts/Layout.astro";
 import BlogPage from "@components/blog/BlogPage.astro";
 import { DEFAULT_LOCALE } from "@i18n/config";
-import type { Locale } from "@i18n/config";
 import { buildAlternateUrls } from "@i18n/utils";
-import { t } from "@i18n/ui";
-import { getPageContent, getBlogSlugs, sanityOgImage } from "@lib/queries";
+import {
+  getPageContent,
+  getBlogSlugs,
+  getBlogTexts,
+  sanityOgImage,
+} from "@lib/queries";
 
 const lang = DEFAULT_LOCALE;
 
-const [seo, blogSlugs] = await Promise.all([
+const [seo, blogSlugs, blogTexts] = await Promise.all([
   getPageContent(lang, "blog"),
   getBlogSlugs(),
+  getBlogTexts(lang),
 ]);
 
 const alternateUrls = buildAlternateUrls(Astro.url.origin, blogSlugs);
 ---
 
 <Layout
-  title={seo?.metaTitle ?? t(lang, "blog.pageTitle")}
-  description={seo?.metaDescription ?? t(lang, "blog.pageSubtitle")}
+  title={seo?.metaTitle ?? blogTexts?.pageTitle ?? ""}
+  description={seo?.metaDescription ?? blogTexts?.pageSubtitle ?? ""}
   {lang}
   {alternateUrls}
   ogImage={sanityOgImage(seo?.ogImageUrl)}

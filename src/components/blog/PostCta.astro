@@ -1,5 +1,4 @@
 ---
-import { t } from "@i18n/ui";
 import { localePrefix } from "@i18n/utils";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
@@ -10,9 +9,10 @@ interface Props {
   lang?: Locale;
   contact: ContactInfo | null;
   blogSlug?: string;
+  ctaReplyNote?: string | null;
 }
 
-const { post, lang = DEFAULT_LOCALE, contact, blogSlug = "blog" } = Astro.props;
+const { post, lang = DEFAULT_LOCALE, contact, blogSlug = "blog", ctaReplyNote } = Astro.props;
 const prefix = localePrefix(lang);
 
 // CTA button href
@@ -126,7 +126,7 @@ function inlineHTML(children: PTSpan[], markDefs: PTLink[]): string {
       </div>
 
       <span class="block text-sm text-gray-500 leading-tight"
-        >{t(lang, "blog.ctaReplyNote")}</span
+        >{ctaReplyNote ?? ""}</span
       >
     </div>
   </div>

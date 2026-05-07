@@ -1,6 +1,6 @@
 ---
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
+import { getListingsTexts } from "@lib/queries";
 import PropertySection from "@components/listings/ui/PropertySection.astro";
 
 interface Props {
@@ -9,10 +9,11 @@ interface Props {
 }
 
 const { features, lang } = Astro.props;
+const texts = await getListingsTexts(lang);
 const sorted = [...features].sort((a, b) => a.name.localeCompare(b.name));
 ---
 
-<PropertySection title={t(lang, "listings.features")}>
+<PropertySection title={texts?.features ?? ""}>
   <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-24 gap-y-5">
     {
       sorted.map((f) => (

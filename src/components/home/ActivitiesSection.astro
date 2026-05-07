@@ -1,16 +1,17 @@
 ---
-import { t } from "@i18n/ui";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
+import type { HomePageData } from "@lib/types";
 import SectionHeading from "@components/ui/SectionHeading.astro";
 import { getActivities } from "@lib/queries";
 import ActivityCard from "@components/ui/ActivityCard.astro";
 
 interface Props {
   lang?: Locale;
+  home?: HomePageData | null;
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
+const { lang = DEFAULT_LOCALE, home } = Astro.props;
 
 const activities = await getActivities(lang);
 ---
@@ -18,8 +19,8 @@ const activities = await getActivities(lang);
 <section id="activities" class="section bg-white pt-section-sm">
   <div>
     <SectionHeading
-      title={t(lang, "activities.title")}
-      subtitle={t(lang, "activities.subtitle")}
+      title={home?.activitiesTitle ?? ""}
+      subtitle={home?.activitiesSubtitle ?? ""}
     />
     <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {

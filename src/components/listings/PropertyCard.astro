@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
+import { getListingsTexts } from "@lib/queries";
 import type { Property } from "@lib/types";
 import SliderButton from "@components/ui/SliderButton.astro";
 import Badge from "@components/listings/ui/Badge.astro";
@@ -16,6 +16,7 @@ interface Props {
 }
 
 const { property, href, lang, level = 3 } = Astro.props;
+const texts = await getListingsTexts(lang);
 const trackId = `photos-${crypto.randomUUID().slice(0, 8)}`;
 
 const price = property.price
@@ -42,12 +43,12 @@ const price = property.price
     </HeadingSmall>
 
     <dl class="flex flex-col mt-auto [&_dt]:sr-only">
-      <dt>{t(lang, "listings.price")}</dt>
+      <dt>{texts?.price ?? ""}</dt>
       <dd class="font-medium mb-1">
-        {price ?? t(lang, "listings.priceOnRequest")}
+        {price ?? (texts?.priceOnRequest ?? "")}
       </dd>
 
-      <dt>{t(lang, "listings.propertyType")}</dt>
+      <dt>{texts?.propertyType ?? ""}</dt>
       <dd class="text-sm mb-3 pb-2 border-b border-gray-200">
         {property.propertyType?.name}
       </dd>
@@ -56,19 +57,19 @@ const price = property.price
         {
           [
             {
-              label: t(lang, "listings.bedroom"),
+              label: texts?.bedroom ?? "",
               icon: "#icon-bed",
               value: property.bedrooms,
               unit: "",
             },
             {
-              label: t(lang, "listings.bath"),
+              label: texts?.bath ?? "",
               icon: "#icon-bath",
               value: property.bathrooms,
               unit: "",
             },
             {
-              label: t(lang, "listings.areaSize"),
+              label: texts?.areaSize ?? "",
               icon: "#icon-area",
               value: property.area,
               unit: " m²",
@@ -110,7 +111,7 @@ const price = property.price
     <ul
       id={trackId}
       data-track
-      aria-label={`${t(lang, "listings.photos")}: ${property.title}`}
+      aria-label={`${texts?.photos ?? ""}: ${property.title}`}
       class="flex overflow-x-scroll snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>li]:snap-center [&>li]:shrink-0 [&>li]:w-full [&>li]:aspect-4/3 [&>li]:overflow-hidden"
     >
       {

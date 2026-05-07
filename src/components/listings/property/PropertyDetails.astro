@@ -1,7 +1,7 @@
 ---
 import type { Property } from "@lib/types";
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
+import { getListingsTexts } from "@lib/queries";
 import PropertySection from "@components/listings/ui/PropertySection.astro";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { property, lang } = Astro.props;
+const texts = await getListingsTexts(lang);
 
 const price = property.price
   ? new Intl.NumberFormat("en-EU", {
@@ -21,37 +22,37 @@ const price = property.price
 
 const details = [
   {
-    label: t(lang, "listings.price"),
-    value: price ?? t(lang, "listings.priceOnRequest"),
+    label: texts?.price ?? "",
+    value: price ?? (texts?.priceOnRequest ?? ""),
   },
   property.area != null && {
-    label: t(lang, "listings.areaSize"),
+    label: texts?.areaSize ?? "",
     value: `${property.area} m²`,
   },
   property.bedrooms != null && {
-    label: t(lang, "listings.bedroom"),
+    label: texts?.bedroom ?? "",
     value: String(property.bedrooms),
   },
   property.bathrooms != null && {
-    label: t(lang, "listings.bath"),
+    label: texts?.bath ?? "",
     value: String(property.bathrooms),
   },
   property.year != null && {
-    label: t(lang, "listings.yearBuilt"),
+    label: texts?.yearBuilt ?? "",
     value: String(property.year),
   },
   property.propertyType && {
-    label: t(lang, "listings.propertyType"),
+    label: texts?.propertyType ?? "",
     value: property.propertyType.name,
   },
   property.status && {
-    label: t(lang, "listings.propertyStatus"),
+    label: texts?.propertyStatus ?? "",
     value: property.status.name,
   },
 ].filter(Boolean) as { label: string; value: string }[];
 ---
 
-<PropertySection title={t(lang, "listings.details")}>
+<PropertySection title={texts?.details ?? ""}>
   <dl
     class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 sm:gap-x-10 rounded-md border border-accent/50 bg-accent-darker/20 p-6 pb-7 mt-5"
   >

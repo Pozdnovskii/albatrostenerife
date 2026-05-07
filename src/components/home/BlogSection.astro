@@ -1,7 +1,7 @@
 ---
-import { t } from "@i18n/ui";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
+import type { HomePageData } from "@lib/types";
 import { getPosts, getBlogSlugs } from "@lib/queries";
 import { localePrefix } from "@i18n/utils";
 
@@ -10,9 +10,10 @@ import BlogList from "@components/blog/BlogList.astro";
 
 interface Props {
   lang?: Locale;
+  home?: HomePageData | null;
 }
 
-const { lang = DEFAULT_LOCALE } = Astro.props;
+const { lang = DEFAULT_LOCALE, home } = Astro.props;
 
 const [posts, blogSlugs] = await Promise.all([
   getPosts(lang, 3),
@@ -26,12 +27,12 @@ const blogHref = `${localePrefix(lang)}/${blogSlug}`;
 <section id="blog" class="section bg-gray-100">
   <div>
     <SectionHeading
-      title={t(lang, "blog.title")}
-      subtitle={t(lang, "blog.subtitle")}
+      title={home?.blogTitle ?? ""}
+      subtitle={home?.blogSubtitle ?? ""}
     />
 
     <BlogList {posts} {lang} {blogSlug} class="mb-10" />
 
-    <a href={blogHref} class="btn btn-outline mx-auto">{t(lang, "blog.viewAll")}</a>
+    <a href={blogHref} class="btn btn-outline mx-auto">{home?.blogViewAll ?? ""}</a>
   </div>
 </section>

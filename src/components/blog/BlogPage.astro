@@ -1,8 +1,7 @@
 ---
 import type { Locale } from "@i18n/config";
 import { DEFAULT_LOCALE } from "@i18n/config";
-import { t } from "@i18n/ui";
-import { getPosts, getBlogSlugs } from "@lib/queries";
+import { getPosts, getBlogSlugs, getBlogTexts } from "@lib/queries";
 import { localePrefix } from "@i18n/utils";
 import { collectionSchema } from "@lib/schema";
 import SectionHeading from "@components/ui/SectionHeading.astro";
@@ -17,15 +16,16 @@ interface Props {
 }
 
 const { lang = DEFAULT_LOCALE, tagId, title } = Astro.props;
-const [posts, blogSlugs] = await Promise.all([
+const [posts, blogSlugs, blogTexts] = await Promise.all([
   getPosts(lang, undefined, undefined, tagId),
   getBlogSlugs(),
+  getBlogTexts(lang),
 ]);
 const blogSlug = blogSlugs[lang] ?? "blog";
 const origin = Astro.url.origin;
 const blogUrl = `${origin}${localePrefix(lang)}/${blogSlug}`;
 const itemUrls = posts.map((p) => `${blogUrl}/${p.slug}`);
-const heading = title ?? t(lang, "blog.pageTitle");
+const heading = title ?? blogTexts?.pageTitle ?? "";
 ---
 
 {
@@ -40,7 +40,7 @@ const heading = title ?? t(lang, "blog.pageTitle");
       big
       smallMargin
       title={heading}
-      subtitle={tagId ? undefined : t(lang, "blog.pageSubtitle")}
+      subtitle={tagId ? undefined : (blogTexts?.pageSubtitle ?? undefined)}
       level={1}
     />
 

@@ -1,6 +1,7 @@
 ---
 import type { Locale } from "@i18n/config";
 import type { Review } from "@lib/types";
+import { getHomePage } from "@lib/queries";
 import HeroSection from "./HeroSection.astro";
 import ResortSection from "./ResortSection.astro";
 import ListingsSection from "./ListingsSection.astro";
@@ -16,13 +17,15 @@ interface Props {
 }
 
 const { lang, reviews } = Astro.props;
+
+const home = await getHomePage(lang);
 ---
 
-<HeroSection {lang} />
-<ResortSection {lang} />
-<ListingsSection {lang} />
-<ServicesSection {lang} />
-<ActivitiesSection {lang} />
-<ReviewsSection {lang} {reviews} />
-<ContactSection {lang} sourceName="Home Page" />
-<BlogSection {lang} />
+<HeroSection {lang} {home} />
+<ResortSection {lang} {home} />
+<ListingsSection {lang} {home} />
+<ServicesSection {lang} {home} />
+<ActivitiesSection {lang} {home} />
+<ReviewsSection {lang} {home} {reviews} />
+<ContactSection {lang} title={home?.contactTitle ?? undefined} subtitle={home?.contactSubtitle ?? undefined} sourceName="Home Page" />
+<BlogSection {lang} {home} />

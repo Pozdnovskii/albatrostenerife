@@ -3,7 +3,12 @@ import type { Locale } from "@i18n/config";
 import { LOCALES } from "@i18n/config";
 import type {
   Activity,
+  BlogTextsData,
   ContactInfo,
+  ListingsTextsData,
+  NotFoundTextsData,
+  SellersTextsData,
+  HomePageData,
   LegalPageData,
   PageContent,
   Post,
@@ -165,7 +170,7 @@ export async function getServicePageData(
       "ctaText":         coalesce(ctaText[$lang], ctaText.en),
       "cardButtonText":  coalesce(cardButtonText[$lang], cardButtonText.en),
       "agentQuote":      coalesce(agentQuote[$lang], agentQuote.en),
-      "ctaHref": *[_type == "seoSettings" && translations.en.slug.current == "inquiry-form"][0]{
+      "ctaHref": *[_type == "seoSettings" && translations.en.slug.current == "sell-property"][0]{
         "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
       }.slug,
       "metaTitle":       coalesce(metaTitle[$lang], metaTitle.en),
@@ -181,6 +186,45 @@ export async function getServicePageData(
 }
 
 // ── Home sections ─────────────────────────────────────────────────────────────
+
+/** Fetches all home page copy from the singleton homePage document. */
+export function getHomePage(lang: Locale): Promise<HomePageData | null> {
+  return cached(`getHomePage:${lang}`, () =>
+    sanityClient.fetch<HomePageData | null>(
+      `*[_type == "homePage"][0]{
+        "heroTitle":          coalesce(heroTitle[$lang], heroTitle.en),
+        "heroSubtitle":       coalesce(heroSubtitle[$lang], heroSubtitle.en),
+        "heroBtn1":           coalesce(heroBtn1[$lang], heroBtn1.en),
+        "heroBtn1Href":       heroBtn1Page->{
+          "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
+        }.slug,
+        "heroBtn2":           coalesce(heroBtn2[$lang], heroBtn2.en),
+        "heroBtn2Href":       heroBtn2Page->{
+          "slug": coalesce(translations[$lang].slug.current, translations.en.slug.current)
+        }.slug,
+        "resortTitle":        coalesce(resortTitle[$lang], resortTitle.en),
+        "resortSubtitle":     coalesce(resortSubtitle[$lang], resortSubtitle.en),
+        "resortDescription":  coalesce(resortDescription[$lang], resortDescription.en),
+        "resortImageAlt":     coalesce(resortImageAlt[$lang], resortImageAlt.en),
+        "listingsTitle":      coalesce(listingsTitle[$lang], listingsTitle.en),
+        "listingsSubtitle":   coalesce(listingsSubtitle[$lang], listingsSubtitle.en),
+        "listingsViewAll":    coalesce(listingsViewAll[$lang], listingsViewAll.en),
+        "servicesTitle":      coalesce(servicesTitle[$lang], servicesTitle.en),
+        "servicesSubtitle":   coalesce(servicesSubtitle[$lang], servicesSubtitle.en),
+        "activitiesTitle":    coalesce(activitiesTitle[$lang], activitiesTitle.en),
+        "activitiesSubtitle": coalesce(activitiesSubtitle[$lang], activitiesSubtitle.en),
+        "reviewsTitle":       coalesce(reviewsTitle[$lang], reviewsTitle.en),
+        "reviewsSubtitle":    coalesce(reviewsSubtitle[$lang], reviewsSubtitle.en),
+        "contactTitle":       coalesce(contactTitle[$lang], contactTitle.en),
+        "contactSubtitle":    coalesce(contactSubtitle[$lang], contactSubtitle.en),
+        "blogTitle":          coalesce(blogTitle[$lang], blogTitle.en),
+        "blogSubtitle":       coalesce(blogSubtitle[$lang], blogSubtitle.en),
+        "blogViewAll":        coalesce(blogViewAll[$lang], blogViewAll.en),
+      }`,
+      { lang },
+    ),
+  );
+}
 
 /** Resolves the lang-specific slug for the "contact" seoSettings page. */
 export function getContactPageSlug(lang: Locale): Promise<string | null> {
@@ -485,6 +529,76 @@ export async function getPostDetail(
       "metaDescription": coalesce(metaDescription[$lang], metaDescription.en)
     }`,
     { lang, enSlug },
+  );
+}
+
+export function getListingsTexts(lang: Locale): Promise<ListingsTextsData | null> {
+  return cached(`getListingsTexts:${lang}`, () =>
+    sanityClient.fetch<ListingsTextsData | null>(
+      `*[_type == "listingsTexts"][0]{
+        "pageTitle":       coalesce(pageTitle[$lang],       pageTitle.en),
+        "pageSubtitle":    coalesce(pageSubtitle[$lang],    pageSubtitle.en),
+        "priceOnRequest":  coalesce(priceOnRequest[$lang],  priceOnRequest.en),
+        "photos":          coalesce(photos[$lang],          photos.en),
+        "bedroom":         coalesce(bedroom[$lang],         bedroom.en),
+        "bath":            coalesce(bath[$lang],            bath.en),
+        "areaSize":        coalesce(areaSize[$lang],        areaSize.en),
+        "propertyType":    coalesce(propertyType[$lang],    propertyType.en),
+        "price":           coalesce(price[$lang],           price.en),
+        "propertyStatus":  coalesce(propertyStatus[$lang],  propertyStatus.en),
+        "yearBuilt":       coalesce(yearBuilt[$lang],       yearBuilt.en),
+        "features":        coalesce(features[$lang],        features.en),
+        "description":     coalesce(description[$lang],     description.en),
+        "details":         coalesce(details[$lang],         details.en),
+        "video":           coalesce(video[$lang],           video.en),
+        "virtualTour":     coalesce(virtualTour[$lang],     virtualTour.en),
+        "readMore":        coalesce(readMore[$lang],        readMore.en),
+        "readLess":        coalesce(readLess[$lang],        readLess.en),
+        "allPhotos":       coalesce(allPhotos[$lang],       allPhotos.en),
+        "otherProperties": coalesce(otherProperties[$lang], otherProperties.en)
+      }`,
+      { lang },
+    ),
+  );
+}
+
+export function getNotFoundTexts(lang: Locale): Promise<NotFoundTextsData | null> {
+  return cached(`getNotFoundTexts:${lang}`, () =>
+    sanityClient.fetch<NotFoundTextsData | null>(
+      `*[_type == "notFoundTexts"][0]{
+        "title":    coalesce(title[$lang], title.en),
+        "subtitle": coalesce(subtitle[$lang], subtitle.en),
+        "back":     coalesce(back[$lang], back.en)
+      }`,
+      { lang },
+    ),
+  );
+}
+
+export function getSellersTexts(lang: Locale): Promise<SellersTextsData | null> {
+  return cached(`getSellersTexts:${lang}`, () =>
+    sanityClient.fetch<SellersTextsData | null>(
+      `*[_type == "sellersTexts"][0]{
+        "title":    coalesce(title[$lang], title.en),
+        "enTitle":  title.en,
+        "subtitle": coalesce(subtitle[$lang], subtitle.en)
+      }`,
+      { lang },
+    ),
+  );
+}
+
+export function getBlogTexts(lang: Locale): Promise<BlogTextsData | null> {
+  return cached(`getBlogTexts:${lang}`, () =>
+    sanityClient.fetch<BlogTextsData | null>(
+      `*[_type == "blogTexts"][0]{
+        "pageTitle":    coalesce(pageTitle[$lang], pageTitle.en),
+        "pageSubtitle": coalesce(pageSubtitle[$lang], pageSubtitle.en),
+        "relatedPosts": coalesce(relatedPosts[$lang], relatedPosts.en),
+        "ctaReplyNote": coalesce(ctaReplyNote[$lang], ctaReplyNote.en)
+      }`,
+      { lang },
+    ),
   );
 }
 

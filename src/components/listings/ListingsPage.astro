@@ -4,8 +4,7 @@ import PropertyList from "@components/listings/PropertyList.astro";
 import SchemaOrg from "@components/seo/SchemaOrg.astro";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
-import { t } from "@i18n/ui";
-import { getProperties, getListingsSlugs } from "@lib/queries";
+import { getProperties, getListingsSlugs, getListingsTexts } from "@lib/queries";
 import { localePrefix } from "@i18n/utils";
 import { collectionSchema } from "@lib/schema";
 import ContactSection from "@components/contact/ContactSection.astro";
@@ -15,9 +14,10 @@ interface Props {
 }
 
 const { lang = DEFAULT_LOCALE } = Astro.props;
-const [properties, listingsSlugs] = await Promise.all([
+const [properties, listingsSlugs, texts] = await Promise.all([
   getProperties(lang),
   getListingsSlugs(),
+  getListingsTexts(lang),
 ]);
 const listingsSlug = listingsSlugs[lang] ?? "listings";
 const origin = Astro.url.origin;
@@ -25,15 +25,15 @@ const listingsUrl = `${origin}${localePrefix(lang)}/${listingsSlug}`;
 const itemUrls = properties.map((p) => `${listingsUrl}/${p.slug}`);
 ---
 
-<SchemaOrg schema={collectionSchema(t(lang, "listings.pageTitle"), listingsUrl, lang, itemUrls)} />
+<SchemaOrg schema={collectionSchema(texts?.pageTitle ?? "", listingsUrl, lang, itemUrls)} />
 
 <section class="section bg-gray-100 lg:pt-section-sm">
   <div>
     <SectionHeading
       big
       smallMargin
-      title={t(lang, "listings.pageTitle")}
-      subtitle={t(lang, "listings.pageSubtitle")}
+      title={texts?.pageTitle ?? ""}
+      subtitle={texts?.pageSubtitle ?? ""}
       level={1}
     />
     <PropertyList {properties} {lang} {listingsSlug} level={2} />

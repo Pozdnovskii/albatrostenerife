@@ -1,9 +1,8 @@
 ---
 import { getImage } from "astro:assets";
-import { t } from "@i18n/ui";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
-import { getContactInfo } from "@lib/queries";
+import { getContactInfo, getSellersTexts } from "@lib/queries";
 import desktopSrc from "@assets/sellers.webp";
 import mobileSrc from "@assets/sellers-mob.webp";
 import SectionHeading from "@components/ui/SectionHeading.astro";
@@ -17,7 +16,7 @@ interface Props {
 
 const { lang = DEFAULT_LOCALE } = Astro.props;
 
-const [desktop, mobile, contact] = await Promise.all([
+const [desktop, mobile, contact, sellersTexts] = await Promise.all([
   getImage({
     src: desktopSrc,
     widths: [1024, 1440, 1920],
@@ -31,6 +30,7 @@ const [desktop, mobile, contact] = await Promise.all([
     format: "webp",
   }),
   getContactInfo(lang),
+  getSellersTexts(lang),
 ]);
 ---
 
@@ -43,14 +43,14 @@ const [desktop, mobile, contact] = await Promise.all([
       <SectionHeading
         left
         level={1}
-        title={t(lang, "sellers.title")}
-        subtitle={t(lang, "sellers.subtitle")}
+        title={sellersTexts?.title ?? ""}
+        subtitle={sellersTexts?.subtitle ?? ""}
         subtitlePlain
         subtitleClass="text-black"
         smallMargin
         small
       />
-      <ContactForm lang={lang} showAptNo sourceName={t(DEFAULT_LOCALE, "sellers.title")} />
+      <ContactForm lang={lang} showAptNo sourceName={sellersTexts?.enTitle ?? ""} />
     </div>
 
     <!-- Agent card -->
