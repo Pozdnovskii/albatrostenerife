@@ -13,10 +13,19 @@ export const LOCALE_LABELS: Record<Locale, string> = {
 
 
 export const HREFLANG: Record<Locale, string> = {
-  en: "en-US",
+  en: "en-GB",
   cs: "cs-CZ",
   pl: "pl-PL",
   hu: "hu-HU",
   it: "it-IT",
   es: "es-ES",
+};
+
+export const OG_LOCALE: Record<Locale, string> = {
+  en: "en_GB",
+  cs: "cs_CZ",
+  pl: "pl_PL",
+  hu: "hu_HU",
+  it: "it_IT",
+  es: "es_ES",
 };

@@ -1,5 +1,5 @@
 ---
-import { LOCALES, HREFLANG, DEFAULT_LOCALE } from "@i18n/config";
+import { LOCALES, HREFLANG, OG_LOCALE, DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
 
 interface Props {
@@ -61,10 +61,10 @@ function localePath(l: Locale) {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
-<meta property="og:locale" content={HREFLANG[lang]} />
+<meta property="og:locale" content={OG_LOCALE[lang]} />
 {
   LOCALES.filter((l) => l !== lang).map((l) => (
-    <meta property="og:locale:alternate" content={HREFLANG[l]} />
+    <meta property="og:locale:alternate" content={OG_LOCALE[l]} />
   ))
 }
 
