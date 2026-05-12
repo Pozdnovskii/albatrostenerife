@@ -24,6 +24,16 @@ import { homePage } from "@studio/schemas/homePage";
 import { blogTexts } from "@studio/schemas/blogTexts";
 import { sellersTexts } from "@studio/schemas/sellersTexts";
 import { listingsTexts } from "@studio/schemas/listingsTexts";
+import { contactTexts } from "@studio/schemas/contactTexts";
+
+const SINGLETON_TYPES = [
+  "homePage",
+  "blogTexts",
+  "listingsTexts",
+  "contactTexts",
+  "sellersTexts",
+  "contactInfo",
+];
 
 export default defineConfig({
   name: "albatros-realestate",
@@ -75,10 +85,11 @@ export default defineConfig({
                 S.list()
                   .title("Texts")
                   .items([
-                    S.documentTypeListItem("homePage").title("Home Page"),
-                    S.documentTypeListItem("blogTexts").title("Blog"),
-                    S.documentTypeListItem("listingsTexts").title("Listings"),
-                    S.documentTypeListItem("sellersTexts").title("Sellers Page"),
+                    S.listItem().title("Home Page").child(S.document().documentId("homePage").schemaType("homePage")),
+                    S.listItem().title("Blog").child(S.document().documentId("blogTexts").schemaType("blogTexts")),
+                    S.listItem().title("Listings").child(S.document().documentId("listingsTexts").schemaType("listingsTexts")),
+                    S.listItem().title("Contact Page").child(S.document().documentId("contactTexts").schemaType("contactTexts")),
+                    S.listItem().title("Sellers Page").child(S.document().documentId("sellersTexts").schemaType("sellersTexts")),
                     S.documentTypeListItem("legalPage").title("Legal Pages"),
                     S.documentTypeListItem("service").title("Services"),
                   ]),
@@ -86,7 +97,7 @@ export default defineConfig({
             S.divider(),
             S.documentTypeListItem("seoSettings").title("SEO Settings"),
             S.documentTypeListItem("navigation").title("Navigation"),
-            S.documentTypeListItem("contactInfo").title("Contact Info"),
+            S.listItem().title("Contact Info").child(S.document().documentId("contactInfo").schemaType("contactInfo")),
           ]),
     }),
     visionTool(),
@@ -122,6 +133,9 @@ export default defineConfig({
       blogTexts,
       sellersTexts,
       listingsTexts,
+      contactTexts,
     ],
+    templates: (prev) =>
+      prev.filter((t) => !SINGLETON_TYPES.includes(t.schemaType)),
   },
 });

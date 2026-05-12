@@ -5,6 +5,7 @@ import type {
   Activity,
   BlogTextsData,
   ContactInfo,
+  ContactTextsData,
   ListingsTextsData,
   SellersTextsData,
   HomePageData,
@@ -555,6 +556,18 @@ export function getListingsTexts(lang: Locale): Promise<ListingsTextsData | null
         "readLess":        coalesce(readLess[$lang],        readLess.en),
         "allPhotos":       coalesce(allPhotos[$lang],       allPhotos.en),
         "otherProperties": coalesce(otherProperties[$lang], otherProperties.en)
+      }`,
+      { lang },
+    ),
+  );
+}
+
+export function getContactTexts(lang: Locale): Promise<ContactTextsData | null> {
+  return cached(`getContactTexts:${lang}`, () =>
+    sanityClient.fetch<ContactTextsData | null>(
+      `*[_type == "contactTexts"][0]{
+        "title":    coalesce(title[$lang], title.en),
+        "subtitle": coalesce(subtitle[$lang], subtitle.en)
       }`,
       { lang },
     ),

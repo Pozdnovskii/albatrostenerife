@@ -178,6 +178,11 @@ export type SellersTextsData = {
   subtitle: string | null;
 };
 
+export type ContactTextsData = {
+  title:    string | null;
+  subtitle: string | null;
+};
+
 export type ListingsTextsData = {
   pageTitle:       string | null;
   pageSubtitle:    string | null;

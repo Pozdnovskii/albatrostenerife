@@ -1,6 +1,5 @@
 ---
-import { getContactInfo } from "@lib/queries";
-import { t } from "@i18n/ui";
+import { getContactInfo, getContactTexts } from "@lib/queries";
 import { DEFAULT_LOCALE } from "@i18n/config";
 import type { Locale } from "@i18n/config";
 import SectionHeading from "@components/ui/SectionHeading.astro";
@@ -20,14 +19,20 @@ interface Props {
 const {
   lang = DEFAULT_LOCALE,
   level = 2,
-  title = t(lang, "contact.title"),
-  subtitle = t(lang, "contact.subtitle"),
+  title: titleProp,
+  subtitle: subtitleProp,
   left = false,
   class: cls,
   sourceName = "Contact Form",
 } = Astro.props;
 
-const contact = await getContactInfo(lang);
+const [contact, texts] = await Promise.all([
+  getContactInfo(lang),
+  level === 1 ? getContactTexts(lang) : Promise.resolve(null),
+]);
+
+const title = titleProp ?? texts?.title ?? "";
+const subtitle = subtitleProp ?? texts?.subtitle ?? undefined;
 ---
 
 <section id="contact" class:list={["section bg-white lg:pt-section-sm", cls]}>
