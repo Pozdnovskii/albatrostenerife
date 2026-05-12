@@ -112,6 +112,7 @@ export const property = defineType({
       title: "Year built",
       type: "number",
       group: "details",
+      initialValue: 1989,
       validation: (r) => r.min(1900).max(new Date().getFullYear()),
     }),
 
