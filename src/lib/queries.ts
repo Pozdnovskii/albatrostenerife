@@ -6,7 +6,6 @@ import type {
   BlogTextsData,
   ContactInfo,
   ListingsTextsData,
-  NotFoundTextsData,
   SellersTextsData,
   HomePageData,
   LegalPageData,
@@ -556,19 +555,6 @@ export function getListingsTexts(lang: Locale): Promise<ListingsTextsData | null
         "readLess":        coalesce(readLess[$lang],        readLess.en),
         "allPhotos":       coalesce(allPhotos[$lang],       allPhotos.en),
         "otherProperties": coalesce(otherProperties[$lang], otherProperties.en)
-      }`,
-      { lang },
-    ),
-  );
-}
-
-export function getNotFoundTexts(lang: Locale): Promise<NotFoundTextsData | null> {
-  return cached(`getNotFoundTexts:${lang}`, () =>
-    sanityClient.fetch<NotFoundTextsData | null>(
-      `*[_type == "notFoundTexts"][0]{
-        "title":    coalesce(title[$lang], title.en),
-        "subtitle": coalesce(subtitle[$lang], subtitle.en),
-        "back":     coalesce(back[$lang], back.en)
       }`,
       { lang },
     ),

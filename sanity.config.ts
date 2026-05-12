@@ -22,7 +22,6 @@ import { blogPost } from "@studio/schemas/blogPost";
 import { blogCta } from "@studio/schemas/blogCta";
 import { homePage } from "@studio/schemas/homePage";
 import { blogTexts } from "@studio/schemas/blogTexts";
-import { notFoundTexts } from "@studio/schemas/notFoundTexts";
 import { sellersTexts } from "@studio/schemas/sellersTexts";
 import { listingsTexts } from "@studio/schemas/listingsTexts";
 
@@ -80,7 +79,6 @@ export default defineConfig({
                     S.documentTypeListItem("blogTexts").title("Blog"),
                     S.documentTypeListItem("listingsTexts").title("Listings"),
                     S.documentTypeListItem("sellersTexts").title("Sellers Page"),
-                    S.documentTypeListItem("notFoundTexts").title("404 Not Found"),
                     S.documentTypeListItem("legalPage").title("Legal Pages"),
                     S.documentTypeListItem("service").title("Services"),
                   ]),
@@ -122,7 +120,6 @@ export default defineConfig({
       blogCta,
       homePage,
       blogTexts,
-      notFoundTexts,
       sellersTexts,
       listingsTexts,
     ],

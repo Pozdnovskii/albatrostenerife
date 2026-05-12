@@ -171,11 +171,6 @@ export type HomePageData = {
   blogViewAll:       string | null;
 };
 
-export type NotFoundTextsData = {
-  title:    string | null;
-  subtitle: string | null;
-  back:     string | null;
-};
 
 export type SellersTextsData = {
   title:    string | null;
