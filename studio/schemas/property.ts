@@ -31,7 +31,7 @@ export const property = defineType({
       group: "display",
     }),
 
-    translatedField("title", "Title"),
+    translatedField("title", "Title", { searchWeight: 100 }),
 
     // ── SEO ──────────────────────────────────────────────────────────────────
     defineField({
@@ -44,7 +44,10 @@ export const property = defineType({
           name: lang,
           title: LANGUAGE_TITLES[lang as Locale],
           type: "slug",
-          options: { source: `title.${lang}` },
+          options: {
+            source: `title.${lang}`,
+            ...(lang === DEFAULT_LOCALE ? { search: { weight: 50 } } : {}),
+          },
           validation: lang === DEFAULT_LOCALE ? (r) => r.required() : undefined,
         }),
       ),
@@ -52,6 +55,7 @@ export const property = defineType({
     translatedField("metaTitle", "Meta Title", {
       required: false,
       group: "seo",
+      searchWeight: 30,
     }),
     translatedField("metaDescription", "Meta Description", {
       required: false,

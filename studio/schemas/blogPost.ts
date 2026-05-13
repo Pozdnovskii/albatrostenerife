@@ -25,13 +25,14 @@ export const blogPost = defineType({
 
   fields: [
     // ── Preview ───────────────────────────────────────────────────────────────
-    translatedField("title", "Title", { group: "preview" }),
+    translatedField("title", "Title", { group: "preview", searchWeight: 100 }),
 
     translatedField("description", "Description", {
       required: false,
       type: "text",
       rows: 3,
       group: "preview",
+      searchWeight: 20,
     }),
 
     defineField({
@@ -55,7 +56,10 @@ export const blogPost = defineType({
           name: lang,
           title: LANGUAGE_TITLES[lang as Locale],
           type: "slug",
-          options: { source: `title.${lang}` },
+          options: {
+            source: `title.${lang}`,
+            ...(lang === DEFAULT_LOCALE ? { search: { weight: 50 } } : {}),
+          },
           validation: lang === DEFAULT_LOCALE ? (r) => r.required() : undefined,
         }),
       ),
@@ -63,6 +67,7 @@ export const blogPost = defineType({
     translatedField("metaTitle", "Meta Title", {
       required: false,
       group: "seo",
+      searchWeight: 30,
     }),
     translatedField("metaDescription", "Meta Description", {
       required: false,
