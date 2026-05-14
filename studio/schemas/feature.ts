@@ -1,10 +1,13 @@
 import { defineType } from "sanity";
+import { StarIcon } from "@sanity/icons";
 import { translatedField, DEFAULT_LOCALE } from "../lib/constants";
 
 export const feature = defineType({
   name: "feature",
   title: "Feature",
   type: "document",
+  icon: StarIcon,
+  __experimental_omnisearch_visibility: false,
   fields: [
     translatedField("name", "Name"),
   ],

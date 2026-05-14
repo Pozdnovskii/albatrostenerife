@@ -39,7 +39,7 @@ export function translatedField(
         name: lang,
         title: LOCALE_LABELS[lang],
         type,
-        rows,
+        ...(type === "text" && rows !== undefined ? { rows } : {}),
         // Boost only the default-locale sub-field in Studio search — editors
         // search by EN content; other-language translations stay at default
         // weight so they're still findable but don't dominate ranking.

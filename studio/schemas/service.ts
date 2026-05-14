@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { CogIcon } from "@sanity/icons";
 import {
   translatedField,
   LANGUAGES,
@@ -11,6 +12,8 @@ export const service = defineType({
   name: "service",
   title: "Service",
   type: "document",
+  icon: CogIcon,
+  __experimental_omnisearch_visibility: false,
 
   groups: [
     { name: "card", title: "Card", default: true },

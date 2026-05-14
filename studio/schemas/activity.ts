@@ -1,10 +1,13 @@
 import { defineField, defineType } from "sanity";
+import { SunIcon } from "@sanity/icons";
 import { translatedField, DEFAULT_LOCALE } from "../lib/constants";
 
 export const activity = defineType({
   name: "activity",
   title: "Activity",
   type: "document",
+  icon: SunIcon,
+  __experimental_omnisearch_visibility: false,
   fields: [
     translatedField("name", "Name"),
     defineField({

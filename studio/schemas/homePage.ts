@@ -1,10 +1,13 @@
 import { defineField, defineType } from "sanity";
+import { HomeIcon } from "@sanity/icons";
 import { translatedField } from "../lib/constants";
 
 export const homePage = defineType({
   name: "homePage",
   title: "Home Page",
   type: "document",
+  icon: HomeIcon,
+  __experimental_omnisearch_visibility: false,
   groups: [
     { name: "hero",       title: "Hero" },
     { name: "resort",     title: "Resort" },

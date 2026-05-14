@@ -2,7 +2,17 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import type { StructureBuilder } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
-import { RocketIcon } from "@sanity/icons";
+import {
+  RocketIcon,
+  HomeIcon,
+  ComposeIcon,
+  TextIcon,
+  InfoOutlineIcon,
+  BookIcon,
+  ThListIcon,
+  EnvelopeIcon,
+  UsersIcon,
+} from "@sanity/icons";
 import { DeployTool } from "@studio/plugins/DeployTool";
 
 import { propertyStatus } from "@studio/schemas/propertyStatus";
@@ -50,6 +60,7 @@ export default defineConfig({
           .items([
             S.listItem()
               .title("Properties")
+              .icon(HomeIcon)
               .child(
                 S.list()
                   .title("Properties")
@@ -65,6 +76,7 @@ export default defineConfig({
             S.divider(),
             S.listItem()
               .title("Blog")
+              .icon(ComposeIcon)
               .child(
                 S.list()
                   .title("Blog")
@@ -81,15 +93,16 @@ export default defineConfig({
             S.divider(),
             S.listItem()
               .title("Texts")
+              .icon(TextIcon)
               .child(
                 S.list()
                   .title("Texts")
                   .items([
-                    S.listItem().title("Home Page").child(S.document().documentId("homePage").schemaType("homePage")),
-                    S.listItem().title("Blog").child(S.document().documentId("blogTexts").schemaType("blogTexts")),
-                    S.listItem().title("Listings").child(S.document().documentId("listingsTexts").schemaType("listingsTexts")),
-                    S.listItem().title("Contact Page").child(S.document().documentId("contactTexts").schemaType("contactTexts")),
-                    S.listItem().title("Sellers Page").child(S.document().documentId("sellersTexts").schemaType("sellersTexts")),
+                    S.listItem().title("Home Page").icon(HomeIcon).child(S.document().documentId("homePage").schemaType("homePage")),
+                    S.listItem().title("Blog").icon(BookIcon).child(S.document().documentId("blogTexts").schemaType("blogTexts")),
+                    S.listItem().title("Listings").icon(ThListIcon).child(S.document().documentId("listingsTexts").schemaType("listingsTexts")),
+                    S.listItem().title("Contact Page").icon(EnvelopeIcon).child(S.document().documentId("contactTexts").schemaType("contactTexts")),
+                    S.listItem().title("Sellers Page").icon(UsersIcon).child(S.document().documentId("sellersTexts").schemaType("sellersTexts")),
                     S.documentTypeListItem("legalPage").title("Legal Pages"),
                     S.documentTypeListItem("service").title("Services"),
                   ]),
@@ -97,7 +110,7 @@ export default defineConfig({
             S.divider(),
             S.documentTypeListItem("seoSettings").title("SEO Settings"),
             S.documentTypeListItem("navigation").title("Navigation"),
-            S.listItem().title("Contact Info").child(S.document().documentId("contactInfo").schemaType("contactInfo")),
+            S.listItem().title("Contact Info").icon(InfoOutlineIcon).child(S.document().documentId("contactInfo").schemaType("contactInfo")),
           ]),
     }),
     visionTool(),

@@ -1,10 +1,13 @@
 import { defineField, defineType } from "sanity";
+import { SearchIcon } from "@sanity/icons";
 import { LANGUAGES, LANGUAGE_TITLES, DEFAULT_LOCALE } from "../lib/constants";
 
 export const seoSettings = defineType({
   name: "seoSettings",
   title: "SEO Settings",
   type: "document",
+  icon: SearchIcon,
+  __experimental_omnisearch_visibility: false,
   fields: [
     defineField({
       name: "title",

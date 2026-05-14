@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { HomeIcon } from "@sanity/icons";
 import { FeaturesToggleInput } from "../components/FeaturesToggleInput";
 import { StatusRadioInput } from "../components/StatusRadioInput";
 import {
@@ -13,6 +14,7 @@ export const property = defineType({
   name: "property",
   title: "Property",
   type: "document",
+  icon: HomeIcon,
 
   groups: [
     { name: "seo", title: "SEO" },
@@ -31,7 +33,7 @@ export const property = defineType({
       group: "display",
     }),
 
-    translatedField("title", "Title", { searchWeight: 100 }),
+    translatedField("title", "Title", { searchWeight: 200 }),
 
     // ── SEO ──────────────────────────────────────────────────────────────────
     defineField({
@@ -44,10 +46,7 @@ export const property = defineType({
           name: lang,
           title: LANGUAGE_TITLES[lang as Locale],
           type: "slug",
-          options: {
-            source: `title.${lang}`,
-            ...(lang === DEFAULT_LOCALE ? { search: { weight: 50 } } : {}),
-          },
+          options: { source: `title.${lang}` },
           validation: lang === DEFAULT_LOCALE ? (r) => r.required() : undefined,
         }),
       ),
@@ -139,6 +138,8 @@ export const property = defineType({
           name: lang,
           title: LANGUAGE_TITLES[lang as Locale],
           type: "array",
+          options:
+            lang === DEFAULT_LOCALE ? { search: { weight: 5 } } : undefined,
           of: [
             defineArrayMember({
               type: "block",

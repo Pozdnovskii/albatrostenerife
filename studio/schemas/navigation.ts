@@ -1,10 +1,13 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { MenuIcon } from "@sanity/icons";
 import { translatedField, DEFAULT_LOCALE } from "../lib/constants";
 
 export const navigation = defineType({
   name: "navigation",
   title: "Navigation",
   type: "document",
+  icon: MenuIcon,
+  __experimental_omnisearch_visibility: false,
   fields: [
     defineField({
       name: "title",

@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { DocumentTextIcon } from "@sanity/icons";
 import { translatedField, LANGUAGES, LANGUAGE_TITLES } from "../lib/constants";
 import type { Locale } from "@i18n/config";
 
@@ -6,6 +7,8 @@ export const legalPage = defineType({
   name: "legalPage",
   title: "Legal Page",
   type: "document",
+  icon: DocumentTextIcon,
+  __experimental_omnisearch_visibility: false,
   fields: [
     translatedField("heading", "Heading (H1)", { required: "default" }),
 

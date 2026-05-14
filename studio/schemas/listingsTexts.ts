@@ -1,10 +1,13 @@
 import { defineType } from "sanity";
+import { ThListIcon } from "@sanity/icons";
 import { translatedField } from "../lib/constants";
 
 export const listingsTexts = defineType({
   name: "listingsTexts",
   title: "Listings",
   type: "document",
+  icon: ThListIcon,
+  __experimental_omnisearch_visibility: false,
   groups: [
     { name: "page",     title: "Page" },
     { name: "card",     title: "Cards" },

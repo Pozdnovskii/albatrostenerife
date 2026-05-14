@@ -1,10 +1,13 @@
 import { defineField, defineType } from "sanity";
+import { BookmarkIcon } from "@sanity/icons";
 import { translatedField, DEFAULT_LOCALE } from "../lib/constants";
 
 export const propertyLabel = defineType({
   name: "propertyLabel",
   title: "Property Label",
   type: "document",
+  icon: BookmarkIcon,
+  __experimental_omnisearch_visibility: false,
   fields: [
     translatedField("name", "Name"),
     defineField({

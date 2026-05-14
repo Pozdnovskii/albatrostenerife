@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { LinkIcon } from "@sanity/icons";
 import { translatedField } from "../lib/constants";
 import { DEFAULT_LOCALE } from "../lib/constants";
 
@@ -6,6 +7,8 @@ export const blogCta = defineType({
   name: "blogCta",
   title: "CTA Button",
   type: "document",
+  icon: LinkIcon,
+  __experimental_omnisearch_visibility: false,
 
   fields: [
     translatedField("label", "Button Label"),

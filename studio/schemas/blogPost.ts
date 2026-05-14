@@ -1,6 +1,7 @@
 import { createElement } from "react";
 import type React from "react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { ComposeIcon } from "@sanity/icons";
 import { TagRadioInput } from "../components/TagRadioInput";
 import {
   translatedField,
@@ -14,6 +15,7 @@ export const blogPost = defineType({
   name: "blogPost",
   title: "Blog Post",
   type: "document",
+  icon: ComposeIcon,
 
   groups: [
     { name: "preview", title: "Preview" },
@@ -56,10 +58,7 @@ export const blogPost = defineType({
           name: lang,
           title: LANGUAGE_TITLES[lang as Locale],
           type: "slug",
-          options: {
-            source: `title.${lang}`,
-            ...(lang === DEFAULT_LOCALE ? { search: { weight: 50 } } : {}),
-          },
+          options: { source: `title.${lang}` },
           validation: lang === DEFAULT_LOCALE ? (r) => r.required() : undefined,
         }),
       ),

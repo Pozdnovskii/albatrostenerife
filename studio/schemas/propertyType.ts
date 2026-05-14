@@ -1,10 +1,13 @@
 import { defineField, defineType } from "sanity";
+import { PackageIcon } from "@sanity/icons";
 import { translatedField, DEFAULT_LOCALE } from "../lib/constants";
 
 export const propertyType = defineType({
   name: "propertyType",
   title: "Property Type",
   type: "document",
+  icon: PackageIcon,
+  __experimental_omnisearch_visibility: false,
   fields: [
     translatedField("name", "Name"),
     defineField({

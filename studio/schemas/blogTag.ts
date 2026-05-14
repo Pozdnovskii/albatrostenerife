@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { TagIcon } from "@sanity/icons";
 import { translatedField, DEFAULT_LOCALE, LANGUAGES, LANGUAGE_TITLES } from "../lib/constants";
 import type { Locale } from "@i18n/config";
 import { ConnectedPostsInput } from "../components/ConnectedPostsInput";
@@ -7,6 +8,8 @@ export const blogTag = defineType({
   name: "blogTag",
   title: "Blog Tag",
   type: "document",
+  icon: TagIcon,
+  __experimental_omnisearch_visibility: false,
 
   groups: [
     { name: "seo", title: "SEO" },
