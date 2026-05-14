@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /studio/
 Disallow: /downloads/
+Disallow: /api/
 
 Sitemap: https://albatrostenerife.com/sitemap-index.xml

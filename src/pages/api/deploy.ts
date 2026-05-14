@@ -1,7 +1,7 @@
 export const prerender = false;
 
 export const POST = async () => {
-  const hookUrl = import.meta.env.PUBLIC_SANITY_STUDIO_DEPLOY_HOOK;
+  const hookUrl = import.meta.env.SANITY_DEPLOY_HOOK;
   if (!hookUrl) {
     return Response.json({ ok: false, error: "Deploy hook not configured" }, { status: 500 });
   }
