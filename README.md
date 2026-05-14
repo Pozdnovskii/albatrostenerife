@@ -22,14 +22,12 @@ npm run dev        # Astro dev server → localhost:4321
 Copy `.env.example` to `.env` and fill in:
 
 ```
-SANITY_PROJECT_ID=
-SANITY_DATASET=
-SANITY_API_TOKEN=       # read-only token
 RESEND_API_KEY=
 RESEND_FROM=
 RESEND_TO=
 TURNSTILE_SECRET_KEY=
 PUBLIC_TURNSTILE_SITE_KEY=
+PUBLIC_SANITY_STUDIO_DEPLOY_HOOK=
 ```
 
 ## Sanity Studio

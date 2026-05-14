@@ -98,7 +98,6 @@ export const POST = async ({ request }: { request: Request }) => {
       ]);
     } catch (err) {
       console.error("Resend failed:", err);
-      // Still succeed — data is in Sanity
     }
   }
 
