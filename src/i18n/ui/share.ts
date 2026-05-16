@@ -1,0 +1,58 @@
+import type { Locale } from "../config";
+
+export const share = {
+  en: {
+    "share.label": "Share",
+    "share.whatsapp": "Share on WhatsApp",
+    "share.telegram": "Share on Telegram",
+    "share.facebook": "Share on Facebook",
+    "share.email": "Share via email",
+    "share.copy": "Copy link",
+    "share.copied": "Copied",
+  },
+  cs: {
+    "share.label": "Sdílet",
+    "share.whatsapp": "Sdílet na WhatsApp",
+    "share.telegram": "Sdílet na Telegram",
+    "share.facebook": "Sdílet na Facebook",
+    "share.email": "Sdílet e-mailem",
+    "share.copy": "Kopírovat odkaz",
+    "share.copied": "Zkopírováno",
+  },
+  pl: {
+    "share.label": "Udostępnij",
+    "share.whatsapp": "Udostępnij na WhatsApp",
+    "share.telegram": "Udostępnij na Telegram",
+    "share.facebook": "Udostępnij na Facebooku",
+    "share.email": "Udostępnij e-mailem",
+    "share.copy": "Kopiuj link",
+    "share.copied": "Skopiowano",
+  },
+  hu: {
+    "share.label": "Megosztás",
+    "share.whatsapp": "Megosztás WhatsApp-on",
+    "share.telegram": "Megosztás Telegramon",
+    "share.facebook": "Megosztás Facebookon",
+    "share.email": "Megosztás e-mailben",
+    "share.copy": "Link másolása",
+    "share.copied": "Másolva",
+  },
+  it: {
+    "share.label": "Condividi",
+    "share.whatsapp": "Condividi su WhatsApp",
+    "share.telegram": "Condividi su Telegram",
+    "share.facebook": "Condividi su Facebook",
+    "share.email": "Condividi via email",
+    "share.copy": "Copia link",
+    "share.copied": "Copiato",
+  },
+  es: {
+    "share.label": "Compartir",
+    "share.whatsapp": "Compartir en WhatsApp",
+    "share.telegram": "Compartir en Telegram",
+    "share.facebook": "Compartir en Facebook",
+    "share.email": "Compartir por email",
+    "share.copy": "Copiar enlace",
+    "share.copied": "Copiado",
+  },
+} satisfies Record<Locale, Record<string, string>>;

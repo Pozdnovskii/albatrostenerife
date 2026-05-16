@@ -12,14 +12,20 @@ interface Props {
   ctaReplyNote?: string | null;
 }
 
-const { post, lang = DEFAULT_LOCALE, contact, blogSlug = "blog", ctaReplyNote } = Astro.props;
+const {
+  post,
+  lang = DEFAULT_LOCALE,
+  contact,
+  blogSlug = "blog",
+  ctaReplyNote,
+} = Astro.props;
 const prefix = localePrefix(lang);
 
 // CTA button href
 const page = post.ctaButton?.page ?? null;
 const ctaHref = page
   ? page.isHomepage
-    ? (prefix || "/")
+    ? prefix || "/"
     : `${prefix}/${page.slug ?? ""}`
   : null;
 
@@ -89,7 +95,9 @@ function inlineHTML(children: PTSpan[], markDefs: PTLink[]): string {
     <div
       class="bg-gray-50 rounded-lg p-4 border border-accent-lighter/66 sm:p-svw sm:text-center md:flex md:flex-col md:items-center"
     >
-      <h2 class="text-2xl font-medium mb-4 md:text-3xl">{post.ctaTitle}</h2>
+      <h2 class="text-2xl font-medium text-balance mb-4 md:text-3xl">
+        {post.ctaTitle}
+      </h2>
 
       {
         post.ctaText &&

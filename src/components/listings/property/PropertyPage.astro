@@ -15,6 +15,9 @@ import PropertyDescription from "@components/listings/property/PropertyDescripti
 import PropertyGallery from "@components/listings/property/PropertyGallery.astro";
 import ContactSection from "@components/contact/ContactSection.astro";
 import ContactForm from "@components/contact/ContactForm.astro";
+import ShareButtons from "@components/ui/ShareButtons.astro";
+import PropertySection from "@components/listings/ui/PropertySection.astro";
+import { t } from "@i18n/ui";
 
 interface Props {
   property: Property;
@@ -62,12 +65,17 @@ const breadcrumbs = [
         <PropertyDescription description={property.description} {lang} />
       )
     }
+
     {property.videoUrl && <PropertyVideo url={property.videoUrl} {lang} />}
     {
       property.virtualTourUrl && (
         <PropertyVirtualTour url={property.virtualTourUrl} {lang} />
       )
     }
+
+    <PropertySection title={t(lang, "share.label")}>
+      <ShareButtons url={pageUrl} title={property.title} {lang} />
+    </PropertySection>
   </div>
 
   <!-- Desktop sticky sidebar: form only -->
@@ -75,7 +83,11 @@ const breadcrumbs = [
     class="hidden lg:block lg:sticky lg:top-10 lg:py-section-xs lg:pr-svw 2xl:pr-0"
   >
     <div class="rounded-xl bg-white p-6 text-black">
-      <ContactForm {lang} sourceName={property.enTitle ?? property.title} singleCol />
+      <ContactForm
+        {lang}
+        sourceName={property.enTitle ?? property.title}
+        singleCol
+      />
     </div>
   </aside>
 </div>
